@@ -3,9 +3,9 @@ import { createRoot } from "react-dom/client";
 import "./../index.css";
 import ActionMenu from "./ActionMenu.tsx";
 import { PluginGate } from "../helpers/PluginGate.tsx";
-import { syncTheme } from "../helpers/syncTheme.ts";
+import { syncThemeMode } from "../helpers/syncThemeMode.ts";
 
-syncTheme();
+syncThemeMode();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

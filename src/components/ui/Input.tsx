@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "../../helpers/utils";
 
-function Input({
+export default function Input({
   className,
   type,
   hasFocusHighlight,
@@ -20,5 +20,3 @@ function Input({
     />
   );
 }
-
-export { Input };

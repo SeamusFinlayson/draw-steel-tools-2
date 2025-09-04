@@ -1,7 +1,7 @@
 import OBR from "@owlbear-rodeo/sdk";
 
 /** Keep tailwind theme up to date by applying the "dark" class to the document body. */
-export function syncTheme() {
+export function syncThemeMode() {
   const setBodyTheme = (string: string) => {
     if (string === "DARK") document.body.classList.add("dark");
     else document.body.classList.remove("dark");

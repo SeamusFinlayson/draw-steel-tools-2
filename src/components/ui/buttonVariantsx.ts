@@ -11,7 +11,7 @@ export const buttonVariants = cva(
         secondary:
           "bg-mirage-100 text-mirage-950 hover:bg-mirage-100/80 dark:bg-mirage-900 dark:text-mirage-50 dark:hover:bg-mirage-900/80",
         ghost:
-          "hover:bg-mirage-100/80 dark:hover:bg-mirage-900/80 text-mirage-950 dark:text-mirage-50",
+          "hover:bg-black/7 dark:hover:bg-white/7 text-mirage-950 dark:text-mirage-50",
       },
       size: {
         base: "h-9 px-4 py-2 rounded-[18px] active:rounded-[8px]",

@@ -4,7 +4,7 @@ import { type VariantProps } from "class-variance-authority";
 import { cn } from "../../helpers/utils";
 import { buttonVariants } from "./buttonVariantsx";
 
-function Button({
+export default function Button({
   className,
   variant,
   size,
@@ -24,5 +24,3 @@ function Button({
     />
   );
 }
-
-export { Button };
