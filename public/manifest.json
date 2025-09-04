@@ -9,7 +9,7 @@
   "action": {
     "title": "Draw Steel Tools",
     "icon": "/dragon-head.svg",
-    "popover": "/",
+    "popover": "/action",
     "height": 600,
     "width": 300
   }
