@@ -1,1 +1,40 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --accent: #9966ff;
+  --accent-foreground: #f5f2ff;
+  --ring: var(--color-black);
+}
+
+.dark {
+  --accent: #bb99ff;
+  --accent-foreground: #350c69;
+  --ring: var(--color-white);
+}
+
+@theme inline {
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-ring: var(--ring);
+}
+
+@theme {
+  --color-mirage-50: #f6f6f9;
+  --color-mirage-100: #ededf1;
+  --color-mirage-200: #d6d7e1;
+  --color-mirage-300: #b3b6c6;
+  --color-mirage-400: #898fa7;
+  --color-mirage-500: #6a708d;
+  --color-mirage-600: #555974;
+  --color-mirage-700: #464a5e;
+  --color-mirage-800: #3d4051;
+  --color-mirage-900: #353745;
+  --color-mirage-950: #23242e;
+}
+
+button {
+  cursor: pointer;
+}
