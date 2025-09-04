@@ -1,0 +1,16 @@
+{
+  "name": "Draw Steel Tools",
+  "version": "2.0.0",
+  "manifest_version": 1,
+  "author": "Seamus Finlayson",
+  "homepage_url": "https://seamus-finlayson.ca/pages/draw-steel-tools",
+  "icon": "/logo.svg",
+  "description": "Stamina and resource tracking + power rolls for Draw Steel!",
+  "action": {
+    "title": "Draw Steel Tools",
+    "icon": "/dragon-head.svg",
+    "popover": "/",
+    "height": 600,
+    "width": 300
+  }
+}
