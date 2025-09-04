@@ -6,19 +6,19 @@
 :root {
   --accent: #9966ff;
   --accent-foreground: #f5f2ff;
-  --ring: var(--color-black);
+  --foreground: var(--color-black);
 }
 
 .dark {
   --accent: #bb99ff;
   --accent-foreground: #350c69;
-  --ring: var(--color-white);
+  --foreground: var(--color-white);
 }
 
 @theme inline {
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
-  --color-ring: var(--ring);
+  --color-foreground: var(--foreground);
 }
 
 @theme {
