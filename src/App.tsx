@@ -3,7 +3,7 @@ import { Button } from "./components/ui/button";
 
 function App() {
   return (
-    <div className="">
+    <div className="dark">
       <div className="bg-mirage-50 dark:bg-mirage-950 grid h-screen gap-2 p-4">
         <h1 className="text-3xl font-bold underline">Hello world!</h1>
         <Button>Accent</Button>

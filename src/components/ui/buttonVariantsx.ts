@@ -1,12 +1,12 @@
 import { cva } from "class-variance-authority";
 
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-6 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring focus-visible:ring-[2px]",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-base font-medium transition-all ease-out disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-6 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring focus-visible:ring-[2px]",
   {
     variants: {
       variant: {
         outline:
-          "border bg-background hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+          "border hover:bg-mirage-100/80 dark:hover:bg-mirage-900/80 text-mirage-950 dark:text-mirage-50 border-mirage-950/30 dark:border-mirage-50/30",
         primary: "bg-accent text-accent-foreground  hover:bg-accent/90",
         secondary:
           "bg-mirage-100 text-mirage-950 hover:bg-mirage-100/80 dark:bg-mirage-900 dark:text-mirage-50 dark:hover:bg-mirage-900/80",
