@@ -1,4 +1,3 @@
-import { useCallback, useState } from "react";
 import {
   EllipsisVerticalIcon,
   HistoryIcon,
@@ -11,15 +10,8 @@ import {
 import Button from "../../components/ui/Button";
 import FreeWheelInput from "../../components/logic/FreeWheelInput";
 import Label from "../../components/ui/Label";
-import * as DiceProtocol from "../../diceProtocol";
-import type { Roll, RollAttributes } from "./types";
-import OBR from "@owlbear-rodeo/sdk";
-import { powerRoll } from "./helpers";
-import usePlayerName from "../../helpers/usePlayerName";
-import {
-  createRollRequest,
-  useDiceRoller,
-} from "../../helpers/diceCommunicationHelpers";
+import { defaultRollerAttributes, powerRoll } from "./helpers";
+import { createRollRequest } from "../../helpers/diceCommunicationHelpers";
 import Toggle from "../../components/ui/Toggle";
 import DiceStylePicker from "./DiceStylePicker";
 import { ToggleGroup, ToggleGroupItem } from "../../components/ui/toggleGroup";
@@ -35,54 +27,35 @@ import {
 import { DiceRollViewer } from "./DiceRollResultViewer";
 import { Separator } from "../../components/ui/Separator";
 import { RadioGroup, RadioGroupItem } from "../../components/ui/radioGroup";
-import { cn } from "../../helpers/utils";
+import Input from "../../components/ui/Input";
+import z from "zod";
+import parseNumber from "../../helpers/parseNumber";
+import type {
+  DiceRoller,
+  Roll,
+  RollAttributes,
+} from "../../types/diceRollerTypes";
 
-const defaultRollerAttributes = {
-  edges: 0,
-  banes: 0,
-  bonus: 0,
-  hasSkill: false,
-  diceOptions: "2d10",
-  visibility: "shared",
-} satisfies RollAttributes;
-
-export default function DiceRoller() {
-  const [rollAttributes, setRollAttributes] = useState<RollAttributes>(
-    defaultRollerAttributes,
-  );
+export default function DiceRoller({
+  playerName,
+  rollAttributes,
+  setRollAttributes,
+  diceRoller,
+  result,
+  setResult,
+  diceResultViewerOpen,
+  setDiceResultViewerOpen,
+}: {
+  playerName: string;
+  rollAttributes: RollAttributes;
+  setRollAttributes: React.Dispatch<React.SetStateAction<RollAttributes>>;
+  diceRoller: DiceRoller;
+  result: Roll | undefined;
+  setResult: React.Dispatch<React.SetStateAction<Roll | undefined>>;
+  diceResultViewerOpen: boolean;
+  setDiceResultViewerOpen: (diceRollerOpen: boolean) => void;
+}) {
   const netEdges = rollAttributes.edges - rollAttributes.banes;
-  const [result, setResult] = useState<Roll>();
-  const playerName = usePlayerName();
-
-  const [diceResultViewerOpen, setDiceResultViewerOpen] = useState(false);
-
-  // External dice roller
-  const handleRollResult = useCallback(
-    (data: DiceProtocol.PowerRollResult) => {
-      OBR.action.open();
-      const rolls = data.result.map((val) => val.result);
-      for (let i = 0; i < rolls.length; i++) {
-        if (rolls[i] === 0) rolls[i] = 10;
-      }
-
-      setResult(
-        powerRoll({
-          bonus: data.rollProperties.bonus,
-          hasSkill: data.rollProperties.hasSkill,
-          netEdges: data.rollProperties.netEdges,
-          playerName,
-          rollMethod: "givenValues",
-          dieValues: rolls,
-          selectionStrategy:
-            data.rollProperties.dice === "3d10kl2" ? "lowest" : "highest",
-        }),
-      );
-
-      setRollAttributes({ ...defaultRollerAttributes });
-    },
-    [playerName],
-  );
-  const diceRoller = useDiceRoller({ onRollResult: handleRollResult });
 
   return (
     <div className="bg-mirage-50 dark:bg-mirage-950 mx-4 space-y-4 rounded-2xl p-4">
@@ -104,23 +77,26 @@ export default function DiceRoller() {
           >
             <MinusIcon />
           </Button>
-          <div className="grid place-items-center px-0.5">
+          <Input className="px-0 text-center" hasFocusHighlight>
             <FreeWheelInput
               id="bonusInput"
-              className={cn(
-                "file:text-foreground placeholder:text-foreground/50 selection:bg-primary selection:text-foreground ring-mirage-950/20 dark:ring-mirage-50/20 text-foreground flex h-9 h-full w-full min-w-0 rounded-[8px] bg-transparent px-3 py-1 text-center text-base shadow-xs ring transition-[color,box-shadow] duration-75 outline-none file:inline-flex file:h-7 file:bg-transparent file:text-sm file:font-medium file:ring-0 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-                { "focus:ring-accent focus:ring-2": true },
-              )}
               value={rollAttributes.bonus.toString()}
-              onUpdate={(target) =>
+              onUpdate={(target) => {
+                const bonus = z.int().parse(
+                  parseNumber(target.value, {
+                    min: -999,
+                    max: 999,
+                    truncate: true,
+                  }),
+                );
                 setRollAttributes((prev) => ({
                   ...prev,
-                  bonus: parseFloat(target.value),
-                }))
-              }
+                  bonus,
+                }));
+              }}
               clearContentOnFocus
             />
-          </div>
+          </Input>
           <Button
             aria-label="increment bonus"
             className="rounded-l-[8px]"

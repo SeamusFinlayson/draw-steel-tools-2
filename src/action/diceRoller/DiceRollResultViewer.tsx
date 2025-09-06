@@ -1,4 +1,4 @@
-import type { Roll } from "./types";
+import type { Roll } from "../../types/diceRollerTypes";
 import { netEdgesTextAndLabel } from "./helpers";
 import D10Icon from "../../components/icons/D10";
 import { cn } from "../../helpers/utils";

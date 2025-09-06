@@ -1,4 +1,4 @@
-import * as DiceProtocol from "../../diceProtocol";
+import * as DiceProtocol from "../diceProtocol";
 
 export type DiceOptions = "2d10" | "3d10kh2" | "3d10kl2";
 export type RollVisibility = "shared" | "self";
@@ -28,3 +28,18 @@ export type DieResult = {
   value: number;
   dropped: boolean;
 };
+
+export type DiceRoller = {
+  connect: () => void;
+  disconnect: () => void;
+  onRollResult: (rollResult: DiceProtocol.PowerRollResult) => void;
+} & (
+  | {
+      config: DiceProtocol.DiceRollerConfig;
+      requestRoll: (rollRequest: DiceProtocol.PowerRollRequest) => void;
+    }
+  | {
+      config: undefined;
+      requestRoll: undefined;
+    }
+);

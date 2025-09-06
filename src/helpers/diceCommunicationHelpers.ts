@@ -1,6 +1,7 @@
 import * as DiceProtocol from "../diceProtocol";
 import OBR from "@owlbear-rodeo/sdk";
 import { useEffect, useState } from "react";
+import type { DiceRoller } from "../types/diceRollerTypes";
 
 export function createRollRequest(args: {
   gmOnly: boolean;
@@ -19,21 +20,6 @@ export function createRollRequest(args: {
     rollProperties,
   };
 }
-
-type DiceRoller = {
-  connect: () => void;
-  disconnect: () => void;
-  onRollResult: (rollResult: DiceProtocol.PowerRollResult) => void;
-} & (
-  | {
-      config: DiceProtocol.DiceRollerConfig;
-      requestRoll: (rollRequest: DiceProtocol.PowerRollRequest) => void;
-    }
-  | {
-      config: undefined;
-      requestRoll: undefined;
-    }
-);
 
 function requestDiceRollerConfig() {
   OBR.broadcast.sendMessage(

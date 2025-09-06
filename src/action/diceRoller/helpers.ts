@@ -1,4 +1,8 @@
-import type { DieResult, Roll } from "./types";
+import type {
+  DieResult,
+  Roll,
+  RollAttributes,
+} from "../../types/diceRollerTypes";
 
 export function powerRoll(
   args: {
@@ -137,3 +141,12 @@ export const netEdgesTextAndLabel = (
 
   return { text: "", label: "" };
 };
+
+export const defaultRollerAttributes = {
+  edges: 0,
+  banes: 0,
+  bonus: 0,
+  hasSkill: false,
+  diceOptions: "2d10",
+  visibility: "shared",
+} satisfies RollAttributes;
