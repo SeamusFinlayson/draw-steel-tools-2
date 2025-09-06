@@ -8,6 +8,8 @@ import { useDiceRoller } from "../helpers/diceCommunicationHelpers";
 import type { Roll, RollAttributes } from "../types/diceRollerTypes";
 import { defaultRollerAttributes, powerRoll } from "./diceRoller/helpers";
 import { Header } from "./header/Header";
+import { ScrollArea } from "../components/ui/scrollArea";
+import ActionHeightMatch from "./ActionHeightMatch";
 
 function ActionMenu() {
   const playerName = usePlayerName();
@@ -46,19 +48,28 @@ function ActionMenu() {
   const diceRoller = useDiceRoller({ onRollResult: handleRollResult });
 
   return (
-    <div className="text-foreground flex h-screen flex-col gap-4 pb-2">
-      <Header diceRoller={diceRoller} setRollAttributes={setRollAttributes} />
-      <ResourceTracker />
-      <DiceRoller
-        playerName={playerName}
-        diceResultViewerOpen={diceResultViewerOpen}
-        setDiceResultViewerOpen={setDiceResultViewerOpen}
-        rollAttributes={rollAttributes}
-        setRollAttributes={setRollAttributes}
-        result={result}
-        setResult={setResult}
-        diceRoller={diceRoller}
-      />
+    <div className="h-screen">
+      <ScrollArea className="h-full" type="always">
+        <ActionHeightMatch>
+          <div className="text-foreground flex flex-col gap-4 pb-4">
+            <Header
+              diceRoller={diceRoller}
+              setRollAttributes={setRollAttributes}
+            />
+            <ResourceTracker />
+            <DiceRoller
+              playerName={playerName}
+              diceResultViewerOpen={diceResultViewerOpen}
+              setDiceResultViewerOpen={setDiceResultViewerOpen}
+              rollAttributes={rollAttributes}
+              setRollAttributes={setRollAttributes}
+              result={result}
+              setResult={setResult}
+              diceRoller={diceRoller}
+            />
+          </div>
+        </ActionHeightMatch>
+      </ScrollArea>
     </div>
   );
 }

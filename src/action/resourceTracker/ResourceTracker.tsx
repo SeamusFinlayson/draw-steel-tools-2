@@ -7,7 +7,6 @@ import {
   RoomTrackersZod,
   type RoomTrackers,
 } from "../../types/roomTrackersTypes";
-import Button from "../../components/ui/Button";
 import FreeWheelInput from "../../components/logic/FreeWheelInput";
 import Label from "../../components/ui/Label";
 import parseNumber from "../../helpers/parseNumber";
@@ -18,68 +17,54 @@ export default function ResourceTracker() {
   const heroTokens = trackers?.heroTokens ? trackers.heroTokens : 0;
 
   return (
-    <div className="space-y-2 px-4">
-      <div className="flex gap-4">
-        <div>
-          <Label variant="small">Malice</Label>
-          <Input>
-            <FreeWheelInput
-              value={malice.toString()}
-              onUpdate={(target) => {
-                const value = RoomTrackersZod.parse({
-                  ...trackers,
-                  malice: parseNumber(target.value, {
-                    min: -9999,
-                    max: 9999,
-                    truncate: true,
-                    inlineMath: { previousValue: malice },
-                  }),
-                });
-                OBR.room.setMetadata({
-                  [getPluginId("trackers")]: value,
-                });
-                setTrackers(value);
-              }}
-              clearContentOnFocus
-            />
-          </Input>
-        </div>
-        <div>
-          <Label variant="small">Hero Tokens</Label>
-
-          <Input>
-            <FreeWheelInput
-              value={heroTokens.toString()}
-              onUpdate={(target) => {
-                const value = RoomTrackersZod.parse({
-                  ...trackers,
-                  heroTokens: parseNumber(target.value, {
-                    min: -9999,
-                    max: 9999,
-                    truncate: true,
-                    inlineMath: { previousValue: heroTokens },
-                  }),
-                });
-                OBR.room.setMetadata({
-                  [getPluginId("trackers")]: value,
-                });
-                setTrackers(value);
-              }}
-              clearContentOnFocus
-            />
-          </Input>
-        </div>
+    <div className="bg-mirage-950 mx-4 flex gap-4 rounded-2xl p-4">
+      <div>
+        <Label variant="small">Malice</Label>
+        <Input>
+          <FreeWheelInput
+            value={malice.toString()}
+            onUpdate={(target) => {
+              const value = RoomTrackersZod.parse({
+                ...trackers,
+                malice: parseNumber(target.value, {
+                  min: -9999,
+                  max: 9999,
+                  truncate: true,
+                  inlineMath: { previousValue: malice },
+                }),
+              });
+              OBR.room.setMetadata({
+                [getPluginId("trackers")]: value,
+              });
+              setTrackers(value);
+            }}
+            clearContentOnFocus
+          />
+        </Input>
       </div>
-      <div className="flex flex-wrap gap-4">
-        <Button
-          onClick={() =>
-            OBR.room.setMetadata({
-              [getPluginId("trackers")]: {} satisfies RoomTrackers,
-            })
-          }
-        >
-          Delete Values
-        </Button>
+      <div>
+        <Label variant="small">Hero Tokens</Label>
+        <Input>
+          <FreeWheelInput
+            value={heroTokens.toString()}
+            onUpdate={(target) => {
+              const value = RoomTrackersZod.parse({
+                ...trackers,
+                heroTokens: parseNumber(target.value, {
+                  min: -9999,
+                  max: 9999,
+                  truncate: true,
+                  inlineMath: { previousValue: heroTokens },
+                }),
+              });
+              OBR.room.setMetadata({
+                [getPluginId("trackers")]: value,
+              });
+              setTrackers(value);
+            }}
+            clearContentOnFocus
+          />
+        </Input>
       </div>
     </div>
   );
