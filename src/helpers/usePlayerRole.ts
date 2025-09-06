@@ -1,7 +1,7 @@
 import OBR from "@owlbear-rodeo/sdk";
 import { useEffect, useState } from "react";
 
-export default function usePlayerName() {
+export default function usePlayerRole() {
   const [playerRole, setPlayerRole] = useState("");
 
   useEffect(() => {

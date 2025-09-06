@@ -7,6 +7,7 @@ import usePlayerName from "../helpers/usePlayerName";
 import { useDiceRoller } from "../helpers/diceCommunicationHelpers";
 import type { Roll, RollAttributes } from "../types/diceRollerTypes";
 import { defaultRollerAttributes, powerRoll } from "./diceRoller/helpers";
+import { Header } from "./header/Header";
 
 function ActionMenu() {
   const playerName = usePlayerName();
@@ -45,7 +46,8 @@ function ActionMenu() {
   const diceRoller = useDiceRoller({ onRollResult: handleRollResult });
 
   return (
-    <div className="text-foreground flex h-screen flex-col gap-4 py-2">
+    <div className="text-foreground flex h-screen flex-col gap-4 pb-2">
+      <Header diceRoller={diceRoller} setRollAttributes={setRollAttributes} />
       <ResourceTracker />
       <DiceRoller
         playerName={playerName}

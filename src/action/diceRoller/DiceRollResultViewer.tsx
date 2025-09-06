@@ -1,6 +1,6 @@
 import type { Roll } from "../../types/diceRollerTypes";
 import { netEdgesTextAndLabel } from "./helpers";
-import D10Icon from "../../components/icons/D10";
+import D10Icon from "../../components/icons/D10Icon";
 import { cn } from "../../helpers/utils";
 import { Separator } from "../../components/ui/Separator";
 
