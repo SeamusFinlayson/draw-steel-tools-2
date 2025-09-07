@@ -93,9 +93,10 @@ export function Header({
                 const themeMode = (await OBR.theme.getTheme()).mode;
                 OBR.popover.open({
                   id: getPluginId("settings"),
-                  url: `/src/settings/settings.html?themeMode=${themeMode}`,
-                  height: 500,
-                  width: 400,
+                  url: `/settings?themeMode=${themeMode}`,
+                  height: 400,
+                  width: 500,
+                  hidePaper: false,
                 });
               }}
             >

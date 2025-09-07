@@ -7,6 +7,8 @@
   --accent: #9966ff;
   --accent-foreground: #f5f2ff;
   --foreground: var(--color-black);
+  --foreground-inverse: var(--color-white);
+  --foreground-secondary: rgba(0, 0, 0, 0.6);
   --foreground-secondary: rgba(0, 0, 0, 0.6);
 }
 
@@ -14,6 +16,7 @@
   --accent: #bb99ff;
   --accent-foreground: #350c69;
   --foreground: var(--color-white);
+  --foreground-inverse: var(--color-black);
   --foreground-secondary: rgba(255, 255, 255, 0.7);
 }
 
@@ -21,6 +24,7 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-foreground: var(--foreground);
+  --color-foreground-inverse: var(--foreground-inverse);
   --color-foreground-secondary: var(--foreground-secondary);
 }
 
@@ -36,6 +40,10 @@
   --color-mirage-800: #3d4051;
   --color-mirage-900: #353745;
   --color-mirage-950: #23242e;
+
+  --breakpoint-sm: 24rem;
+  --breakpoint-md: 32rem;
+  --breakpoint-lg: 40rem;
 }
 
 button {

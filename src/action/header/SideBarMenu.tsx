@@ -20,6 +20,7 @@ import {
 import { ScrollArea } from "../../components/ui/scrollArea";
 import type React from "react";
 import PatreonIcon from "../../components/icons/PatreonIcon";
+import { cn } from "../../helpers/utils";
 
 export default function SideBarMenu({
   children,
@@ -53,7 +54,11 @@ export default function SideBarMenu({
           {/* <div aria-label="autofocus capture" tabIndex={0} /> */}
           <div className="mb-2 grid items-center">
             {children}
-            <div className="text-foreground-secondary mt-4 mb-1 px-4 text-sm">
+            <div
+              className={cn("text-foreground-secondary mb-2 px-4 text-sm", {
+                "mt-4": children,
+              })}
+            >
               Links
             </div>
             <LinkButton

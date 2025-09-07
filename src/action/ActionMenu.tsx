@@ -9,7 +9,7 @@ import type { Roll, RollAttributes } from "../types/diceRollerTypes";
 import { defaultRollerAttributes, powerRoll } from "./diceRoller/helpers";
 import { Header } from "./header/Header";
 import { ScrollArea } from "../components/ui/scrollArea";
-import ActionHeightMatch from "./ActionHeightMatch";
+import HeightMatch from "../components/logic/HeightMatch";
 
 function ActionMenu() {
   const playerName = usePlayerName();
@@ -47,10 +47,15 @@ function ActionMenu() {
   );
   const diceRoller = useDiceRoller({ onRollResult: handleRollResult });
 
+  const setActionHeight = useCallback(
+    (height: number) => OBR.action.setHeight(height),
+    [],
+  );
+
   return (
     <div className="h-screen">
       <ScrollArea className="h-full" type="always">
-        <ActionHeightMatch>
+        <HeightMatch setHeight={setActionHeight}>
           <div className="text-foreground flex flex-col gap-4 pb-4">
             <Header
               diceRoller={diceRoller}
@@ -68,7 +73,7 @@ function ActionMenu() {
               diceRoller={diceRoller}
             />
           </div>
-        </ActionHeightMatch>
+        </HeightMatch>
       </ScrollArea>
     </div>
   );

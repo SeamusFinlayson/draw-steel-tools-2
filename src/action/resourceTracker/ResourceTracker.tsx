@@ -1,18 +1,17 @@
-import { useEffect, useState } from "react";
 import Input from "../../components/ui/Input";
-import type { Metadata } from "@owlbear-rodeo/sdk";
 import { getPluginId } from "../../helpers/getPluginId";
 import OBR from "@owlbear-rodeo/sdk";
-import {
-  RoomTrackersZod,
-  type RoomTrackers,
-} from "../../types/roomTrackersTypes";
+import { RoomTrackersZod } from "../../types/roomTrackersTypes";
 import FreeWheelInput from "../../components/logic/FreeWheelInput";
 import Label from "../../components/ui/Label";
 import parseNumber from "../../helpers/parseNumber";
+import { useRoomMetadata } from "../../helpers/roomMetadata";
 
 export default function ResourceTracker() {
-  const { trackers, setTrackers } = useRoomTrackers();
+  const [trackers, setTrackers] = useRoomMetadata(
+    getPluginId("trackers"),
+    RoomTrackersZod.parse,
+  );
   const malice = trackers?.malice ? trackers.malice : 0;
   const heroTokens = trackers?.heroTokens ? trackers.heroTokens : 0;
 
@@ -32,9 +31,6 @@ export default function ResourceTracker() {
                   truncate: true,
                   inlineMath: { previousValue: malice },
                 }),
-              });
-              OBR.room.setMetadata({
-                [getPluginId("trackers")]: value,
               });
               setTrackers(value);
             }}
@@ -68,24 +64,4 @@ export default function ResourceTracker() {
       </div>
     </div>
   );
-}
-
-function parseMetadataTrackers(metadata: Metadata) {
-  const trackerMetadata = metadata[getPluginId("trackers")];
-  const validation = RoomTrackersZod.safeParse(trackerMetadata);
-  return validation.success ? validation.data : undefined;
-}
-
-function useRoomTrackers() {
-  const [trackers, setTrackers] = useState<RoomTrackers>();
-
-  useEffect(() => {
-    const handleRoomMetadata = (metadata: Metadata) => {
-      setTrackers(parseMetadataTrackers(metadata));
-    };
-    OBR.room.getMetadata().then(handleRoomMetadata);
-    return OBR.room.onMetadataChange(handleRoomMetadata);
-  }, []);
-
-  return { trackers, setTrackers };
 }

@@ -1,7 +1,6 @@
-import OBR from "@owlbear-rodeo/sdk";
 import React, { useEffect, useRef } from "react";
 
-function useActionHeightMatch() {
+function useHeightMatch(setHeight: (height: number) => void) {
   const heightReferenceDivRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -9,25 +8,27 @@ function useActionHeightMatch() {
     const resizeObserver = new ResizeObserver((entries) => {
       if (entries.length > 0) {
         const height = entries[0].borderBoxSize[0].blockSize;
-        OBR.action.setHeight(height);
+        setHeight(height);
       }
     });
     resizeObserver.observe(heightReferenceDivRef.current);
     return () => {
-      OBR.action.setHeight(600);
+      setHeight(600);
       resizeObserver.disconnect();
     };
-  }, [heightReferenceDivRef]);
+  }, [heightReferenceDivRef, setHeight]);
 
   return heightReferenceDivRef;
 }
 
-export default function ActionHeightMatch({
+export default function HeightMatch({
   children,
+  setHeight,
 }: {
   children: React.ReactNode;
+  setHeight: (height: number) => void;
 }) {
-  const heightReferenceDivRef = useActionHeightMatch();
+  const heightReferenceDivRef = useHeightMatch(setHeight);
 
   return <div ref={heightReferenceDivRef}>{children}</div>;
 }
