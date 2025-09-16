@@ -67,6 +67,9 @@ export default function TokenEditor() {
       (item) => item.id === token.item.id,
       (items) => {
         if (items.length !== 1) throw new Error("Too many items selected.");
+        if (characterTokenData.name && characterTokenData.name.length > 0) {
+          items[0].name = characterTokenData.name;
+        }
         const existingDataValidation = CharacterTokenDataZod.safeParse(
           items[0].metadata[TOKEN_METADATA_KEY],
         );
