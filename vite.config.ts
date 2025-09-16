@@ -11,6 +11,8 @@ export default defineConfig({
       input: {
         action: resolve(__dirname, "action.html"),
         settings: resolve(__dirname, "settings.html"),
+        background: resolve(__dirname, "background.html"),
+        contextMenu: resolve(__dirname, "contextMenu.html"),
       },
     },
   },

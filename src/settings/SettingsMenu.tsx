@@ -4,12 +4,13 @@ import { ScrollArea } from "../components/ui/scrollArea";
 import SettingsList from "./SettingsList";
 import OBR from "@owlbear-rodeo/sdk";
 import { getPluginId } from "../helpers/getPluginId";
-import { useRoomMetadata } from "../helpers/roomMetadata";
-import { SettingsZod } from "../types/settings";
+import { useRoomMetadata } from "../helpers/useRoomMetadata";
+import { SettingsZod } from "../types/settingsZod";
+import { SETTINGS_METADATA_KEY } from "../helpers/settingsHelpers";
 
 export default function SettingsMenu() {
   const [settings, setSettings, ready] = useRoomMetadata(
-    getPluginId("metadata"),
+    SETTINGS_METADATA_KEY,
     SettingsZod.parse,
   );
 
@@ -23,7 +24,12 @@ export default function SettingsMenu() {
         <ScrollArea className="h-full" type="always">
           <HeightMatch setHeight={setPopoverHeight}>
             <div className="space-y-4 p-4 sm:p-6">
-              <h1 className="w-full text-lg font-bold">Room Settings</h1>
+              <h1 className="w-full text-lg font-bold">
+                <span>Draw Steel Tools </span>
+                <span className="text-foreground-secondary font-normal">
+                  Room Settings
+                </span>
+              </h1>
               <div className="text-foreground flex flex-col gap-4">
                 <SettingsList settings={settings} setSettings={setSettings} />
               </div>

@@ -11,15 +11,8 @@ import Input from "../components/ui/Input";
 import FreeWheelInput from "../components/logic/FreeWheelInput";
 import parseNumber from "../helpers/parseNumber";
 import { ToggleGroup, ToggleGroupItem } from "../components/ui/toggleGroup";
-import type { Settings } from "../types/settings";
-
-const defaultSettings = {
-  nameTagsEnabled: false,
-  verticalOffset: 0,
-  alignHealthBarsTop: false,
-  showHealthBars: false,
-  segmentsCount: 0,
-};
+import type { Settings } from "../types/settingsZod";
+import { defaultSettings } from "../helpers/settingsHelpers";
 
 export default function SettingsList({
   settings,
@@ -71,7 +64,7 @@ export default function SettingsList({
       />
       <SettingsRow
         icon={
-          definedSettings.alignHealthBarsTop ? (
+          definedSettings.justifyHealthBarsTop ? (
             <AlignVerticalJustifyStartIcon />
           ) : (
             <AlignVerticalJustifyEndIcon />
@@ -82,12 +75,12 @@ export default function SettingsList({
         action={
           <ToggleGroup
             aria-label="Vertical Justification"
-            value={definedSettings.alignHealthBarsTop ? "top" : "bottom"}
+            value={definedSettings.justifyHealthBarsTop ? "top" : "bottom"}
             onValueChange={(value) => {
               if (value === "") return;
               setSettings({
                 ...settings,
-                alignHealthBarsTop: value === "top",
+                justifyHealthBarsTop: value === "top",
               });
             }}
             type="single"
@@ -171,7 +164,7 @@ function SettingsRow({
     <div>
       <div
         className={cn(
-          "bg-mirage-100 dark:bg-mirage-900 flex gap-2 rounded-2xl p-2",
+          "bg-mirage-100 dark:bg-mirage-900 flex gap-2 rounded-lg p-2",
           { "rounded-b-none": last === false },
         )}
       >
@@ -215,7 +208,7 @@ function SubSettingsRow({
       <div className="pt-0.5">
         <div
           className={cn(
-            "bg-mirage-100 dark:bg-mirage-900 flex gap-2 rounded-b-2xl p-2",
+            "bg-mirage-100 dark:bg-mirage-900 flex gap-2 rounded-b-lg p-2",
             { "rounded-b-none": last === false },
           )}
         >

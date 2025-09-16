@@ -7,9 +7,9 @@ export const buttonVariants = cva(
       variant: {
         outline:
           "border hover:bg-mirage-100/80 dark:hover:bg-mirage-900/80 text-mirage-950 dark:text-mirage-50 border-mirage-950/30 dark:border-mirage-50/30",
-        primary: "bg-accent text-accent-foreground  hover:bg-accent/90",
+        primary: "bg-accent text-accent-foreground hover:bg-accent/90",
         secondary:
-          "bg-mirage-100 text-mirage-950 hover:bg-mirage-100/80 dark:bg-mirage-900 dark:text-mirage-50 dark:hover:bg-mirage-900/80",
+          "bg-mirage-100 text-mirage-950 hover:bg-mirage-150 dark:bg-mirage-900 dark:text-mirage-50 dark:hover:bg-mirage-800",
         ghost:
           "hover:bg-black/7 dark:hover:bg-white/7 text-mirage-950 dark:text-mirage-50",
       },

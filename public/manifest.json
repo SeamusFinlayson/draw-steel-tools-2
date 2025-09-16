@@ -6,6 +6,7 @@
   "homepage_url": "https://seamus-finlayson.ca/pages/draw-steel-tools",
   "icon": "/logo.svg",
   "description": "Stamina and resource tracking + power rolls for Draw Steel!",
+  "background_url": "/background",
   "action": {
     "title": "Draw Steel Tools",
     "icon": "/dragon-head.svg",

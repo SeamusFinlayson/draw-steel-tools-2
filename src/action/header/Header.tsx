@@ -88,7 +88,7 @@ export function Header({
           {playerRole === "GM" && (
             <Button
               variant={"ghost"}
-              className="h-10 w-full items-center justify-start gap-4 rounded-none px-4"
+              className="h-10 w-full items-center justify-start gap-4 rounded-none px-4 active:rounded-none"
               onClick={async () => {
                 const themeMode = (await OBR.theme.getTheme()).mode;
                 OBR.popover.open({
@@ -100,7 +100,7 @@ export function Header({
                 });
               }}
             >
-              <div className="place-items- grid size-6">
+              <div className="grid size-6 place-items-center">
                 <Settings2 />
               </div>
               <div>Settings</div>

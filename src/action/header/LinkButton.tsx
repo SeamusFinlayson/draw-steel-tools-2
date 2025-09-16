@@ -16,7 +16,7 @@ export default function LinkButton({
     <Button
       asChild
       variant={"ghost"}
-      className="h-10 items-center justify-start gap-4 rounded-none px-4"
+      className="h-10 items-center justify-start gap-4 rounded-none px-4 active:rounded-none"
     >
       <a
         className={cn(

@@ -13,7 +13,6 @@ function useHeightMatch(setHeight: (height: number) => void) {
     });
     resizeObserver.observe(heightReferenceDivRef.current);
     return () => {
-      setHeight(600);
       resizeObserver.disconnect();
     };
   }, [heightReferenceDivRef, setHeight]);

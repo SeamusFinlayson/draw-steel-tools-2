@@ -1,11 +1,11 @@
 import Input from "../../components/ui/Input";
 import { getPluginId } from "../../helpers/getPluginId";
 import OBR from "@owlbear-rodeo/sdk";
-import { RoomTrackersZod } from "../../types/roomTrackersTypes";
+import { RoomTrackersZod } from "../../types/roomTrackersZod";
 import FreeWheelInput from "../../components/logic/FreeWheelInput";
 import Label from "../../components/ui/Label";
 import parseNumber from "../../helpers/parseNumber";
-import { useRoomMetadata } from "../../helpers/roomMetadata";
+import { useRoomMetadata } from "../../helpers/useRoomMetadata";
 
 export default function ResourceTracker() {
   const [trackers, setTrackers] = useRoomMetadata(
@@ -16,7 +16,7 @@ export default function ResourceTracker() {
   const heroTokens = trackers?.heroTokens ? trackers.heroTokens : 0;
 
   return (
-    <div className="bg-mirage-950 mx-4 flex gap-4 rounded-2xl p-4">
+    <div className="bg-mirage-50 dark:bg-mirage-950 mx-4 flex gap-4 rounded-2xl p-4">
       <div>
         <Label variant="small">Malice</Label>
         <Input>
