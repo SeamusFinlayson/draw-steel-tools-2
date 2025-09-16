@@ -5,13 +5,28 @@ import { RoomTrackersZod } from "../../types/roomTrackersZod";
 import FreeWheelInput from "../../components/logic/FreeWheelInput";
 import Label from "../../components/ui/Label";
 import parseNumber from "../../helpers/parseNumber";
-import { useRoomMetadata } from "../../helpers/useRoomMetadata";
 
-export default function ResourceTracker() {
-  const [trackers, setTrackers] = useRoomMetadata(
-    getPluginId("trackers"),
-    RoomTrackersZod.parse,
-  );
+export default function ResourceTracker({
+  trackers,
+  setTrackers,
+  playerRole,
+}: {
+  trackers:
+    | {
+        malice?: number | undefined;
+        heroTokens?: number | undefined;
+      }
+    | undefined;
+  setTrackers: (
+    newValue:
+      | {
+          malice?: number | undefined;
+          heroTokens?: number | undefined;
+        }
+      | undefined,
+  ) => void;
+  playerRole: "GM" | "PLAYER";
+}) {
   const malice = trackers?.malice ? trackers.malice : 0;
   const heroTokens = trackers?.heroTokens ? trackers.heroTokens : 0;
 
@@ -21,6 +36,7 @@ export default function ResourceTracker() {
         <Label variant="small">Malice</Label>
         <Input>
           <FreeWheelInput
+            disabled={playerRole === "PLAYER"}
             value={malice.toString()}
             onUpdate={(target) => {
               const value = RoomTrackersZod.parse({

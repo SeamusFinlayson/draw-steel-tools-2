@@ -261,7 +261,7 @@ export const surgesBackgroundId = (itemId: string) =>
 
 // Item Id utilities
 export function addAllExtensionAttachmentsToArray(
-  array: any[],
+  array: unknown[],
   itemId: string,
 ) {
   addHealthAttachmentsToArray(array, itemId);
@@ -270,18 +270,21 @@ export function addAllExtensionAttachmentsToArray(
   addNameTagAttachmentsToArray(array, itemId);
 }
 
-export function addHealthAttachmentsToArray(array: any[], itemId: string) {
+export function addHealthAttachmentsToArray(array: unknown[], itemId: string) {
   array.push(hpTextId(itemId), hpFillId(itemId), hpBackgroundId(itemId));
 }
 
-export function addArmorAttachmentsToArray(array: any[], itemId: string) {
+export function addArmorAttachmentsToArray(array: unknown[], itemId: string) {
   array.push(acTextId(itemId), acBackgroundId(itemId));
 }
 
-export function addTempHealthAttachmentsToArray(array: any[], itemId: string) {
+export function addTempHealthAttachmentsToArray(
+  array: unknown[],
+  itemId: string,
+) {
   array.push(thpTextId(itemId), thpBackgroundId(itemId));
 }
 
-export function addNameTagAttachmentsToArray(array: any[], itemId: string) {
+export function addNameTagAttachmentsToArray(array: unknown[], itemId: string) {
   array.push(getNameTagId(itemId));
 }

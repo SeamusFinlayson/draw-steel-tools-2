@@ -10,6 +10,17 @@ import { defaultRollerAttributes, powerRoll } from "./diceRoller/helpers";
 import { Header } from "./header/Header";
 import { ScrollArea } from "../components/ui/scrollArea";
 import HeightMatch from "../components/logic/HeightMatch";
+import { useRoomMetadata } from "../helpers/useRoomMetadata";
+import { getPluginId } from "../helpers/getPluginId";
+import { RoomTrackersZod } from "../types/roomTrackersZod";
+import usePlayerRole from "../helpers/usePlayerRole";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../components/ui/accordion";
+import { Badge } from "../components/ui/badge";
 
 function ActionMenu() {
   const playerName = usePlayerName();
@@ -18,6 +29,11 @@ function ActionMenu() {
   );
   const [diceResultViewerOpen, setDiceResultViewerOpen] = useState(false);
   const [result, setResult] = useState<Roll>();
+  const [trackers, setTrackers] = useRoomMetadata(
+    getPluginId("trackers"),
+    RoomTrackersZod.parse,
+  );
+  const playerRole = usePlayerRole();
 
   // External dice roller
   const handleRollResult = useCallback(
@@ -56,22 +72,71 @@ function ActionMenu() {
     <div className="h-screen">
       <ScrollArea className="h-full" type="always">
         <HeightMatch setHeight={setActionHeight}>
-          <div className="text-foreground flex flex-col gap-4 pb-4">
+          <div className="text-foreground flex flex-col pb-2">
             <Header
               diceRoller={diceRoller}
               setRollAttributes={setRollAttributes}
             />
-            <ResourceTracker />
-            <DiceRoller
-              playerName={playerName}
-              diceResultViewerOpen={diceResultViewerOpen}
-              setDiceResultViewerOpen={setDiceResultViewerOpen}
-              rollAttributes={rollAttributes}
-              setRollAttributes={setRollAttributes}
-              result={result}
-              setResult={setResult}
-              diceRoller={diceRoller}
-            />
+            <Accordion
+              type="single"
+              className="w-full"
+              collapsible
+              defaultValue="item-2"
+              // value={["item-1", "item-2"]}
+            >
+              <AccordionItem value="item-1">
+                <AccordionTrigger
+                  preview={
+                    <>
+                      <Badge text={`Malice: ${trackers?.malice}`} />
+                      <Badge text={`Hero Tokens: ${trackers?.heroTokens}`} />
+                    </>
+                  }
+                >
+                  Scene Resources
+                </AccordionTrigger>
+                <AccordionContent>
+                  <ResourceTracker
+                    trackers={trackers}
+                    setTrackers={setTrackers}
+                    playerRole={playerRole}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-2">
+                <AccordionTrigger
+                  alwaysShowPreview
+                  preview={
+                    result === undefined ? (
+                      <Badge text={"Make a Roll"} />
+                    ) : (
+                      <>
+                        <Badge text={`Total: ${result.total}`} />
+                        <Badge
+                          text={
+                            result.critical ? "Critical" : `Tier ${result.tier}`
+                          }
+                        />
+                      </>
+                    )
+                  }
+                >
+                  Power Roll
+                </AccordionTrigger>
+                <AccordionContent>
+                  <DiceRoller
+                    playerName={playerName}
+                    diceResultViewerOpen={diceResultViewerOpen}
+                    setDiceResultViewerOpen={setDiceResultViewerOpen}
+                    rollAttributes={rollAttributes}
+                    setRollAttributes={setRollAttributes}
+                    result={result}
+                    setResult={setResult}
+                    diceRoller={diceRoller}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </HeightMatch>
       </ScrollArea>
