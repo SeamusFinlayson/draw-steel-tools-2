@@ -111,7 +111,7 @@ function ActionMenu() {
                     </>
                   }
                 >
-                  Scene Resources
+                  Room Resources
                 </AccordionTrigger>
                 <AccordionContent>
                   <ResourceTracker
