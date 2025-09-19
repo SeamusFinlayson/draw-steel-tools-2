@@ -248,16 +248,10 @@ export const hpTextId = (itemId: string) => `${itemId}-health-text`;
 export const hpFillId = (itemId: string) => `${itemId}-health-fill`;
 export const hpBackgroundId = (itemId: string) => `${itemId}-health-background`;
 
-export const acTextId = (itemId: string) => `${itemId}-ac-text`;
-export const acBackgroundId = (itemId: string) => `${itemId}-ac-background`;
-
-export const thpTextId = (itemId: string) => `${itemId}-temp-hp-text`;
-export const thpBackgroundId = (itemId: string) =>
-  `${itemId}-temp-hp-background`;
-
-export const surgesTextId = (itemId: string) => `${itemId}-surges-text`;
-export const surgesBackgroundId = (itemId: string) =>
-  `${itemId}-surges-background`;
+export const bubbleBackgroundId = (itemId: string, i: number) =>
+  `${itemId}-${i}-bg`;
+export const bubbleTextId = (itemId: string, i: number) =>
+  `${itemId}-${i}-text`;
 
 // Item Id utilities
 export function addAllExtensionAttachmentsToArray(
@@ -265,24 +259,11 @@ export function addAllExtensionAttachmentsToArray(
   itemId: string,
 ) {
   addHealthAttachmentsToArray(array, itemId);
-  addArmorAttachmentsToArray(array, itemId);
-  addTempHealthAttachmentsToArray(array, itemId);
   addNameTagAttachmentsToArray(array, itemId);
 }
 
 export function addHealthAttachmentsToArray(array: unknown[], itemId: string) {
   array.push(hpTextId(itemId), hpFillId(itemId), hpBackgroundId(itemId));
-}
-
-export function addArmorAttachmentsToArray(array: unknown[], itemId: string) {
-  array.push(acTextId(itemId), acBackgroundId(itemId));
-}
-
-export function addTempHealthAttachmentsToArray(
-  array: unknown[],
-  itemId: string,
-) {
-  array.push(thpTextId(itemId), thpBackgroundId(itemId));
 }
 
 export function addNameTagAttachmentsToArray(array: unknown[], itemId: string) {

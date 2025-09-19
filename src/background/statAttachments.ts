@@ -4,10 +4,10 @@ import {
   DIAMETER,
   FULL_BAR_HEIGHT,
   SHORT_BAR_HEIGHT,
-  addArmorAttachmentsToArray,
   addHealthAttachmentsToArray,
   addNameTagAttachmentsToArray,
-  addTempHealthAttachmentsToArray,
+  bubbleBackgroundId,
+  bubbleTextId,
   createHealthBar,
   createNameTag,
   createStatBubble,
@@ -205,7 +205,10 @@ function createAttachments(item: Image, role: "PLAYER" | "GM", dpi: number) {
     // Display nothing, explicitly remove all attachments
     addHealthAttachmentsToArray(deleteItemsArray, item.id);
     for (let i = 0; i < 3; i++) {
-      deleteItemsArray.push(`${item.id}-${i}-bg`, `${item.id}-${i}-text`);
+      deleteItemsArray.push(
+        bubbleBackgroundId(item.id, i),
+        bubbleTextId(item.id, i),
+      );
     }
   } else if (role === "PLAYER" && token.gmOnly && settings.showHealthBars) {
     // Display limited stats depending on GM configuration
@@ -253,14 +256,17 @@ function createAttachments(item: Image, role: "PLAYER" | "GM", dpi: number) {
             stats[i].value,
             stats[i].color,
             bubblePosition,
-            `${item.id}-${i}-bg`,
-            `${item.id}-${i}-text`,
+            bubbleBackgroundId(item.id, i),
+            bubbleTextId(item.id, i),
           ),
         );
 
         bubblePosition.x -= DIAMETER + MARGIN;
       } else {
-        deleteItemsArray.push(`${item.id}-${i}-bg`, `${item.id}-${i}-text`);
+        deleteItemsArray.push(
+          bubbleBackgroundId(item.id, i),
+          bubbleTextId(item.id, i),
+        );
       }
     }
   }
@@ -301,8 +307,12 @@ function createAttachments(item: Image, role: "PLAYER" | "GM", dpi: number) {
   function createLimitedHealthBar() {
     // Clear other attachments
     deleteItemsArray.push(hpTextId(item.id));
-    addArmorAttachmentsToArray(deleteItemsArray, item.id);
-    addTempHealthAttachmentsToArray(deleteItemsArray, item.id);
+    for (let i = 0; i < 3; i++) {
+      deleteItemsArray.push(
+        bubbleBackgroundId(item.id, i),
+        bubbleTextId(item.id, i),
+      );
+    }
 
     // return early if health bar shouldn't be created
     if (token.staminaMaximum <= 0) {
@@ -310,7 +320,7 @@ function createAttachments(item: Image, role: "PLAYER" | "GM", dpi: number) {
       return;
     }
 
-    deleteItemsArray.push(`${item.id}health-label`);
+    deleteItemsArray.push(hpTextId(item.id));
     addItemsArray.push(
       ...createHealthBar(
         item,
