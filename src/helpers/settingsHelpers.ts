@@ -11,6 +11,8 @@ export const defaultSettings: DefinedSettings = {
   justifyHealthBarsTop: false,
   showHealthBars: false,
   segmentsCount: 0,
+  keepPowerRollBonus: false,
+  keepActivitiesOpen: false,
 };
 
 export async function getSettings(

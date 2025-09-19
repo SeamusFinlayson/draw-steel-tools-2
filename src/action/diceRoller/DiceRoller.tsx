@@ -10,7 +10,7 @@ import {
 import Button from "../../components/ui/Button";
 import FreeWheelInput from "../../components/logic/FreeWheelInput";
 import Label from "../../components/ui/Label";
-import { defaultRollerAttributes, powerRoll } from "./helpers";
+import getResetRollAttributes, { powerRoll } from "./helpers";
 import { createRollRequest } from "../../helpers/diceCommunicationHelpers";
 import Toggle from "../../components/ui/Toggle";
 import DiceStylePicker from "./DiceStylePicker";
@@ -35,6 +35,7 @@ import type {
   Roll,
   RollAttributes,
 } from "../../types/diceRollerTypes";
+import type { DefinedSettings } from "../../types/settingsZod";
 
 export default function DiceRoller({
   playerName,
@@ -45,6 +46,7 @@ export default function DiceRoller({
   setResult,
   diceResultViewerOpen,
   setDiceResultViewerOpen,
+  settings,
 }: {
   playerName: string;
   rollAttributes: RollAttributes;
@@ -54,6 +56,7 @@ export default function DiceRoller({
   setResult: React.Dispatch<React.SetStateAction<Roll | undefined>>;
   diceResultViewerOpen: boolean;
   setDiceResultViewerOpen: (diceRollerOpen: boolean) => void;
+  settings?: DefinedSettings;
 }) {
   const netEdges = rollAttributes.edges - rollAttributes.banes;
 
@@ -269,7 +272,9 @@ export default function DiceRoller({
                   dice: "2d10",
                 }),
               );
-              setRollAttributes({ ...defaultRollerAttributes });
+              setRollAttributes(
+                getResetRollAttributes(rollAttributes, settings),
+              );
             } else {
               setResult(undefined);
               diceRoller.requestRoll(
@@ -383,7 +388,9 @@ export default function DiceRoller({
                         dice: rollAttributes.diceOptions,
                       }),
                     );
-                    setRollAttributes({ ...defaultRollerAttributes });
+                    setRollAttributes(
+                      getResetRollAttributes(rollAttributes, settings),
+                    );
                   } else {
                     setResult(undefined);
                     diceRoller.requestRoll(

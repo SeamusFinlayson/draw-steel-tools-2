@@ -1,6 +1,8 @@
 import {
   AlignVerticalJustifyEndIcon,
   AlignVerticalJustifyStartIcon,
+  ChevronDownIcon,
+  DicesIcon,
   DramaIcon,
   MoveVerticalIcon,
   TagIcon,
@@ -57,7 +59,6 @@ export default function SettingsList({
                   verticalOffset: parseNumber(target.value),
                 })
               }
-              clearContentOnFocus
             />
           </Input>
         }
@@ -70,6 +71,7 @@ export default function SettingsList({
             <AlignVerticalJustifyEndIcon />
           )
         }
+        forceWrap
         label="Justification"
         description="Snap stat bubbles to the top or bottom of tokens"
         action={
@@ -141,6 +143,34 @@ export default function SettingsList({
           last
         />
       </SettingsRow>
+      <SettingsRow
+        label="Keep Power Roll Bonus"
+        icon={<DicesIcon />}
+        description="Prevent the bonus added to your power roll from being reset after each roll"
+        action={
+          <Switch
+            aria-label="Keep Power Roll Bonus"
+            checked={definedSettings.keepPowerRollBonus}
+            onCheckedChange={(checked) =>
+              setSettings({ ...settings, keepPowerRollBonus: checked })
+            }
+          />
+        }
+      />
+      <SettingsRow
+        label="Keep Activities Open"
+        icon={<ChevronDownIcon />}
+        description="Allow multiple activity drop downs to stay open at the same time"
+        action={
+          <Switch
+            aria-label="Keep Activities Open"
+            checked={definedSettings.keepActivitiesOpen}
+            onCheckedChange={(checked) =>
+              setSettings({ ...settings, keepActivitiesOpen: checked })
+            }
+          />
+        }
+      />
     </div>
   );
 }
@@ -152,6 +182,7 @@ function SettingsRow({
   action,
   children,
   last,
+  forceWrap,
 }: {
   icon?: React.JSX.Element;
   label: string;
@@ -159,6 +190,7 @@ function SettingsRow({
   action: React.JSX.Element;
   children?: React.JSX.Element | React.JSX.Element[];
   last?: boolean;
+  forceWrap?: boolean;
 }): React.JSX.Element {
   return (
     <div>
@@ -170,7 +202,9 @@ function SettingsRow({
       >
         <div className="stroke-foreground size-10 shrink-0 p-2">{icon}</div>
         <div className="flex grow flex-wrap justify-between gap-2">
-          <div className="min-w-36 grow basis-0">
+          <div
+            className={cn("min-w-36 grow basis-0", { "basis-full": forceWrap })}
+          >
             <h1>{label}</h1>
             <div className="text-foreground-secondary text-xs">
               {description}

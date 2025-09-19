@@ -1,12 +1,15 @@
 import DiceRoller from "./diceRoller/DiceRoller";
 import ResourceTracker from "./resourceTracker/ResourceTracker";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import * as DiceProtocol from "../diceProtocol";
 import OBR from "@owlbear-rodeo/sdk";
 import usePlayerName from "../helpers/usePlayerName";
 import { useDiceRoller } from "../helpers/diceCommunicationHelpers";
 import type { Roll, RollAttributes } from "../types/diceRollerTypes";
-import { defaultRollerAttributes, powerRoll } from "./diceRoller/helpers";
+import getResetRollAttributes, {
+  defaultRollerAttributes,
+  powerRoll,
+} from "./diceRoller/helpers";
 import { Header } from "./header/Header";
 import { ScrollArea } from "../components/ui/scrollArea";
 import HeightMatch from "../components/logic/HeightMatch";
@@ -21,6 +24,11 @@ import {
   AccordionTrigger,
 } from "../components/ui/accordion";
 import { Badge } from "../components/ui/badge";
+import {
+  defaultSettings,
+  SETTINGS_METADATA_KEY,
+} from "../helpers/settingsHelpers";
+import { SettingsZod } from "../types/settingsZod";
 
 function ActionMenu() {
   const playerName = usePlayerName();
@@ -34,6 +42,12 @@ function ActionMenu() {
     RoomTrackersZod.parse,
   );
   const playerRole = usePlayerRole();
+
+  const [settings] = useRoomMetadata(SETTINGS_METADATA_KEY, SettingsZod.parse);
+  const definedSettings = useMemo(
+    () => ({ ...defaultSettings, ...settings }),
+    [settings],
+  );
 
   // External dice roller
   const handleRollResult = useCallback(
@@ -56,10 +70,11 @@ function ActionMenu() {
             data.rollProperties.dice === "3d10kl2" ? "lowest" : "highest",
         }),
       );
-
-      setRollAttributes({ ...defaultRollerAttributes });
+      setRollAttributes(
+        getResetRollAttributes(rollAttributes, definedSettings),
+      );
     },
-    [playerName],
+    [playerName, definedSettings, rollAttributes],
   );
   const diceRoller = useDiceRoller({ onRollResult: handleRollResult });
 
@@ -78,11 +93,14 @@ function ActionMenu() {
               setRollAttributes={setRollAttributes}
             />
             <Accordion
-              type="single"
+              {...(definedSettings.keepActivitiesOpen
+                ? { type: "multiple" }
+                : {
+                    type: "single",
+                    defaultValue: "item-2",
+                    collapsible: true,
+                  })}
               className="w-full"
-              collapsible
-              defaultValue="item-2"
-              // value={["item-1", "item-2"]}
             >
               <AccordionItem value="item-1">
                 <AccordionTrigger
@@ -133,6 +151,7 @@ function ActionMenu() {
                     result={result}
                     setResult={setResult}
                     diceRoller={diceRoller}
+                    settings={definedSettings}
                   />
                 </AccordionContent>
               </AccordionItem>

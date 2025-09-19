@@ -1,7 +1,6 @@
-import { PlugZap, Settings2, UnplugIcon } from "lucide-react";
+import { PlugZap, UnplugIcon } from "lucide-react";
 import ConnectedDiceIcon from "../../components/icons/ConnectedDiceIcon";
 import Button from "../../components/ui/Button";
-import usePlayerRole from "../../helpers/usePlayerRole";
 import type { DiceRoller, RollAttributes } from "../../types/diceRollerTypes";
 import { useEffect, useState } from "react";
 import {
@@ -10,8 +9,6 @@ import {
   TooltipTrigger,
 } from "../../components/ui/tooltip";
 import SideBarMenu from "./SideBarMenu";
-import OBR from "@owlbear-rodeo/sdk";
-import { getPluginId } from "../../helpers/getPluginId";
 
 export function Header({
   setRollAttributes: setRollAttributes,
@@ -20,7 +17,6 @@ export function Header({
   setRollAttributes: React.Dispatch<React.SetStateAction<RollAttributes>>;
   diceRoller: DiceRoller;
 }) {
-  const playerRole = usePlayerRole();
   const [noDiceRollersFound, setNoDiceRollersFound] = useState(true);
   useEffect(() => {
     if (diceRoller.config) setNoDiceRollersFound(false);
@@ -84,29 +80,7 @@ export function Header({
           </Tooltip>
         )}
 
-        <SideBarMenu>
-          {playerRole === "GM" && (
-            <Button
-              variant={"ghost"}
-              className="h-10 w-full items-center justify-start gap-4 rounded-none px-4 active:rounded-none"
-              onClick={async () => {
-                const themeMode = (await OBR.theme.getTheme()).mode;
-                OBR.popover.open({
-                  id: getPluginId("settings"),
-                  url: `/settings?themeMode=${themeMode}`,
-                  height: 400,
-                  width: 500,
-                  hidePaper: false,
-                });
-              }}
-            >
-              <div className="grid size-6 place-items-center">
-                <Settings2 />
-              </div>
-              <div>Settings</div>
-            </Button>
-          )}
-        </SideBarMenu>
+        <SideBarMenu />
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import type {
   Roll,
   RollAttributes,
 } from "../../types/diceRollerTypes";
+import type { DefinedSettings } from "../../types/settingsZod";
 
 export function powerRoll(
   args: {
@@ -150,3 +151,13 @@ export const defaultRollerAttributes = {
   diceOptions: "2d10",
   visibility: "shared",
 } satisfies RollAttributes;
+
+export default function getResetRollAttributes(
+  rollAttributes: RollAttributes,
+  settings?: DefinedSettings,
+) {
+  return {
+    ...defaultRollerAttributes,
+    ...(settings?.keepPowerRollBonus ? { bonus: rollAttributes.bonus } : {}),
+  };
+}
