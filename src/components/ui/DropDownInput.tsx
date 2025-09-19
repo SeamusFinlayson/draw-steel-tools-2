@@ -3,6 +3,7 @@ import FreeWheelInput from "../logic/FreeWheelInput";
 import Input from "./Input";
 import Label from "./Label";
 import GroupDropDown from "./UnderlineDropDown";
+import { cn } from "../../helpers/utils";
 
 export function DropDownInput({
   label,
@@ -19,7 +20,9 @@ export function DropDownInput({
 
   return (
     <div>
-      <Label variant="small">{label}</Label>
+      <Label className={cn({ "opacity-50": disabled })} variant="small">
+        {label}
+      </Label>
       <Input>
         <FreeWheelInput
           onFocus={() => setHasFocus(true)}
