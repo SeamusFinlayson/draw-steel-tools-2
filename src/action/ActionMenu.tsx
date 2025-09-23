@@ -85,7 +85,7 @@ function ActionMenu() {
   );
 
   return (
-    <div className="h-screen">
+    <div className="bg-mirage-50/75 dark:bg-mirage-950/50 h-screen">
       <ScrollArea className="h-full" type="always">
         <HeightMatch setHeight={setActionHeight}>
           <div className="text-foreground flex flex-col pb-2">
