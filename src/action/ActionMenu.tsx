@@ -70,9 +70,10 @@ function ActionMenu() {
             data.rollProperties.dice === "3d10kl2" ? "lowest" : "highest",
         }),
       );
-      setRollAttributes(
-        getResetRollAttributes(rollAttributes, definedSettings),
-      );
+      setRollAttributes({
+        ...getResetRollAttributes(rollAttributes, definedSettings),
+        style: rollAttributes.style,
+      });
     },
     [playerName, definedSettings, rollAttributes],
   );
