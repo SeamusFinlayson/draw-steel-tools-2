@@ -11,7 +11,7 @@ export function NameValueLabel({
     <div className="pointer-events-none grid pb-0.5">
       <div
         data-show-value={showValue}
-        className="text-foreground-secondary col-start-1 row-start-1 block overflow-clip text-xs font-normal text-nowrap text-ellipsis transition-all duration-150 data-[show-value=true]:opacity-0"
+        className="text-foreground col-start-1 row-start-1 block overflow-clip text-xs font-normal text-nowrap text-ellipsis transition-all duration-150 data-[show-value=true]:opacity-0"
       >
         {name}
       </div>

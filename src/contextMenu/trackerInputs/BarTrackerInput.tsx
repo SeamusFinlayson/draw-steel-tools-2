@@ -32,7 +32,7 @@ export default function BarTrackerInput({
             !(valueHasFocus && parentValue !== "0") &&
             !(maxHasFocus && parentMax !== "0")
           }
-          className="text-foreground-secondary col-span-2 col-start-1 row-start-1 block overflow-clip text-xs font-normal text-nowrap text-ellipsis opacity-0 transition-all duration-150 data-[visible=true]:opacity-100"
+          className="text-foreground col-span-2 col-start-1 row-start-1 block overflow-clip text-xs font-normal text-nowrap text-ellipsis opacity-0 transition-all duration-150 data-[visible=true]:opacity-100"
         >
           {label}
         </div>
