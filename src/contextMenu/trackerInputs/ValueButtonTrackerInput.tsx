@@ -38,7 +38,7 @@ export default function ValueButtonTrackerInput({
 
   return (
     <div className="group text-foreground w-full">
-      <div title={labelTitle} className="text-foreground-secondary">
+      <div title={labelTitle}>
         <NameValueLabel
           name={label}
           value={parentValue.toString()}

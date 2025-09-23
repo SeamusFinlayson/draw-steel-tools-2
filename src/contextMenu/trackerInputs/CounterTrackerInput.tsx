@@ -25,13 +25,11 @@ export default function CounterTracker({
 
   return (
     <div className="group text-foreground w-full">
-      <div className="text-foreground-secondary">
-        <NameValueLabel
-          name={label}
-          value={parentValue.toString()}
-          showValue={hasFocus && parentValue !== 0}
-        />
-      </div>
+      <NameValueLabel
+        name={label}
+        value={parentValue.toString()}
+        showValue={hasFocus && parentValue !== 0}
+      />
 
       <InputBackground className="overflow-clip" color={color}>
         <div className="flex">
