@@ -9,7 +9,7 @@ import { SettingsZod } from "../types/settingsZod";
 import { SETTINGS_METADATA_KEY } from "../helpers/settingsHelpers";
 
 export default function SettingsMenu() {
-  const [settings, setSettings, ready] = useRoomMetadata(
+  const settingsMetadata = useRoomMetadata(
     SETTINGS_METADATA_KEY,
     SettingsZod.parse,
   );
@@ -20,7 +20,7 @@ export default function SettingsMenu() {
 
   return (
     <div className="text-foreground bg-mirage-50 dark:bg-mirage-950 h-screen">
-      {ready && (
+      {settingsMetadata.ready && (
         <ScrollArea className="h-full" type="always">
           <HeightMatch setHeight={setPopoverHeight}>
             <div className="space-y-4 p-4 sm:p-6">
@@ -31,7 +31,10 @@ export default function SettingsMenu() {
                 </span>
               </h1>
               <div className="text-foreground flex flex-col gap-4">
-                <SettingsList settings={settings} setSettings={setSettings} />
+                <SettingsList
+                  settings={settingsMetadata.value}
+                  setSettings={settingsMetadata.update}
+                />
               </div>
             </div>
           </HeightMatch>
