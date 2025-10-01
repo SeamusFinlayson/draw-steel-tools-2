@@ -37,16 +37,19 @@ function ActionMenu() {
   );
   const [diceResultViewerOpen, setDiceResultViewerOpen] = useState(false);
   const [result, setResult] = useState<Roll>();
-  const [trackers, setTrackers] = useRoomMetadata(
+  const trackerMetadata = useRoomMetadata(
     getPluginId("trackers"),
     RoomTrackersZod.parse,
   );
   const playerRole = usePlayerRole();
 
-  const [settings] = useRoomMetadata(SETTINGS_METADATA_KEY, SettingsZod.parse);
+  const settingsMetadata = useRoomMetadata(
+    SETTINGS_METADATA_KEY,
+    SettingsZod.parse,
+  );
   const definedSettings = useMemo(
-    () => ({ ...defaultSettings, ...settings }),
-    [settings],
+    () => ({ ...defaultSettings, ...settingsMetadata.value }),
+    [settingsMetadata],
   );
 
   // External dice roller
@@ -107,8 +110,12 @@ function ActionMenu() {
                 <AccordionTrigger
                   preview={
                     <>
-                      <Badge text={`Malice: ${trackers?.malice}`} />
-                      <Badge text={`Hero Tokens: ${trackers?.heroTokens}`} />
+                      <Badge
+                        text={`Malice: ${trackerMetadata.value ? trackerMetadata.value.malice : 0}`}
+                      />
+                      <Badge
+                        text={`Hero Tokens: ${trackerMetadata.value ? trackerMetadata.value.heroTokens : 0}`}
+                      />
                     </>
                   }
                 >
@@ -116,8 +123,8 @@ function ActionMenu() {
                 </AccordionTrigger>
                 <AccordionContent>
                   <ResourceTracker
-                    trackers={trackers}
-                    setTrackers={setTrackers}
+                    trackers={trackerMetadata.value}
+                    setTrackers={trackerMetadata.update}
                     playerRole={playerRole}
                   />
                 </AccordionContent>

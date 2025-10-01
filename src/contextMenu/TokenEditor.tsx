@@ -22,7 +22,10 @@ import CounterTracker from "./trackerInputs/CounterTrackerInput";
 import { cn } from "../helpers/utils";
 import Toggle from "../components/ui/Toggle";
 import { useRoomMetadata } from "../helpers/useRoomMetadata";
-import { SETTINGS_METADATA_KEY } from "../helpers/settingsHelpers";
+import {
+  defaultSettings,
+  SETTINGS_METADATA_KEY,
+} from "../helpers/settingsHelpers";
 import { SettingsZod } from "../types/settingsZod";
 import usePlayerRole from "../helpers/usePlayerRole";
 
@@ -46,12 +49,14 @@ export default function TokenEditor() {
     });
   }, []);
 
-  const [roomSettings] = useRoomMetadata(
+  const settingsMetadata = useRoomMetadata(
     SETTINGS_METADATA_KEY,
     SettingsZod.parse,
   );
 
-  if (token === undefined || roomSettings === undefined) return <></>;
+  if (token === undefined || !settingsMetadata.ready) return <></>;
+
+  const definedSettings = { ...defaultSettings, ...settingsMetadata.value };
 
   const updateToken = (
     characterTokenData: Partial<DefinedCharacterTokenData>,
@@ -275,7 +280,7 @@ export default function TokenEditor() {
 
   return (
     <div className="text-foreground space-y-2 p-2">
-      {roomSettings.nameTagsEnabled && NameInput}
+      {definedSettings.nameTagsEnabled && NameInput}
       {StatEditor}
       {playerRole === "GM" && VisibilityToggle}
     </div>
