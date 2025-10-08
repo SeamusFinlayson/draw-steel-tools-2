@@ -267,7 +267,35 @@ export default function TokenEditor() {
                 color="DEFAULT"
                 className="flex grow overflow-clip"
               >
-                <button className="hover:bg-foreground/7 focus-visible:bg-foreground/7 w-full">
+                <button
+                  className="hover:bg-foreground/7 focus-visible:bg-foreground/7 w-full"
+                  onClick={() => {
+                    OBR.popover.open({
+                      id: getPluginId("statblockSearch"),
+                      url: (() => {
+                        const url = new URL(
+                          "/statblockViewer",
+                          window.location.origin,
+                        );
+                        url.searchParams.set(
+                          "statblockName",
+                          token.statblockName,
+                        );
+                        return url.toString();
+                      })(),
+                      height: 2000,
+                      width: 500,
+                      anchorOrigin: {
+                        horizontal: "RIGHT",
+                        vertical: "TOP",
+                      },
+                      transformOrigin: {
+                        horizontal: "CENTER",
+                        vertical: "CENTER",
+                      },
+                    });
+                  }}
+                >
                   <div className="flex h-9 items-center-safe justify-center text-sm">
                     {token.statblockName}
                   </div>

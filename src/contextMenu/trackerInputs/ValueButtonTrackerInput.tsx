@@ -36,6 +36,11 @@ export default function ValueButtonTrackerInput({
     />
   );
 
+  const { clearContentsOnFocus, ...rest } = {
+    clearContentsOnFocus: false,
+    ...inputProps,
+  };
+
   return (
     <div className="group text-foreground w-full">
       <div title={labelTitle}>
@@ -51,15 +56,13 @@ export default function ValueButtonTrackerInput({
       <InputBackground className="w-full overflow-clip" color={color}>
         <div className="flex w-full">
           <FreeWheelInput
-            {...inputProps}
+            {...rest}
             onFocus={() => setHasFocus(true)}
             onBlur={() => setHasFocus(false)}
             value={parentValue.toString()}
             onUpdate={updateHandler}
             clearContentOnFocus={
-              inputProps?.clearContentsOnFocus === undefined
-                ? true
-                : inputProps.clearContentsOnFocus
+              clearContentsOnFocus === undefined ? true : clearContentsOnFocus
             }
             className={cn(
               "w-full bg-transparent text-center outline-hidden",

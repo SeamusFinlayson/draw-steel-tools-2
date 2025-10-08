@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./../index.css";
 import { PluginGate } from "../components/logic/PluginGate.tsx";
 import { syncThemeMode } from "../helpers/syncThemeMode.ts";
-import App from "./StatblockSearch.tsx";
+import App from "./App.tsx";
 
 syncThemeMode();
 
