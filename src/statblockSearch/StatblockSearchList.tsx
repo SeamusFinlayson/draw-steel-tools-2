@@ -5,6 +5,7 @@ import { MonsterPreviewCard } from "./MonsterPreviewCard";
 import { getMonsterDataBundle } from "./helpers/getMonsterDataBundle";
 import type { AppState } from "../types/statblockLookupAppState";
 import parseNumber from "../helpers/parseNumber";
+import { NoMonsterCard } from "./NoMonsterCard";
 
 export function StatblockSearchList({
   search,
@@ -69,6 +70,21 @@ export function StatblockSearchList({
 
   return (
     <div className="grid h-full gap-3 p-4 sm:p-6 lg:grid-cols-2">
+      {search.value === "" && (
+        <NoMonsterCard
+          onActionClick={() =>
+            setAppState((prev) => ({
+              ...prev,
+              selectedIndexBundle: "NONE",
+              tokenOptions: {
+                name: { overwriteTokens: false, value: "", nameTag: false },
+                stamina: { overwriteTokens: false, value: 0 },
+                removeExistingStatblock: { showOption: true, value: false },
+              },
+            }))
+          }
+        />
+      )}
       {sortedMonsterIndex.map((indexBundle) => (
         <MonsterPreviewCard
           key={indexBundle.statblock}
@@ -101,6 +117,7 @@ export function StatblockSearchList({
                   nameTag: false,
                 },
                 stamina: { overwriteTokens: true, value: stamina },
+                removeExistingStatblock: { showOption: false, value: false },
               },
             }));
           }}

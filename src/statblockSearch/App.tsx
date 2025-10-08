@@ -105,10 +105,11 @@ export default function App() {
                                 }
                               : {}),
                             statblockName:
-                              appState.selectedIndexBundle &&
-                              appState.selectedIndexBundle !== "NONE"
+                              typeof appState.selectedIndexBundle === "object"
                                 ? appState.selectedIndexBundle.name
-                                : "",
+                                : appState.selectedIndexBundle === "NONE"
+                                  ? ""
+                                  : "",
                           } satisfies MonsterTokenData);
                         if (nameOptions.overwriteTokens) {
                           item.name = nameOptions.value;

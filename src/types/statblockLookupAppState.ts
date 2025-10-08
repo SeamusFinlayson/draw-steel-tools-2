@@ -3,6 +3,7 @@ import type { MonsterDataBundle, IndexBundle } from "./monsterDataBundlesZod";
 export type TokenOptions = {
   stamina: { overwriteTokens: boolean; value: number };
   name: { overwriteTokens: boolean; value: string; nameTag: boolean };
+  removeExistingStatblock: { showOption: boolean; value: boolean };
 };
 
 export type AppState = {

@@ -7,6 +7,7 @@ import Label from "../components/ui/Label";
 import { Collapsible, CollapsibleContent } from "../components/ui/collapsible";
 import type { AppState, TokenOptions } from "../types/statblockLookupAppState";
 import parseNumber from "../helpers/parseNumber";
+import { NoMonsterCard } from "./NoMonsterCard";
 
 export function OptionsView({
   appState,
@@ -19,22 +20,34 @@ export function OptionsView({
     <div className="grow space-y-6 p-4 sm:p-6">
       <div>
         <h1 className="mb-1">Selected Statblock</h1>
-        {typeof appState.selectedIndexBundle === "object" && (
-          <MonsterPreviewCard
-            indexBundle={appState.selectedIndexBundle}
-            onCardClick={() =>
-              setAppState({ ...appState, monsterViewerOpen: true })
-            }
-            onActionClick={() =>
-              setAppState({
-                ...appState,
-                selectedIndexBundle: undefined,
-                tokenOptions: undefined,
-              })
-            }
-            icon={<XIcon />}
-          />
-        )}
+        {appState.selectedIndexBundle !== undefined &&
+          (appState.selectedIndexBundle === "NONE" ? (
+            <NoMonsterCard
+              onActionClick={() =>
+                setAppState({
+                  ...appState,
+                  selectedIndexBundle: undefined,
+                  tokenOptions: undefined,
+                })
+              }
+              icon={<XIcon />}
+            />
+          ) : (
+            <MonsterPreviewCard
+              indexBundle={appState.selectedIndexBundle}
+              onCardClick={() =>
+                setAppState({ ...appState, monsterViewerOpen: true })
+              }
+              onActionClick={() =>
+                setAppState({
+                  ...appState,
+                  selectedIndexBundle: undefined,
+                  tokenOptions: undefined,
+                })
+              }
+              icon={<XIcon />}
+            />
+          ))}
       </div>
       {appState.tokenOptions ? (
         <div>
