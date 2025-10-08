@@ -17,6 +17,12 @@ import {
   defaultAppState,
   type AppState,
 } from "../types/statblockLookupAppState";
+import { getSelectedItems } from "../helpers/getSelectedItem";
+import { TOKEN_METADATA_KEY } from "../helpers/tokenHelpers";
+import {
+  MonsterTokenDataZod,
+  type MonsterTokenData,
+} from "../types/tokenDataZod";
 
 export default function App() {
   const [appState, setAppState] = useState<AppState>(defaultAppState);
@@ -55,14 +61,67 @@ export default function App() {
         )}
 
         <footer className="w-full">
-          <div className="border-mirage-300 dark:border-mirage-700 border-t px-6 py-3">
+          <div className="border-mirage-300 dark:border-mirage-700 flex gap-4 border-t px-6 py-3">
             <Button
               variant={"accentOutline"}
-              className="w-full"
+              className="grow"
               onClick={() => OBR.popover.close(getPluginId("statblockSearch"))}
             >
               Close
             </Button>
+            {appState.tokenOptions && (
+              <Button
+                className="grow"
+                onClick={async () => {
+                  const tokenOptions = appState.tokenOptions;
+                  if (!tokenOptions) throw new Error("Invalid token options");
+                  const nameOptions = tokenOptions.name;
+                  const staminaOptions = tokenOptions.stamina;
+
+                  const selectedItems = await getSelectedItems();
+                  OBR.scene.items.updateItems(
+                    selectedItems.map((item) => item.id),
+                    (items) => {
+                      items.forEach((item) => {
+                        const existingDataValidation =
+                          MonsterTokenDataZod.safeParse(
+                            items[0].metadata[TOKEN_METADATA_KEY],
+                          );
+                        item.metadata[TOKEN_METADATA_KEY] =
+                          MonsterTokenDataZod.parse({
+                            ...(existingDataValidation.success
+                              ? existingDataValidation.data
+                              : undefined),
+                            type: "MONSTER",
+                            gmOnly: true,
+                            ...(nameOptions.overwriteTokens &&
+                            nameOptions.nameTag
+                              ? { name: nameOptions.value }
+                              : {}),
+                            ...(staminaOptions.overwriteTokens
+                              ? {
+                                  stamina: staminaOptions.value,
+                                  staminaMaximum: staminaOptions.value,
+                                }
+                              : {}),
+                            statblockName:
+                              appState.selectedIndexBundle &&
+                              appState.selectedIndexBundle !== "NONE"
+                                ? appState.selectedIndexBundle.name
+                                : "",
+                          } satisfies MonsterTokenData);
+                        if (nameOptions.overwriteTokens) {
+                          item.name = nameOptions.value;
+                        }
+                      });
+                    },
+                  );
+                  OBR.popover.close(getPluginId("statblockSearch"));
+                }}
+              >
+                Confirm
+              </Button>
+            )}
           </div>
         </footer>
       </div>

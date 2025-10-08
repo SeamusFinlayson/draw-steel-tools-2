@@ -67,7 +67,7 @@ export function OptionsView({
                   <Label htmlFor="nameInput" className="mb-2">
                     Stamina
                   </Label>
-                  <Input id="nameInput" className="w-60">
+                  <Input id="nameInput" className="w-60 max-w-full">
                     <FreeWheelInput
                       value={appState.tokenOptions.stamina.value.toString()}
                       onUpdate={(target) => {
@@ -122,7 +122,7 @@ export function OptionsView({
                   <Label htmlFor="nameInput" className="mb-1">
                     Name
                   </Label>
-                  <Input id="nameInput" className="w-60">
+                  <Input id="nameInput" className="w-60 max-w-full">
                     <FreeWheelInput
                       value={appState.tokenOptions.name.value}
                       onUpdate={(target) => {
@@ -166,7 +166,7 @@ export function OptionsView({
           </Collapsible>
         </div>
       ) : (
-        <div>Loading...</div>
+        <div className="text-foreground/20">Loading...</div>
       )}
     </div>
   );

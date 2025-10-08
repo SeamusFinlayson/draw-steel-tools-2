@@ -261,7 +261,7 @@ export default function TokenEditor() {
       {token.type === "MONSTER" && (
         <div className="text-foreground col-span-2 w-full">
           <Label name="Statblock" />
-          {false ? (
+          {token.statblockName !== "" ? (
             <div className="flex w-full items-center gap-1">
               <InputBackground
                 color="DEFAULT"
@@ -269,12 +269,15 @@ export default function TokenEditor() {
               >
                 <button className="hover:bg-foreground/7 focus-visible:bg-foreground/7 w-full">
                   <div className="flex h-9 items-center-safe justify-center text-sm">
-                    Umbral Stalker
+                    {token.statblockName}
                   </div>
                 </button>
               </InputBackground>
               <InputBackground color="DEFAULT" className="overflow-clip">
-                <button className="hover:bg-foreground/7 focus-visible:bg-foreground/7 flex w-9 shrink-0 items-center justify-center gap-2">
+                <button
+                  className="hover:bg-foreground/7 focus-visible:bg-foreground/7 flex w-9 shrink-0 items-center justify-center gap-2"
+                  onClick={() => updateToken({ statblockName: "" })}
+                >
                   <XIcon />
                 </button>
               </InputBackground>
