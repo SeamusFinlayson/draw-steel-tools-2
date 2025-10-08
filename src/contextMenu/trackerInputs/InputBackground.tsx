@@ -26,7 +26,7 @@ export default function InputBackground({
           "bg-lime-600/30 dark:bg-lime-600/30": color === "GREEN",
           "bg-sky-600/30 dark:bg-cyan-600/30": color === "BLUE",
           "bg-amber-600/30 dark:bg-amber-600/30": color === "GOLD",
-          "bg-mirage-300/30 dark:bg-mirage-500/30": color === "DEFAULT",
+          "bg-mirage-400/30 dark:bg-mirage-500/30": color === "DEFAULT",
         },
         className,
       )}
