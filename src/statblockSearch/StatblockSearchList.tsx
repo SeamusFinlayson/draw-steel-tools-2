@@ -7,6 +7,9 @@ import type { AppState } from "../types/statblockLookupAppState";
 import parseNumber from "../helpers/parseNumber";
 import { NoMonsterCard } from "./NoMonsterCard";
 
+const params = new URLSearchParams(document.location.search);
+const showNone = params.get("showNone");
+
 export function StatblockSearchList({
   search,
   setAppState,
@@ -70,7 +73,7 @@ export function StatblockSearchList({
 
   return (
     <div className="grid h-full gap-3 p-4 sm:p-6 lg:grid-cols-2">
-      {search.value === "" && (
+      {search.value === "" && showNone === "true" && (
         <NoMonsterCard
           onActionClick={() =>
             setAppState((prev) => ({

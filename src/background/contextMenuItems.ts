@@ -288,7 +288,7 @@ function createAddStats() {
       const themeMode = (await OBR.theme.getTheme()).mode;
       OBR.popover.open({
         id: getPluginId("statblockSearch"),
-        url: `/statblockSearch?themeMode=${themeMode}`,
+        url: `/statblockSearch?themeMode=${themeMode}&showNone=true`,
         height: 1000,
         width: 800,
         anchorOrigin: { horizontal: "CENTER", vertical: "CENTER" },
