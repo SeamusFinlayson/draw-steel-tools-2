@@ -231,6 +231,7 @@ function createAddStats() {
         icon: dragonHeadIcon,
         label: "Add Monster",
         filter: {
+          max: 1,
           every: [
             { key: "layer", value: "CHARACTER", coordinator: "||" },
             { key: "layer", value: "MOUNT" },
@@ -258,6 +259,44 @@ function createAddStats() {
           });
         },
       );
+    },
+  });
+
+  OBR.contextMenu.create({
+    id: getPluginId("add-monsters"),
+    icons: [
+      {
+        icon: dragonHeadIcon,
+        label: "Add Monsters",
+        filter: {
+          min: 2,
+          every: [
+            { key: "layer", value: "CHARACTER", coordinator: "||" },
+            { key: "layer", value: "MOUNT" },
+            { key: "type", value: "IMAGE" },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY],
+              value: undefined,
+              operator: "==",
+            },
+          ],
+          roles: ["GM"],
+        },
+      },
+    ],
+    onClick: async () => {
+      const themeMode = (await OBR.theme.getTheme()).mode;
+      OBR.popover.open({
+        id: getPluginId("statblockSearch"),
+        url: `/statblockSearch?themeMode=${themeMode}`,
+        height: 1000,
+        width: 800,
+        anchorOrigin: { horizontal: "CENTER", vertical: "CENTER" },
+        transformOrigin: {
+          horizontal: "CENTER",
+          vertical: "CENTER",
+        },
+      });
     },
   });
 }
