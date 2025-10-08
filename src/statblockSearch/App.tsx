@@ -61,7 +61,7 @@ export default function App() {
         )}
 
         <footer className="w-full">
-          <div className="border-mirage-300 dark:border-mirage-700 flex gap-4 border-t px-6 py-3">
+          <div className="border-mirage-300 dark:border-mirage-700 flex gap-4 border-t px-4 py-2 sm:px-6 sm:py-3">
             <Button
               variant={"accentOutline"}
               className="grow"

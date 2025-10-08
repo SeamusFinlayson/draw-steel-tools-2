@@ -17,7 +17,7 @@ export function App({ monsterData }: { monsterData: MonsterDataBundle }) {
         <MonsterView monsterData={monsterData} />
       </ScrollArea>
       <PluginGate>
-        <div className="border-mirage-300 grid gap-4 border-t p-4 sm:grid-cols-2">
+        <div className="border-mirage-300 grid gap-x-4 gap-y-2 border-t px-4 py-2 sm:grid-cols-2 sm:px-6 sm:py-3">
           <Button variant={"accentOutline"} className="grow" asChild>
             <a href={url.toString()} target="_blank" rel="noopener noreferrer">
               Open in New Tab
