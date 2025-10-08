@@ -271,7 +271,7 @@ export default function TokenEditor() {
                   className="hover:bg-foreground/7 focus-visible:bg-foreground/7 w-full"
                   onClick={() => {
                     OBR.popover.open({
-                      id: getPluginId("statblockSearch"),
+                      id: getPluginId("statblockViewer"),
                       url: (() => {
                         const url = new URL(
                           "/statblockViewer",
