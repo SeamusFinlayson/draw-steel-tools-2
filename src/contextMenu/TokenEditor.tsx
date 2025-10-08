@@ -28,6 +28,9 @@ import {
 } from "../helpers/settingsHelpers";
 import { SettingsZod } from "../types/settingsZod";
 import usePlayerRole from "../helpers/usePlayerRole";
+import { Label } from "./trackerInputs/Label";
+import InputBackground from "./trackerInputs/InputBackground";
+import { getPluginId } from "../helpers/getPluginId";
 
 export default function TokenEditor() {
   const [token, setToken] = useState<
@@ -254,6 +257,54 @@ export default function TokenEditor() {
             }}
           />
         </>
+      )}
+      {token.type === "MONSTER" && (
+        <div className="text-foreground col-span-2 w-full">
+          <Label name="Statblock" />
+          {false ? (
+            <div className="flex w-full items-center gap-1">
+              <InputBackground
+                color="DEFAULT"
+                className="flex grow overflow-clip"
+              >
+                <button className="hover:bg-foreground/7 focus-visible:bg-foreground/7 w-full">
+                  <div className="flex h-9 items-center-safe justify-center text-sm">
+                    Umbral Stalker
+                  </div>
+                </button>
+              </InputBackground>
+              <InputBackground color="DEFAULT" className="overflow-clip">
+                <button className="hover:bg-foreground/7 focus-visible:bg-foreground/7 flex w-9 shrink-0 items-center justify-center gap-2">
+                  <XIcon />
+                </button>
+              </InputBackground>
+            </div>
+          ) : (
+            <InputBackground color="DEFAULT" className="overflow-clip">
+              <button
+                className="hover:bg-foreground/7 focus-visible:bg-foreground/7 grow"
+                onClick={async () => {
+                  const themeMode = (await OBR.theme.getTheme()).mode;
+                  OBR.popover.open({
+                    id: getPluginId("statblockSearch"),
+                    url: `/statblockSearch?themeMode=${themeMode}`,
+                    height: 1000,
+                    width: 800,
+                    anchorOrigin: { horizontal: "CENTER", vertical: "CENTER" },
+                    transformOrigin: {
+                      horizontal: "CENTER",
+                      vertical: "CENTER",
+                    },
+                  });
+                }}
+              >
+                <div className="h-9 items-center p-2 text-sm">
+                  Add Statblock
+                </div>
+              </button>
+            </InputBackground>
+          )}
+        </div>
       )}
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NameValueLabel } from "./NameValueLabel";
+import { Label } from "./Label";
 import FreeWheelInput from "../../components/logic/FreeWheelInput";
 import type { InputColor } from "./InputColorTypes";
 import InputBackground from "./InputBackground";
@@ -39,7 +39,7 @@ export default function ValueButtonTrackerInput({
   return (
     <div className="group text-foreground w-full">
       <div title={labelTitle}>
-        <NameValueLabel
+        <Label
           name={label}
           value={parentValue.toString()}
           showValue={

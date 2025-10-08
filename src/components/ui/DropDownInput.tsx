@@ -23,7 +23,7 @@ export function DropDownInput({
       <Label className={cn({ "opacity-50": disabled })} variant="small">
         {label}
       </Label>
-      <Input>
+      <Input className="w-full">
         <FreeWheelInput
           onFocus={() => setHasFocus(true)}
           onBlur={() => setHasFocus(false)}

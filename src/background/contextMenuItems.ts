@@ -9,7 +9,7 @@ import { TOKEN_METADATA_KEY } from "../helpers/tokenHelpers";
 const VERTICAL_PADDING = 16;
 const NAME_HEIGHT = 36 + 18 + 8;
 const HERO_STATS_HEIGHT = 178;
-const MONSTER_STATS_HEIGHT = 54;
+const MONSTER_STATS_HEIGHT = 54 + 62;
 const ACCESS_TOGGLE_HEIGHT = 20 + 16 + 8;
 
 const getUrl = (themeMode: string) => `/contextMenu?themeMode=${themeMode}`;

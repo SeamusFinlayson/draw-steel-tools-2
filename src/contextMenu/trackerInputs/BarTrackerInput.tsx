@@ -58,7 +58,7 @@ export default function BarTrackerInput({
             value={parentValue}
             onUpdate={valueUpdateHandler}
             className={cn(
-              "col-start-1 row-start-1 w-full bg-transparent text-center outline-hidden",
+              "col-start-1 row-start-1 h-full w-full bg-transparent text-center outline-hidden",
             )}
             clearContentOnFocus
           />
@@ -71,7 +71,7 @@ export default function BarTrackerInput({
             value={parentMax}
             onUpdate={maxUpdateHandler}
             className={cn(
-              "col-start-2 row-start-1 w-full bg-transparent text-center outline-hidden",
+              "col-start-2 row-start-1 h-full w-full bg-transparent text-center outline-hidden",
             )}
             clearContentOnFocus
           />
