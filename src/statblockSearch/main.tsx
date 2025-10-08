@@ -3,14 +3,14 @@ import { createRoot } from "react-dom/client";
 import "./../index.css";
 import { PluginGate } from "../components/logic/PluginGate.tsx";
 import { syncThemeMode } from "../helpers/syncThemeMode.ts";
-import StatblockSearch from "./StatblockSearch.tsx";
+import App from "./StatblockSearch.tsx";
 
 syncThemeMode();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <PluginGate>
-      <StatblockSearch />
+      <App />
     </PluginGate>
   </StrictMode>,
 );

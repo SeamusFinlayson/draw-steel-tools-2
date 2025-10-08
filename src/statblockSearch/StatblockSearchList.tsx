@@ -1,21 +1,18 @@
 import fuzzysort from "fuzzysort";
 import type { SearchData } from "../types/statblockSearchData";
-import type {
-  IndexBundle,
-  MonsterDataBundle,
-} from "../types/monsterDataBundlesZod";
+import type { IndexBundle } from "../types/monsterDataBundlesZod";
 import { MonsterPreviewCard } from "./MonsterPreviewCard";
 import { getMonsterDataBundle } from "./helpers/getMonsterDataBundle";
+import type { AppState } from "../types/statblockLookupAppState";
+import parseNumber from "../helpers/parseNumber";
 
 export function StatblockSearchList({
   search,
-  setMonsterViewerData,
-  setSelectedMonster,
+  setAppState,
   monsterIndex,
 }: {
   search: SearchData;
-  setMonsterViewerData: (monsterDataBundle: MonsterDataBundle) => void;
-  setSelectedMonster: (monsterDataBundle: IndexBundle) => void;
+  setAppState: React.Dispatch<React.SetStateAction<AppState>>;
   monsterIndex: IndexBundle[];
 }) {
   const sortedMonsterIndex = fuzzysort
@@ -77,9 +74,36 @@ export function StatblockSearchList({
           key={indexBundle.statblock}
           indexBundle={indexBundle}
           onCardClick={async () => {
-            setMonsterViewerData(await getMonsterDataBundle(indexBundle));
+            setAppState((prev) => ({
+              ...prev,
+              monsterViewerOpen: true,
+              monsterViewerData: undefined,
+            }));
+            const monsterViewerData = await getMonsterDataBundle(indexBundle);
+            setAppState((prev) => ({ ...prev, monsterViewerData }));
           }}
-          onActionClick={() => setSelectedMonster(indexBundle)}
+          onActionClick={async () => {
+            setAppState((prev) => ({
+              ...prev,
+              selectedIndexBundle: indexBundle,
+            }));
+            const monsterData = await getMonsterDataBundle(indexBundle);
+            const stamina = parseNumber(monsterData.statblock.stamina, {
+              truncate: true,
+            });
+            setAppState((prev) => ({
+              ...prev,
+              monsterViewerData: monsterData,
+              tokenOptions: {
+                name: {
+                  overwriteTokens: true,
+                  value: monsterData.statblock.name,
+                  nameTag: false,
+                },
+                stamina: { overwriteTokens: true, value: stamina },
+              },
+            }));
+          }}
         />
       ))}
     </div>

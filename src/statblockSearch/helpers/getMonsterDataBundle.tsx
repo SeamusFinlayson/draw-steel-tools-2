@@ -26,7 +26,7 @@ export async function getMonsterDataBundle(
   );
 
   return {
-    key: indexBundle.statblock,
+    key: indexBundle.name,
     statblock,
     featuresBlocks: featureBlocks,
   };

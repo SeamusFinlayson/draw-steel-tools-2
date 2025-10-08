@@ -1,8 +1,5 @@
 import { useState } from "react";
-import type {
-  IndexBundle,
-  MonsterDataBundle,
-} from "../types/monsterDataBundlesZod";
+import type { IndexBundle } from "../types/monsterDataBundlesZod";
 import { BrushCleaningIcon, ListFilterIcon, SearchIcon } from "lucide-react";
 import Button from "../components/ui/Button";
 import Toggle from "../components/ui/Toggle";
@@ -15,18 +12,17 @@ import { FiltersDropdown } from "./FiltersDropdown";
 import { DevActionButtons } from "./DevActionButtons";
 import { StatblockSearchList } from "./StatblockSearchList";
 import DebounceInput from "../components/logic/DebounceInput";
+import type { AppState } from "../types/statblockLookupAppState";
 
 const params = new URLSearchParams(document.location.search);
 const devMode = params.get("dev");
 
 export default function SearchView({
   monsterIndex,
-  setMonsterViewerData,
-  setSelectedMonster,
+  setAppState,
 }: {
   monsterIndex: IndexBundle[];
-  setMonsterViewerData: (monsterDataBundle: MonsterDataBundle) => void;
-  setSelectedMonster: (monsterIndexBundle: IndexBundle) => void;
+  setAppState: React.Dispatch<React.SetStateAction<AppState>>;
 }) {
   const [search, setSearch] = useState<SearchData>(defaultSearchData);
 
@@ -96,8 +92,7 @@ export default function SearchView({
 
             <StatblockSearchList
               search={search}
-              setMonsterViewerData={setMonsterViewerData}
-              setSelectedMonster={setSelectedMonster}
+              setAppState={setAppState}
               monsterIndex={monsterIndex}
             />
           </>
