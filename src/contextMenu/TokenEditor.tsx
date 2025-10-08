@@ -268,7 +268,7 @@ export default function TokenEditor() {
                 className="flex grow overflow-clip"
               >
                 <button
-                  className="hover:bg-foreground/7 focus-visible:bg-foreground/7 w-full"
+                  className="hover:bg-foreground/7 focus-visible:bg-foreground/7 w-full transition-colors"
                   onClick={() => {
                     OBR.popover.open({
                       id: getPluginId("statblockViewer"),
@@ -303,7 +303,7 @@ export default function TokenEditor() {
               </InputBackground>
               <InputBackground color="DEFAULT" className="overflow-clip">
                 <button
-                  className="hover:bg-foreground/7 focus-visible:bg-foreground/7 flex w-9 shrink-0 items-center justify-center gap-2"
+                  className="hover:bg-foreground/7 focus-visible:bg-foreground/7 flex w-9 shrink-0 items-center justify-center gap-2 transition-colors"
                   onClick={() => updateToken({ statblockName: "" })}
                 >
                   <XIcon />
