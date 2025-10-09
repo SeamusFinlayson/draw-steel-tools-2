@@ -18,9 +18,7 @@ export default function ValueButtonTrackerInput({
   color?: InputColor;
   updateHandler: (target: HTMLInputElement) => void;
   buttonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>;
-  inputProps?: React.InputHTMLAttributes<HTMLInputElement> & {
-    clearContentsOnFocus?: boolean;
-  };
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
   label: string;
   labelTitle?: string;
 }): React.JSX.Element {
@@ -35,11 +33,6 @@ export default function ValueButtonTrackerInput({
       )}
     />
   );
-
-  const { clearContentsOnFocus, ...rest } = {
-    clearContentsOnFocus: false,
-    ...inputProps,
-  };
 
   return (
     <div className="group text-foreground w-full">
@@ -56,14 +49,12 @@ export default function ValueButtonTrackerInput({
       <InputBackground className="w-full overflow-clip" color={color}>
         <div className="flex w-full">
           <FreeWheelInput
-            {...rest}
+            {...inputProps}
             onFocus={() => setHasFocus(true)}
             onBlur={() => setHasFocus(false)}
             value={parentValue.toString()}
             onUpdate={updateHandler}
-            clearContentOnFocus={
-              clearContentsOnFocus === undefined ? true : clearContentsOnFocus
-            }
+            clearContentOnFocus
             className={cn(
               "w-full bg-transparent text-center outline-hidden",
               inputProps?.className,

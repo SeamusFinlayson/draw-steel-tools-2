@@ -99,7 +99,6 @@ export default function TokenEditor() {
       inputProps={{
         className: "text-start pl-2",
         placeholder: token.item.name,
-        clearContentsOnFocus: false,
       }}
       buttonProps={
         token.name.length === 0
