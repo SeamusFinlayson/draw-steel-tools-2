@@ -35,22 +35,40 @@ export default function App() {
           onPointerDownOutside={() =>
             setAppState({ ...appState, monsterViewerOpen: false })
           }
+          onEscapeKeyDown={() =>
+            setAppState({ ...appState, monsterViewerOpen: false })
+          }
+          onInteractOutside={() =>
+            setAppState({ ...appState, monsterViewerOpen: false })
+          }
         >
-          <ScrollArea className="bg-mirage-50 h-full max-h-full" noDarkMode>
-            <DialogTitle className="max-h-0 overflow-clip">
-              Statblock Viewer
-            </DialogTitle>
-            <DialogDescription className="max-h-0 overflow-clip">
-              View of the selected statblock
-            </DialogDescription>
-            {appState.monsterViewerData ? (
-              <MonsterView monsterData={appState.monsterViewerData} />
-            ) : (
-              <div className="grid h-full place-items-center p-4 text-black/20">
-                {"Loading..."}
-              </div>
-            )}
-          </ScrollArea>
+          <div className="bg-mirage-50 flex h-full flex-col">
+            <ScrollArea className="grow" noDarkMode>
+              <DialogTitle className="max-h-0 overflow-clip">
+                Statblock Viewer
+              </DialogTitle>
+              <DialogDescription className="max-h-0 overflow-clip">
+                View of the selected statblock
+              </DialogDescription>
+              {appState.monsterViewerData ? (
+                <MonsterView monsterData={appState.monsterViewerData} />
+              ) : (
+                <div className="grid h-full place-items-center p-4 text-black/20">
+                  {"Loading..."}
+                </div>
+              )}
+            </ScrollArea>
+            <div className="border-mirage-300 flex gap-4 border-t px-4 py-2 sm:px-6 sm:py-3">
+              <Button
+                className="w-full"
+                onClick={() =>
+                  setAppState({ ...appState, monsterViewerOpen: false })
+                }
+              >
+                Done
+              </Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
       <div className="text-foreground bg-mirage-50 dark:bg-mirage-950 border-mirage-300 dark:border-mirage-700 flex h-screen min-h-screen flex-col rounded-2xl border">
