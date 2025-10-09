@@ -295,6 +295,7 @@ export default function TokenEditor() {
                       horizontal: "CENTER",
                       vertical: "CENTER",
                     },
+                    disableClickAway: true,
                   });
                 }}
               >
