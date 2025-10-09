@@ -23,7 +23,7 @@ export default function SettingsMenu() {
       {settingsMetadata.ready && (
         <ScrollArea className="h-full" type="always">
           <HeightMatch setHeight={setPopoverHeight}>
-            <div className="space-y-4 p-4 sm:p-6">
+            <div className="border-mirage-300 dark:border-mirage-700 space-y-4 rounded-2xl border p-4 sm:p-6">
               <h1 className="w-full text-lg font-bold">
                 <span>Draw Steel Tools </span>
                 <span className="text-foreground-secondary font-normal">
