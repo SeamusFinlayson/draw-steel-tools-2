@@ -80,7 +80,11 @@ export function StatblockSearchList({
               ...prev,
               selectedIndexBundle: "NONE",
               tokenOptions: {
-                name: { overwriteTokens: false, value: "", nameTag: false },
+                name: {
+                  overwriteTokens: false,
+                  value: "Monster",
+                  nameTag: false,
+                },
                 stamina: { overwriteTokens: false, value: 0 },
                 removeExistingStatblock: { showOption: true, value: false },
               },

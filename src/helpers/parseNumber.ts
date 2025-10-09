@@ -28,8 +28,10 @@ export default function parseNumber(
     newValue = options.inlineMath.previousValue + newValue;
   }
 
-  if (options?.min && newValue < options?.min) newValue = options.min;
-  if (options?.max && newValue > options?.max) newValue = options.max;
+  if (options?.min !== undefined && newValue < options?.min)
+    newValue = options.min;
+  if (options?.max !== undefined && newValue > options?.max)
+    newValue = options.max;
   if (options?.truncate) newValue = Math.trunc(newValue);
 
   return newValue;

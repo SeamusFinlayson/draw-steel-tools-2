@@ -5,7 +5,7 @@ import { MonsterPreviewCard } from "./MonsterPreviewCard";
 import { Checkbox } from "../components/ui/checkbox";
 import Label from "../components/ui/Label";
 import { Collapsible, CollapsibleContent } from "../components/ui/collapsible";
-import type { AppState, TokenOptions } from "../types/statblockLookupAppState";
+import type { AppState } from "../types/statblockLookupAppState";
 import parseNumber from "../helpers/parseNumber";
 import { NoMonsterCard } from "./NoMonsterCard";
 
@@ -16,6 +16,8 @@ export function OptionsView({
   appState: AppState;
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;
 }) {
+  const tokenOptions = appState.tokenOptions;
+
   return (
     <div className="grow space-y-6 p-4 sm:p-6">
       <div>
@@ -49,31 +51,31 @@ export function OptionsView({
             />
           ))}
       </div>
-      {appState.tokenOptions ? (
+      {tokenOptions ? (
         <div>
           <h1 className="mb-1">Token Options</h1>
           <div className="flex items-center">
             <Checkbox
               id="setStaminaCheckbox"
-              checked={appState.tokenOptions.stamina.overwriteTokens}
-              onCheckedChange={(checked) =>
+              checked={tokenOptions.stamina.overwriteTokens}
+              onCheckedChange={(checked) => {
                 setAppState({
                   ...appState,
                   tokenOptions: {
-                    ...(appState.tokenOptions as TokenOptions),
+                    ...tokenOptions,
                     stamina: {
-                      ...(appState.tokenOptions as TokenOptions).stamina,
+                      ...tokenOptions.stamina,
                       overwriteTokens: checked === true,
                     },
                   },
-                })
-              }
+                });
+              }}
             />
             <Label className="h-fit" htmlFor="setStaminaCheckbox">
               {"Set Stamina"}
             </Label>
           </div>
-          <Collapsible open={appState.tokenOptions.stamina.overwriteTokens}>
+          <Collapsible open={tokenOptions.stamina.overwriteTokens}>
             <CollapsibleContent>
               <div className="bg-mirage-99 dark:bg-mirage-901 my-1 ml-10 space-y-4 rounded-2xl p-4">
                 <div>
@@ -82,20 +84,23 @@ export function OptionsView({
                   </Label>
                   <Input id="nameInput" className="w-60 max-w-full">
                     <FreeWheelInput
-                      value={appState.tokenOptions.stamina.value.toString()}
+                      clearContentOnFocus
+                      value={tokenOptions.stamina.value.toString()}
                       onUpdate={(target) => {
                         const stamina = parseNumber(target.value, {
                           truncate: true,
                           min: 0,
                           max: 9999,
+                          inlineMath: {
+                            previousValue: tokenOptions.stamina.value,
+                          },
                         });
                         setAppState({
                           ...appState,
                           tokenOptions: {
-                            ...(appState.tokenOptions as TokenOptions),
+                            ...tokenOptions,
                             stamina: {
-                              ...(appState.tokenOptions as TokenOptions)
-                                .stamina,
+                              ...tokenOptions.stamina,
                               value: stamina,
                             },
                           },
@@ -110,14 +115,14 @@ export function OptionsView({
           <div className="flex items-center">
             <Checkbox
               id="setNameCheckbox"
-              checked={appState.tokenOptions.name.overwriteTokens}
+              checked={tokenOptions.name.overwriteTokens}
               onCheckedChange={(checked) =>
                 setAppState({
                   ...appState,
                   tokenOptions: {
-                    ...(appState.tokenOptions as TokenOptions),
+                    ...tokenOptions,
                     name: {
-                      ...(appState.tokenOptions as TokenOptions).name,
+                      ...tokenOptions.name,
                       overwriteTokens: checked === true,
                     },
                   },
@@ -128,7 +133,7 @@ export function OptionsView({
               {"Set Name"}
             </Label>
           </div>
-          <Collapsible open={appState.tokenOptions.name.overwriteTokens}>
+          <Collapsible open={tokenOptions.name.overwriteTokens}>
             <CollapsibleContent>
               <div className="bg-mirage-99 dark:bg-mirage-901 my-1 ml-10 space-y-4 rounded-2xl p-4">
                 <div>
@@ -137,14 +142,14 @@ export function OptionsView({
                   </Label>
                   <Input id="nameInput" className="w-60 max-w-full">
                     <FreeWheelInput
-                      value={appState.tokenOptions.name.value}
+                      value={tokenOptions.name.value}
                       onUpdate={(target) => {
                         setAppState({
                           ...appState,
                           tokenOptions: {
-                            ...(appState.tokenOptions as TokenOptions),
+                            ...tokenOptions,
                             name: {
-                              ...(appState.tokenOptions as TokenOptions).name,
+                              ...tokenOptions.name,
                               value: target.value,
                             },
                           },
@@ -156,14 +161,14 @@ export function OptionsView({
                 <div className="flex items-center">
                   <Checkbox
                     id="AddNameTagCheckbox"
-                    checked={appState.tokenOptions.name.nameTag}
+                    checked={tokenOptions.name.nameTag}
                     onCheckedChange={(checked) =>
                       setAppState({
                         ...appState,
                         tokenOptions: {
-                          ...(appState.tokenOptions as TokenOptions),
+                          ...tokenOptions,
                           name: {
-                            ...(appState.tokenOptions as TokenOptions).name,
+                            ...tokenOptions.name,
                             nameTag: checked === true,
                           },
                         },
