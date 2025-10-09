@@ -15,6 +15,7 @@ import {
   BookOpenIcon,
   HeartCrackIcon,
   HeartPulseIcon,
+  PlusIcon,
   Sparkles,
   XIcon,
 } from "lucide-react";
@@ -29,8 +30,8 @@ import {
 import { SettingsZod } from "../types/settingsZod";
 import usePlayerRole from "../helpers/usePlayerRole";
 import { Label } from "./trackerInputs/Label";
-import InputBackground from "./trackerInputs/InputBackground";
 import { getPluginId } from "../helpers/getPluginId";
+import Button from "../components/ui/Button";
 
 export default function TokenEditor() {
   const [token, setToken] = useState<
@@ -263,53 +264,59 @@ export default function TokenEditor() {
   const StatblockButton = token.type === "MONSTER" && (
     <div className="text-foreground col-span-2 w-full">
       <Label name="Statblock" />
-      {token.statblockName !== "" ? (
-        <div className="flex w-full items-center gap-1">
-          <InputBackground color="DEFAULT" className="flex grow overflow-clip">
-            <button
-              className="hover:bg-foreground/7 focus-visible:bg-foreground/7 w-full transition-colors"
-              onClick={() => {
-                OBR.popover.open({
-                  id: getPluginId("statblockViewer"),
-                  url: (() => {
-                    const url = new URL(
-                      "/statblockViewer",
-                      window.location.origin,
-                    );
-                    url.searchParams.set("statblockName", token.statblockName);
-                    return url.toString();
-                  })(),
-                  height: 2000,
-                  width: 500,
-                  anchorOrigin: {
-                    horizontal: "RIGHT",
-                    vertical: "TOP",
-                  },
-                  transformOrigin: {
-                    horizontal: "CENTER",
-                    vertical: "CENTER",
-                  },
-                });
-              }}
-            >
-              <div className="flex h-9 items-center-safe justify-center text-sm">
-                {token.statblockName}
-              </div>
-            </button>
-          </InputBackground>
-          <InputBackground color="DEFAULT" className="overflow-clip">
-            <button
-              className="hover:bg-foreground/7 focus-visible:bg-foreground/7 flex w-9 shrink-0 items-center justify-center gap-2 transition-colors"
+      <div className="flex w-full items-center justify-between gap-1">
+        {token.statblockName !== "" ? (
+          <>
+            <div className="grow">
+              <Button
+                variant={"secondary"}
+                className="bg-mirage-400/30 dark:bg-mirage-500/30 hover:bg-mirage-400/30 hover:dark:bg-mirage-500/30 group w-full basis-40 overflow-clip p-0 focus-visible:ring-0"
+                onClick={() => {
+                  OBR.popover.open({
+                    id: getPluginId("statblockViewer"),
+                    url: (() => {
+                      const url = new URL(
+                        "/statblockViewer",
+                        window.location.origin,
+                      );
+                      url.searchParams.set(
+                        "statblockName",
+                        token.statblockName,
+                      );
+                      return url.toString();
+                    })(),
+                    height: 2000,
+                    width: 500,
+                    anchorOrigin: {
+                      horizontal: "RIGHT",
+                      vertical: "TOP",
+                    },
+                    transformOrigin: {
+                      horizontal: "CENTER",
+                      vertical: "CENTER",
+                    },
+                  });
+                }}
+              >
+                <div className="group-hover:bg-foreground/7 flex size-full grow items-center-safe justify-center text-sm duration-150">
+                  {token.statblockName}
+                </div>
+              </Button>
+            </div>
+            <Button
+              variant={"secondary"}
+              className="bg-mirage-400/30 dark:bg-mirage-500/30 hover:bg-mirage-400/30 hover:dark:bg-mirage-500/30 group aspect-square shrink-0 overflow-clip p-0 focus-visible:ring-0"
               onClick={() => updateToken({ statblockName: "" })}
             >
-              <XIcon />
-            </button>
-          </InputBackground>
-        </div>
-      ) : (
-        <InputBackground color="DEFAULT" className="overflow-clip">
-          <button
-            className="hover:bg-foreground/7 focus-visible:bg-foreground/7 grow"
+              <div className="group-hover:bg-foreground/7 flex size-full items-center-safe justify-center text-sm duration-150">
+                <XIcon />
+              </div>
+            </Button>
+          </>
+        ) : (
+          <Button
+            variant={"secondary"}
+            className="bg-mirage-400/30 dark:bg-mirage-500/30 hover:bg-mirage-400/30 hover:dark:bg-mirage-500/30 group w-full overflow-clip p-0 focus-visible:ring-0"
             onClick={async () => {
               const themeMode = (await OBR.theme.getTheme()).mode;
               OBR.popover.open({
@@ -325,10 +332,12 @@ export default function TokenEditor() {
               });
             }}
           >
-            <div className="h-9 items-center p-2 text-sm">Add Statblock</div>
-          </button>
-        </InputBackground>
-      )}
+            <div className="group-hover:bg-foreground/7 flex size-full items-center-safe justify-center text-sm duration-150">
+              <PlusIcon />
+            </div>
+          </Button>
+        )}
+      </div>
     </div>
   );
 
@@ -355,8 +364,8 @@ export default function TokenEditor() {
   return (
     <div className="text-foreground space-y-2 p-2">
       {definedSettings.nameTagsEnabled && NameInput}
-      {StatblockButton}
       {StatEditor}
+      {StatblockButton}
       {playerRole === "GM" && VisibilityToggle}
     </div>
   );
