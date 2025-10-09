@@ -1,9 +1,9 @@
 import { useState } from "react";
-import type { IndexBundle } from "../types/monsterDataBundlesZod";
-import { generateIndex } from "./actions/generateIndex";
-import { validateMalice } from "./actions/validatemalice";
-import { validateStatblocks } from "./actions/validateStatblocks";
-import Button from "../components/ui/Button";
+import type { IndexBundle } from "../../types/monsterDataBundlesZod";
+import { generateIndex } from "../actions/generateIndex";
+import { validateMalice } from "../actions/validatemalice";
+import { validateStatblocks } from "../actions/validateStatblocks";
+import Button from "../../components/ui/Button";
 
 export function DevActionButtons({
   monsterIndex,

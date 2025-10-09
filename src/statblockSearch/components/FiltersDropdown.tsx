@@ -1,10 +1,13 @@
 import { useMemo, useState } from "react";
-import { Checkbox } from "../components/ui/checkbox";
-import { Collapsible, CollapsibleContent } from "../components/ui/collapsible";
-import type { SearchData } from "../types/statblockSearchData";
-import { Slider } from "../components/ui/slider";
-import type { IndexBundle } from "../types/monsterDataBundlesZod";
-import Label from "../components/ui/Label";
+import { Checkbox } from "../../components/ui/checkbox";
+import {
+  Collapsible,
+  CollapsibleContent,
+} from "../../components/ui/collapsible";
+import type { SearchData } from "../../types/statblockSearchData";
+import { Slider } from "../../components/ui/slider";
+import type { IndexBundle } from "../../types/monsterDataBundlesZod";
+import Label from "../../components/ui/Label";
 
 export function FiltersDropdown({
   search,

@@ -1,5 +1,5 @@
 import { CheckIcon } from "lucide-react";
-import type { IndexBundle } from "../types/monsterDataBundlesZod";
+import type { IndexBundle } from "../../types/monsterDataBundlesZod";
 import type React from "react";
 
 export function MonsterPreviewCard({

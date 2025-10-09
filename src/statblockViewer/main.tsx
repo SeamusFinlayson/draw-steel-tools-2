@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./../index.css";
 import monsterIndex from "../statblockSearch/monsterIndex.json";
 import { getMonsterDataBundle } from "../statblockSearch/helpers/getMonsterDataBundle.tsx";
-import { App } from "./App.tsx";
+import { StatblockViewer } from "./App.tsx";
 
 const statblockName = new URLSearchParams(document.location.search).get(
   "statblockName",
@@ -17,6 +17,6 @@ document.title = monsterData.statblock.name;
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App monsterData={monsterData} />
+    <StatblockViewer monsterData={monsterData} />
   </StrictMode>,
 );

@@ -1,6 +1,6 @@
-import type { MonsterDataBundle } from "../types/monsterDataBundlesZod";
-import { FeatureBlock } from "./creatureBlockUI/FeatureBlock";
-import { StatBlock } from "./creatureBlockUI/StatBlock";
+import type { MonsterDataBundle } from "../../types/monsterDataBundlesZod";
+import { FeatureBlock } from "../creatureBlockUI/FeatureBlock";
+import { StatBlock } from "../creatureBlockUI/StatBlock";
 
 export default function MonsterView({
   monsterData: monsterData,

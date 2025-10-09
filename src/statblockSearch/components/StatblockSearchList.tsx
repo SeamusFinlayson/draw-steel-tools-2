@@ -1,10 +1,10 @@
 import fuzzysort from "fuzzysort";
-import type { SearchData } from "../types/statblockSearchData";
-import type { IndexBundle } from "../types/monsterDataBundlesZod";
+import type { SearchData } from "../../types/statblockSearchData";
+import type { IndexBundle } from "../../types/monsterDataBundlesZod";
 import { MonsterPreviewCard } from "./MonsterPreviewCard";
-import { getMonsterDataBundle } from "./helpers/getMonsterDataBundle";
-import type { AppState } from "../types/statblockLookupAppState";
-import parseNumber from "../helpers/parseNumber";
+import { getMonsterDataBundle } from "../helpers/getMonsterDataBundle";
+import type { AppState } from "../../types/statblockLookupAppState";
+import parseNumber from "../../helpers/parseNumber";
 import { NoMonsterCard } from "./NoMonsterCard";
 
 const params = new URLSearchParams(document.location.search);

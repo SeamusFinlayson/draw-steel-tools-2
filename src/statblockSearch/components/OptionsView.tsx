@@ -1,12 +1,15 @@
 import { XIcon } from "lucide-react";
-import FreeWheelInput from "../components/logic/FreeWheelInput";
-import Input from "../components/ui/Input";
+import FreeWheelInput from "../../components/logic/FreeWheelInput";
+import Input from "../../components/ui/Input";
 import { MonsterPreviewCard } from "./MonsterPreviewCard";
-import { Checkbox } from "../components/ui/checkbox";
-import Label from "../components/ui/Label";
-import { Collapsible, CollapsibleContent } from "../components/ui/collapsible";
-import type { AppState } from "../types/statblockLookupAppState";
-import parseNumber from "../helpers/parseNumber";
+import { Checkbox } from "../../components/ui/checkbox";
+import Label from "../../components/ui/Label";
+import {
+  Collapsible,
+  CollapsibleContent,
+} from "../../components/ui/collapsible";
+import type { AppState } from "../../types/statblockLookupAppState";
+import parseNumber from "../../helpers/parseNumber";
 import { NoMonsterCard } from "./NoMonsterCard";
 
 export function OptionsView({

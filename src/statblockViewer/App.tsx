@@ -1,5 +1,5 @@
 import "./../index.css";
-import MonsterView from "../statblockSearch/MonsterView.tsx";
+import MonsterView from "../statblockSearch/components/MonsterView.tsx";
 import { ScrollArea } from "../components/ui/scrollArea.tsx";
 import Button from "../components/ui/Button.tsx";
 import OBR from "@owlbear-rodeo/sdk";
@@ -7,7 +7,11 @@ import { getPluginId } from "../helpers/getPluginId.ts";
 import { PluginGate } from "../components/logic/PluginGate.tsx";
 import type { MonsterDataBundle } from "../types/monsterDataBundlesZod.ts";
 
-export function App({ monsterData }: { monsterData: MonsterDataBundle }) {
+export function StatblockViewer({
+  monsterData,
+}: {
+  monsterData: MonsterDataBundle;
+}) {
   const url = new URL(window.location.href);
   url.searchParams.delete("obrref");
 

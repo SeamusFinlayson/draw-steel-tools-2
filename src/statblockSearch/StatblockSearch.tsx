@@ -1,18 +1,18 @@
 import monsterIndex from "./monsterIndex.json";
-import SearchView from "./SearchView";
+import SearchView from "./components/SearchView";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
 } from "../components/ui/dialog";
-import MonsterView from "./MonsterView";
+import MonsterView from "./components/MonsterView";
 import { useState } from "react";
 import { ScrollArea } from "../components/ui/scrollArea";
 import Button from "../components/ui/Button";
 import OBR from "@owlbear-rodeo/sdk";
 import { getPluginId } from "../helpers/getPluginId";
-import { OptionsView } from "./OptionsView";
+import { OptionsView } from "./components/OptionsView";
 import {
   defaultAppState,
   type AppState,
@@ -24,7 +24,7 @@ import {
   type MonsterTokenData,
 } from "../types/tokenDataZod";
 
-export default function App() {
+export default function StatblockSearch() {
   const [appState, setAppState] = useState<AppState>(defaultAppState);
 
   return (
