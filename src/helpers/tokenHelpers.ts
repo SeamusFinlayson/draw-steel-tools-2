@@ -17,6 +17,7 @@ export const defaultMonsterTokenData: DefinedMonsterTokenData = {
   stamina: 0,
   staminaMaximum: 0,
   temporaryStamina: 0,
+  statblockName: "",
 };
 
 export const defaultHeroTokenData: DefinedHeroTokenData = {

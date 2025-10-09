@@ -23,7 +23,7 @@ export default function SettingsMenu() {
       {settingsMetadata.ready && (
         <ScrollArea className="h-full" type="always">
           <HeightMatch setHeight={setPopoverHeight}>
-            <div className="space-y-4 p-4 sm:p-6">
+            <div className="border-mirage-300 dark:border-mirage-700 space-y-4 rounded-2xl border p-4 sm:p-6">
               <h1 className="w-full text-lg font-bold">
                 <span>Draw Steel Tools </span>
                 <span className="text-foreground-secondary font-normal">
@@ -35,6 +35,11 @@ export default function SettingsMenu() {
                   settings={settingsMetadata.value}
                   setSettings={settingsMetadata.update}
                 />
+              </div>
+              <div className="text-foreground-secondary text-sm">
+                Draw Steel Tools is an independent product published under the
+                DRAW STEEL Creator License and is not affiliated with MCDM
+                Productions, LLC. DRAW STEEL © 2024 MCDM Productions, LLC.
               </div>
             </div>
           </HeightMatch>

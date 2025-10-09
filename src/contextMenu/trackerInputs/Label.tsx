@@ -1,12 +1,14 @@
-export function NameValueLabel({
+export function Label({
   name,
   value,
-  showValue,
+  showValue = false,
 }: {
   name: string;
-  value: string;
-  showValue: boolean;
+  value?: string;
+  showValue?: boolean;
 }) {
+  if (value === undefined) showValue = false;
+
   return (
     <div className="pointer-events-none grid pb-0.5">
       <div

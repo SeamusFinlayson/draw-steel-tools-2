@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NameValueLabel } from "./NameValueLabel";
+import { Label } from "./Label";
 import FreeWheelInput from "../../components/logic/FreeWheelInput";
 import type { InputColor } from "./InputColorTypes";
 import InputBackground from "./InputBackground";
@@ -18,9 +18,7 @@ export default function ValueButtonTrackerInput({
   color?: InputColor;
   updateHandler: (target: HTMLInputElement) => void;
   buttonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>;
-  inputProps?: React.InputHTMLAttributes<HTMLInputElement> & {
-    clearContentsOnFocus?: boolean;
-  };
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
   label: string;
   labelTitle?: string;
 }): React.JSX.Element {
@@ -39,7 +37,7 @@ export default function ValueButtonTrackerInput({
   return (
     <div className="group text-foreground w-full">
       <div title={labelTitle}>
-        <NameValueLabel
+        <Label
           name={label}
           value={parentValue.toString()}
           showValue={
@@ -56,11 +54,7 @@ export default function ValueButtonTrackerInput({
             onBlur={() => setHasFocus(false)}
             value={parentValue.toString()}
             onUpdate={updateHandler}
-            clearContentOnFocus={
-              inputProps?.clearContentsOnFocus === undefined
-                ? true
-                : inputProps.clearContentsOnFocus
-            }
+            clearContentOnFocus
             className={cn(
               "w-full bg-transparent text-center outline-hidden",
               inputProps?.className,

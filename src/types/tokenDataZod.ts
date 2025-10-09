@@ -19,6 +19,7 @@ export const MonsterTokenDataZod = z.object({
   stamina: z.number().optional(),
   staminaMaximum: z.number().optional(),
   temporaryStamina: z.number().optional(),
+  statblockName: z.string().optional(),
 });
 
 export const CharacterTokenDataZod = z
@@ -44,6 +45,7 @@ export const DefinedMonsterTokenDataZod = z.object({
   stamina: z.number(),
   staminaMaximum: z.number(),
   temporaryStamina: z.number(),
+  statblockName: z.string(),
 });
 
 export const DefinedCharacterTokenDataZod = z.union([

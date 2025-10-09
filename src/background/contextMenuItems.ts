@@ -9,7 +9,7 @@ import { TOKEN_METADATA_KEY } from "../helpers/tokenHelpers";
 const VERTICAL_PADDING = 16;
 const NAME_HEIGHT = 36 + 18 + 8;
 const HERO_STATS_HEIGHT = 178;
-const MONSTER_STATS_HEIGHT = 54;
+const MONSTER_STATS_HEIGHT = 54 + 62;
 const ACCESS_TOGGLE_HEIGHT = 20 + 16 + 8;
 
 const getUrl = (themeMode: string) => `/contextMenu?themeMode=${themeMode}`;
@@ -231,6 +231,7 @@ function createAddStats() {
         icon: dragonHeadIcon,
         label: "Add Monster",
         filter: {
+          max: 1,
           every: [
             { key: "layer", value: "CHARACTER", coordinator: "||" },
             { key: "layer", value: "MOUNT" },
@@ -258,6 +259,44 @@ function createAddStats() {
           });
         },
       );
+    },
+  });
+
+  OBR.contextMenu.create({
+    id: getPluginId("add-monsters"),
+    icons: [
+      {
+        icon: dragonHeadIcon,
+        label: "Add Monsters",
+        filter: {
+          min: 2,
+          every: [
+            { key: "layer", value: "CHARACTER", coordinator: "||" },
+            { key: "layer", value: "MOUNT" },
+            { key: "type", value: "IMAGE" },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY],
+              value: undefined,
+              operator: "==",
+            },
+          ],
+          roles: ["GM"],
+        },
+      },
+    ],
+    onClick: async () => {
+      const themeMode = (await OBR.theme.getTheme()).mode;
+      OBR.popover.open({
+        id: getPluginId("statblockSearch"),
+        url: `/statblockSearch?themeMode=${themeMode}&showNone=true`,
+        height: 1000,
+        width: 800,
+        anchorOrigin: { horizontal: "CENTER", vertical: "CENTER" },
+        transformOrigin: {
+          horizontal: "CENTER",
+          vertical: "CENTER",
+        },
+      });
     },
   });
 }

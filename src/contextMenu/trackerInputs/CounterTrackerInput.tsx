@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NameValueLabel } from "./NameValueLabel";
+import { Label } from "./Label";
 import InputBackground from "./InputBackground";
 import type { InputColor } from "./InputColorTypes";
 import { MinusIcon, PlusIcon } from "lucide-react";
@@ -25,7 +25,7 @@ export default function CounterTracker({
 
   return (
     <div className="group text-foreground w-full">
-      <NameValueLabel
+      <Label
         name={label}
         value={parentValue.toString()}
         showValue={hasFocus && parentValue !== 0}

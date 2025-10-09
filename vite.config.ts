@@ -13,6 +13,8 @@ export default defineConfig({
         settings: resolve(__dirname, "settings.html"),
         background: resolve(__dirname, "background.html"),
         contextMenu: resolve(__dirname, "contextMenu.html"),
+        statblockSearch: resolve(__dirname, "statblockSearch.html"),
+        statblockViewer: resolve(__dirname, "statblockViewer.html"),
       },
     },
   },
