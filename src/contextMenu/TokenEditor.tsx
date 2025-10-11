@@ -271,7 +271,7 @@ export default function TokenEditor() {
               <Button
                 variant={"secondary"}
                 className="bg-mirage-400/30 dark:bg-mirage-500/30 hover:bg-mirage-400/30 hover:dark:bg-mirage-500/30 group w-full basis-40 overflow-clip p-0 focus-visible:ring-0"
-                onClick={() => {
+                onClick={async () => {
                   OBR.popover.open({
                     id: getPluginId("statblockViewer"),
                     url: (() => {
@@ -297,6 +297,8 @@ export default function TokenEditor() {
                     },
                     disableClickAway: true,
                   });
+                  const selection = await OBR.player.getSelection();
+                  if (selection) OBR.player.select(selection, true);
                 }}
               >
                 <div className="group-hover:bg-foreground/7 flex size-full grow items-center-safe justify-center text-sm duration-150">
