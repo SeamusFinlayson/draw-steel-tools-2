@@ -13,6 +13,7 @@ export default function ValueButtonTrackerInput({
   inputProps,
   label,
   labelTitle,
+  clearInputOnFocus = true,
 }: {
   parentValue: number | string;
   color?: InputColor;
@@ -21,6 +22,7 @@ export default function ValueButtonTrackerInput({
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
   label: string;
   labelTitle?: string;
+  clearInputOnFocus?: boolean;
 }): React.JSX.Element {
   const [hasFocus, setHasFocus] = useState(false);
 
@@ -54,7 +56,7 @@ export default function ValueButtonTrackerInput({
             onBlur={() => setHasFocus(false)}
             value={parentValue.toString()}
             onUpdate={updateHandler}
-            clearContentOnFocus
+            clearContentOnFocus={clearInputOnFocus}
             className={cn(
               "w-full bg-transparent text-center outline-hidden",
               inputProps?.className,

@@ -101,6 +101,7 @@ export default function TokenEditor() {
         className: "text-start pl-2",
         placeholder: token.item.name,
       }}
+      clearInputOnFocus={false}
       buttonProps={
         token.name.length === 0
           ? {
