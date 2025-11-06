@@ -10,7 +10,7 @@ import MonsterView from "./components/MonsterView";
 import { useState } from "react";
 import { ScrollArea } from "../components/ui/scrollArea";
 import Button from "../components/ui/Button";
-import OBR from "@owlbear-rodeo/sdk";
+import OBR, { isImage } from "@owlbear-rodeo/sdk";
 import { getPluginId } from "../helpers/getPluginId";
 import { OptionsView } from "./components/OptionsView";
 import {
@@ -20,9 +20,17 @@ import {
 import { getSelectedItems } from "../helpers/getSelectedItem";
 import { TOKEN_METADATA_KEY } from "../helpers/tokenHelpers";
 import {
+  MinionTokenDataZod,
   MonsterTokenDataZod,
+  type MinionTokenData,
   type MonsterTokenData,
 } from "../types/tokenDataZod";
+import { MinionGroupZod, type MinionGroup } from "../types/minionGroup";
+import { MONSTER_GROUPS_METADATA_KEY } from "../helpers/monsterGroupHelpers";
+import z from "zod";
+
+const params = new URLSearchParams(document.location.search);
+let groupId = params.get("groupId");
 
 export default function StatblockSearch() {
   const [appState, setAppState] = useState<AppState>(defaultAppState);
@@ -87,54 +95,125 @@ export default function StatblockSearch() {
             >
               Close
             </Button>
-            {appState.tokenOptions && (
+            {appState.setupOptions && (
               <Button
                 className="grow"
                 onClick={async () => {
-                  const tokenOptions = appState.tokenOptions;
+                  const tokenOptions = appState.setupOptions;
                   if (!tokenOptions) throw new Error("Invalid token options");
-                  const nameOptions = tokenOptions.name;
-                  const staminaOptions = tokenOptions.stamina;
-
                   const selectedItems = await getSelectedItems();
-                  OBR.scene.items.updateItems(
-                    selectedItems.map((item) => item.id),
-                    (items) => {
-                      items.forEach((item) => {
-                        const existingDataValidation =
-                          MonsterTokenDataZod.safeParse(
-                            items[0].metadata[TOKEN_METADATA_KEY],
-                          );
-                        item.metadata[TOKEN_METADATA_KEY] =
-                          MonsterTokenDataZod.parse({
-                            ...(existingDataValidation.success
-                              ? existingDataValidation.data
-                              : undefined),
-                            type: "MONSTER",
-                            gmOnly: true,
-                            ...(nameOptions.overwriteTokens &&
-                            nameOptions.nameTag
-                              ? { name: nameOptions.value }
-                              : {}),
-                            ...(staminaOptions.overwriteTokens
-                              ? {
-                                  stamina: staminaOptions.value,
-                                  staminaMaximum: staminaOptions.value,
-                                }
-                              : {}),
-                            statblockName:
+
+                  if (tokenOptions.type === "BASIC") {
+                    const nameOptions = tokenOptions.name;
+                    const staminaOptions = tokenOptions.stamina;
+                    OBR.scene.items.updateItems(
+                      selectedItems.map((item) => item.id),
+                      (items) => {
+                        items.forEach((item) => {
+                          const existingDataValidation =
+                            MonsterTokenDataZod.safeParse(
+                              items[0].metadata[TOKEN_METADATA_KEY],
+                            );
+                          item.metadata[TOKEN_METADATA_KEY] =
+                            MonsterTokenDataZod.parse({
+                              ...(existingDataValidation.success
+                                ? existingDataValidation.data
+                                : undefined),
+                              type: "MONSTER",
+                              gmOnly: true,
+                              ...(nameOptions.enabled && nameOptions.nameTag
+                                ? { name: nameOptions.value }
+                                : {}),
+                              ...(staminaOptions.enabled
+                                ? {
+                                    stamina: staminaOptions.value,
+                                    staminaMaximum: staminaOptions.value,
+                                  }
+                                : {}),
+                              statblockName:
+                                typeof appState.selectedIndexBundle === "object"
+                                  ? appState.selectedIndexBundle.name
+                                  : appState.selectedIndexBundle === "NONE"
+                                    ? undefined
+                                    : "",
+                            } satisfies MonsterTokenData);
+                          if (nameOptions.enabled) {
+                            item.name = nameOptions.value;
+                          }
+                        });
+                      },
+                    );
+                  }
+                  if (tokenOptions.type === "MINION") {
+                    let groupSize: number | null = null;
+                    if (groupId === "" || groupId === null) {
+                      groupId = `${Date.now().toString()}-${Math.trunc(Math.random() * 10000)}`;
+                      groupSize = (
+                        (await OBR.player.getSelection()) as string[]
+                      ).length;
+                      OBR.scene.items.updateItems(
+                        selectedItems.map((item) => item.id),
+                        (items) => {
+                          items.forEach(async (item) => {
+                            const existingDataValidation =
+                              MinionTokenDataZod.safeParse(
+                                items[0].metadata[TOKEN_METADATA_KEY],
+                              );
+                            item.metadata[TOKEN_METADATA_KEY] =
+                              MinionTokenDataZod.parse({
+                                ...(existingDataValidation.success
+                                  ? existingDataValidation.data
+                                  : undefined),
+                                type: "MINION",
+                                groupId: groupId as string,
+                              } satisfies MinionTokenData);
+                            item.name = tokenOptions.groupName.value;
+                          });
+                        },
+                      );
+                    } else {
+                      const groupItems = await OBR.scene.items.getItems(
+                        (item) =>
+                          isImage(item) &&
+                          (
+                            item.metadata?.[
+                              TOKEN_METADATA_KEY
+                            ] as MinionTokenData
+                          )?.groupId === groupId,
+                      );
+                      groupSize = groupItems.length;
+                    }
+
+                    const minionGroups = z
+                      .array(MinionGroupZod)
+                      .safeParse(
+                        (await OBR.scene.getMetadata())[
+                          MONSTER_GROUPS_METADATA_KEY
+                        ],
+                      );
+
+                    console.log(minionGroups.data);
+                    OBR.scene.setMetadata({
+                      [MONSTER_GROUPS_METADATA_KEY]: z
+                        .array(MinionGroupZod)
+                        .parse([
+                          {
+                            type: "MINION",
+                            id: groupId,
+                            individualStamina: tokenOptions.stamina.value,
+                            name: tokenOptions.groupName.value,
+                            statblock:
                               typeof appState.selectedIndexBundle === "object"
                                 ? appState.selectedIndexBundle.name
                                 : appState.selectedIndexBundle === "NONE"
-                                  ? ""
+                                  ? undefined
                                   : "",
-                          } satisfies MonsterTokenData);
-                        if (nameOptions.overwriteTokens) {
-                          item.name = nameOptions.value;
-                        }
-                      });
-                    },
-                  );
+                            currentStamina:
+                              tokenOptions.stamina.value * groupSize,
+                          },
+                        ] satisfies MinionGroup[]),
+                    });
+                  }
                   OBR.popover.close(getPluginId("statblockSearch"));
                 }}
               >

@@ -79,14 +79,14 @@ export function StatblockSearchList({
             setAppState((prev) => ({
               ...prev,
               selectedIndexBundle: "NONE",
-              tokenOptions: {
+              setupOptions: {
+                type: "BASIC",
                 name: {
-                  overwriteTokens: false,
+                  enabled: false,
                   value: "Monster",
                   nameTag: false,
                 },
-                stamina: { overwriteTokens: false, value: 0 },
-                removeExistingStatblock: { showOption: true, value: false },
+                stamina: { enabled: false, value: 0 },
               },
             }))
           }
@@ -114,18 +114,32 @@ export function StatblockSearchList({
             const stamina = parseNumber(monsterData.statblock.stamina, {
               truncate: true,
             });
+            const monsterName = monsterData.statblock.name;
+            const isMinion = monsterData.statblock.roles
+              .join()
+              .toLowerCase()
+              .includes("minion");
             setAppState((prev) => ({
               ...prev,
               monsterViewerData: monsterData,
-              tokenOptions: {
-                name: {
-                  overwriteTokens: true,
-                  value: monsterData.statblock.name,
-                  nameTag: false,
-                },
-                stamina: { overwriteTokens: true, value: stamina },
-                removeExistingStatblock: { showOption: false, value: false },
-              },
+              setupOptions: isMinion
+                ? {
+                    type: "MINION",
+                    groupName: {
+                      value: `${monsterName}`,
+                      nameTags: false,
+                    },
+                    stamina: { value: stamina },
+                  }
+                : {
+                    type: "BASIC",
+                    name: {
+                      enabled: true,
+                      value: monsterName,
+                      nameTag: false,
+                    },
+                    stamina: { enabled: true, value: stamina },
+                  },
             }));
           }}
         />

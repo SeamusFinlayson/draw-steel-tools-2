@@ -17,6 +17,15 @@ import { getOriginAndBounds } from "./mathHelpers";
 import createContextMenuItems from "./contextMenuItems";
 import { defaultSettings, getSettings } from "../helpers/settingsHelpers";
 import { TOKEN_METADATA_KEY, parseTokenData } from "../helpers/tokenHelpers";
+import type {
+  DefinedHeroTokenData,
+  DefinedMonsterTokenData,
+  MinionTokenData,
+} from "../types/tokenDataZod";
+import { MinionGroupZod, type MinionGroup } from "../types/minionGroup";
+import z from "zod";
+import { MONSTER_GROUPS_METADATA_KEY } from "../helpers/monsterGroupHelpers";
+import { getPluginId } from "../helpers/getPluginId";
 
 let itemsLast: Image[] = []; // for item change checks
 const addItemsArray: Item[] = []; // for bulk addition or changing of items
@@ -25,12 +34,18 @@ let settings = defaultSettings;
 let callbacksStarted = false;
 let userRoleLast: "GM" | "PLAYER";
 let themeMode: "DARK" | "LIGHT";
+let minionGroups: MinionGroup[] = [];
+let minionGroupCounts: { [groupId: string]: number } = {};
 
 export default async function startBackground() {
   const start = async () => {
     settings = (await getSettings(settings)).settings;
     themeMode = (await OBR.theme.getTheme()).mode;
     createContextMenuItems(settings, themeMode);
+    const minionGroupParse = z
+      .array(MinionGroupZod)
+      .safeParse((await OBR.scene.getMetadata())[MONSTER_GROUPS_METADATA_KEY]);
+    minionGroups = minionGroupParse.success ? minionGroupParse.data : [];
     await refreshAllHealthBars();
     await startCallbacks();
   };
@@ -56,11 +71,13 @@ async function refreshAllHealthBars() {
   //store array of all items currently on the board for change monitoring
   itemsLast = items;
 
+  updateMinionGroupCounts(items);
+
   //draw health bars
   const roll = await OBR.player.getRole();
   const sceneDpi = await OBR.scene.grid.getDpi();
   for (const item of items) {
-    createAttachments(item, roll, sceneDpi);
+    updateTokenOverlay(item, roll, sceneDpi);
   }
 
   await sendItemsToScene(addItemsArray, deleteItemsArray);
@@ -94,7 +111,7 @@ async function startCallbacks() {
       }
     });
 
-    // Handle metadata changes
+    // Handle room metadata changes
     const unsubscribeFromRoomMetadata = OBR.room.onMetadataChange(
       async (metadata) => {
         const { settings: newSettings, isChanged: doRefresh } =
@@ -104,6 +121,17 @@ async function startCallbacks() {
           createContextMenuItems(settings, themeMode);
           refreshAllHealthBars();
         }
+      },
+    );
+
+    // Handle scene metadata changes
+    const unsubscribeFromSceneMetadata = OBR.scene.onMetadataChange(
+      (metadata) => {
+        const minionGroupParse = z
+          .array(MinionGroupZod)
+          .safeParse(metadata[MONSTER_GROUPS_METADATA_KEY]);
+        minionGroups = minionGroupParse.success ? minionGroupParse.data : [];
+        refreshAllHealthBars();
       },
     );
 
@@ -122,7 +150,11 @@ async function startCallbacks() {
         }
 
         //create list of modified and new items, skipping deleted items
-        const changedItems: Image[] = getChangedItems(imagesFromCallback);
+        const minionsChanged = updateMinionGroupCounts(imagesFromCallback);
+        const changedItems: Image[] = getChangedItems(
+          imagesFromCallback,
+          minionsChanged,
+        );
 
         //update array of all items currently on the board
         itemsLast = imagesFromCallback;
@@ -131,7 +163,7 @@ async function startCallbacks() {
         const role = await OBR.player.getRole();
         const sceneDpi = await OBR.scene.grid.getDpi();
         for (const item of changedItems) {
-          createAttachments(item, role, sceneDpi);
+          updateTokenOverlay(item, role, sceneDpi);
         }
 
         await sendItemsToScene(addItemsArray, deleteItemsArray);
@@ -144,6 +176,7 @@ async function startCallbacks() {
         unSubscribeFromTheme();
         unSubscribeFromPlayer();
         unsubscribeFromRoomMetadata();
+        unsubscribeFromSceneMetadata();
         unsubscribeFromItems();
         unsubscribeFromScene();
         callbacksStarted = false;
@@ -152,7 +185,10 @@ async function startCallbacks() {
   }
 }
 
-function getChangedItems(imagesFromCallback: Image[]) {
+function getChangedItems(
+  imagesFromCallback: Image[],
+  includeAllMinions: boolean,
+) {
   const changedItems: Image[] = [];
 
   let s = 0; // # items skipped in itemsLast array, caused by deleted items
@@ -188,7 +224,10 @@ function getChangedItems(imagesFromCallback: Image[]) {
         itemsLast[i + s].visible === imagesFromCallback[i].visible &&
         JSON.stringify(itemsLast[i + s].metadata[TOKEN_METADATA_KEY]) ===
           JSON.stringify(imagesFromCallback[i].metadata[TOKEN_METADATA_KEY])
-      )
+      ) ||
+      (includeAllMinions &&
+        (imagesFromCallback[i].metadata[TOKEN_METADATA_KEY] as MinionTokenData)
+          ?.type === "MINION")
     ) {
       //update items
       changedItems.push(imagesFromCallback[i]);
@@ -197,9 +236,28 @@ function getChangedItems(imagesFromCallback: Image[]) {
   return changedItems;
 }
 
-function createAttachments(item: Image, role: "PLAYER" | "GM", dpi: number) {
-  const { origin, bounds } = getOriginAndBounds(settings, item, dpi);
+function updateTokenOverlay(item: Image, role: "PLAYER" | "GM", dpi: number) {
   const token = parseTokenData(item.metadata);
+  if (
+    token.type === undefined ||
+    token.type === "HERO" ||
+    token.type === "MONSTER"
+  ) {
+    updateHeroMonsterOverlay(item, token, role, dpi);
+  }
+  if (token.type === "MINION") {
+    const minionGroup = minionGroups.find((item) => item.id === token.groupId);
+    if (minionGroup) updateMinionOverlay(item, role, dpi, minionGroup);
+  }
+}
+
+function updateHeroMonsterOverlay(
+  item: Image,
+  token: DefinedHeroTokenData | DefinedMonsterTokenData,
+  role: "PLAYER" | "GM",
+  dpi: number,
+) {
+  const { origin, bounds } = getOriginAndBounds(settings, item, dpi);
 
   if (role === "PLAYER" && token.gmOnly && !settings.showHealthBars) {
     // Display nothing, explicitly remove all attachments
@@ -360,6 +418,108 @@ function createAttachments(item: Image, role: "PLAYER" | "GM", dpi: number) {
   }
 }
 
+function updateMinionOverlay(
+  item: Image,
+  role: "PLAYER" | "GM",
+  dpi: number,
+  minionGroup: MinionGroup,
+) {
+  const { origin, bounds } = getOriginAndBounds(settings, item, dpi);
+
+  if (role === "PLAYER") {
+    // Display nothing, explicitly remove all attachments
+    for (let i = 0; i < 2; i++) {
+      deleteItemsArray.push(
+        bubbleBackgroundId(item.id, i),
+        bubbleTextId(item.id, i),
+      );
+    }
+  } else {
+    // Display full stats
+
+    const MARGIN = 2;
+    const bubblePosition = {
+      x: origin.x + bounds.width / 2 - DIAMETER / 2 - MARGIN,
+      y: origin.y - DIAMETER / 2 - 2 * MARGIN,
+    };
+    if (settings.justifyHealthBarsTop)
+      bubblePosition.y = origin.y + DIAMETER / 2;
+
+    const stats: {
+      color: string;
+      value: number | string;
+      showBubble: boolean;
+    }[] = [];
+
+    const groupRequiredChange = Math.trunc(
+      Math.ceil(minionGroup.currentStamina / minionGroup.individualStamina) -
+        minionGroupCounts[minionGroup.id],
+    );
+
+    stats.push(
+      {
+        color: "#a0201f",
+        value: minionGroup.individualStamina,
+        showBubble: true,
+      },
+      {
+        color: "black",
+        value:
+          groupRequiredChange > 0
+            ? `+${groupRequiredChange}`
+            : groupRequiredChange,
+        showBubble: groupRequiredChange !== 0,
+      },
+    );
+
+    for (let i = 0; i < stats.length; i++) {
+      if (stats[i].showBubble) {
+        addItemsArray.push(
+          ...createStatBubble(
+            item,
+            stats[i].value,
+            stats[i].color,
+            bubblePosition,
+            bubbleBackgroundId(item.id, i),
+            bubbleTextId(item.id, i),
+          ),
+        );
+
+        bubblePosition.x -= DIAMETER + MARGIN;
+      } else {
+        deleteItemsArray.push(
+          bubbleBackgroundId(item.id, i),
+          bubbleTextId(item.id, i),
+        );
+      }
+    }
+  }
+
+  // Create name tag
+  const plainText = minionGroup.name;
+  if (settings.nameTagsEnabled && plainText !== "") {
+    const nameTagPosition = {
+      x: origin.x,
+      y: origin.y,
+    };
+    if (settings.justifyHealthBarsTop) {
+      nameTagPosition.y = origin.y - 4;
+    }
+    addItemsArray.push(
+      ...createNameTag(
+        item,
+        dpi,
+        plainText,
+        nameTagPosition,
+        settings.justifyHealthBarsTop ? "DOWN" : "UP",
+      ),
+    );
+    // globalItemsWithNameTags.push(item);
+  } else {
+    addNameTagAttachmentsToArray(deleteItemsArray, item.id);
+  }
+}
+
 async function sendItemsToScene(
   addItemsArray: Item[],
   deleteItemsArray: string[],
@@ -370,4 +530,34 @@ async function sendItemsToScene(
   await OBR.scene.local.addItems(addItemsArray);
   deleteItemsArray.length = 0;
   addItemsArray.length = 0;
+}
+
+function updateMinionGroupCounts(items: Item[]) {
+  const newMinionGroupCounts: { [groupId: string]: number } = {};
+  minionGroups.forEach((group) => {
+    newMinionGroupCounts[group.id] = items
+      .map(
+        (item) =>
+          (item.metadata?.[getPluginId("metadata")] as { groupId?: string })
+            ?.groupId,
+      )
+      .filter((val) => val === group.id).length;
+  });
+  if (
+    Object.keys(minionGroupCounts).length !==
+    Object.keys(newMinionGroupCounts).length
+  ) {
+    minionGroupCounts = newMinionGroupCounts;
+    return true;
+  }
+  for (const minionGroup of minionGroups) {
+    if (
+      newMinionGroupCounts[minionGroup.id] !== minionGroupCounts[minionGroup.id]
+    ) {
+      minionGroupCounts = newMinionGroupCounts;
+      return true;
+    }
+  }
+  minionGroupCounts = newMinionGroupCounts;
+  return false;
 }

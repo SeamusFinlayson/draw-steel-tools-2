@@ -5,6 +5,7 @@ import {
   CharacterTokenDataZod,
   type DefinedCharacterTokenData,
   type DefinedHeroTokenData,
+  type DefinedMinionTokenData,
   type DefinedMonsterTokenData,
 } from "../types/tokenDataZod";
 
@@ -32,6 +33,11 @@ export const defaultHeroTokenData: DefinedHeroTokenData = {
   surges: 0,
 };
 
+export const defaultMinionTokenData: DefinedMinionTokenData = {
+  type: "MINION",
+  groupId: "",
+};
+
 export function parseTokenData(metadata: Metadata): DefinedCharacterTokenData {
   const characterData = parseMetadata(
     metadata,
@@ -41,5 +47,14 @@ export function parseTokenData(metadata: Metadata): DefinedCharacterTokenData {
   if (characterData?.type === "MONSTER") {
     return { ...defaultMonsterTokenData, ...characterData };
   }
-  return { ...defaultHeroTokenData, ...characterData };
+  if (characterData?.type === "MINION") {
+    return { ...defaultMinionTokenData, ...characterData };
+  }
+  if (characterData?.type === "HERO" || characterData?.type === undefined) {
+    return {
+      ...defaultHeroTokenData,
+      ...characterData,
+    } as DefinedCharacterTokenData;
+  }
+  throw new Error("Unhandled character data type.");
 }

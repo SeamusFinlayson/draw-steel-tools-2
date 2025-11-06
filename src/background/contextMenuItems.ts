@@ -50,6 +50,11 @@ function createPlayerMenu(
               operator: "!=",
             },
             {
+              key: ["metadata", TOKEN_METADATA_KEY, "type"],
+              value: "MINION",
+              operator: "!=",
+            },
+            {
               key: ["metadata", TOKEN_METADATA_KEY],
               value: undefined,
               operator: "!=",
@@ -359,6 +364,11 @@ function createRemoveStats() {
             {
               key: ["metadata", TOKEN_METADATA_KEY, "gmOnly"],
               value: true,
+              operator: "!=",
+            },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY, "type"],
+              value: "MINION",
               operator: "!=",
             },
           ],

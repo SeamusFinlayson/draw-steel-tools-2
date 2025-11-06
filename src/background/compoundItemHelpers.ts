@@ -14,7 +14,7 @@ const FONT_SIZE = 22;
 const FONT = "Roboto, sans-serif";
 const LOCKED = true;
 const DISABLE_HIT = true;
-const BACKGROUND_OPACITY = 0.6;
+const BACKGROUND_OPACITY = 0.7;
 const DISABLE_ATTACHMENT_BEHAVIORS: AttachmentBehavior[] = [
   "ROTATION",
   "VISIBLE",
@@ -34,7 +34,7 @@ const CIRCLE_TEXT_HEIGHT = DIAMETER + 0;
 /** Creates Stat Bubble component items */
 export function createStatBubble(
   item: Item,
-  value: number,
+  value: number | string,
   color: string,
   position: { x: number; y: number },
   backgroundId: string,

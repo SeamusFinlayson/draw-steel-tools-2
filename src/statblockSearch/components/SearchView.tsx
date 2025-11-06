@@ -37,7 +37,7 @@ export default function SearchView({
         </div>
         <DebounceInput
           className="h-full w-full outline-none"
-          placeholder="Statblock"
+          placeholder="Search Statblocks"
           duration={300}
           value={search.value}
           onChange={(e) => updateSearchValue(e)}
