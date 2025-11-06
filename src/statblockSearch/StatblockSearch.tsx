@@ -192,11 +192,11 @@ export default function StatblockSearch() {
                         ],
                       );
 
-                    console.log(minionGroups.data);
                     OBR.scene.setMetadata({
                       [MONSTER_GROUPS_METADATA_KEY]: z
                         .array(MinionGroupZod)
                         .parse([
+                          ...(minionGroups.success ? minionGroups.data : []),
                           {
                             type: "MINION",
                             id: groupId,
