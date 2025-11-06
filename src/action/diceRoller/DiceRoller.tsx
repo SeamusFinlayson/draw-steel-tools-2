@@ -303,7 +303,7 @@ export default function DiceRoller({
               <EllipsisVerticalIcon />
             </Button>
           </DialogTrigger>
-          <DialogContent className="flex size-full max-w-full flex-col justify-between rounded-none">
+          <DialogContent className="flex size-full max-w-full flex-col justify-between rounded-2xl">
             <div className="space-y-3">
               <DialogHeader>
                 <DialogTitle>Advanced Roll </DialogTitle>
