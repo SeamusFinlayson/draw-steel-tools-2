@@ -196,7 +196,11 @@ export default function StatblockSearch() {
                       [MONSTER_GROUPS_METADATA_KEY]: z
                         .array(MinionGroupZod)
                         .parse([
-                          ...(minionGroups.success ? minionGroups.data : []),
+                          ...(minionGroups.success
+                            ? minionGroups.data.filter(
+                                (value) => value.id !== groupId,
+                              )
+                            : []),
                           {
                             type: "MINION",
                             id: groupId,
