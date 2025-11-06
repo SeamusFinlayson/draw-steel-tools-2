@@ -12,11 +12,9 @@ export default function MonsterView({
 
   return (
     <div className="bg-mirage-50 grid justify-items-center gap-y-8 p-4 text-sm text-black sm:p-6">
-      <div>
-        <StatBlock statblock={monsterData.statblock} />
-      </div>
+      <StatBlock statblock={monsterData.statblock} />
       {/* <LeafIcon className="shrink-0" /> */}
-      <div className="grid h-fit gap-8">
+      <div className="grid h-fit w-full gap-8">
         {monsterData.featuresBlocks.length > 0 &&
           monsterData.featuresBlocks.map((item) => (
             <FeatureBlock key={item.name + item.level} featureBlock={item} />
