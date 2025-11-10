@@ -21,7 +21,7 @@ export default function MonsterView({
         <LeafIcon className="size-4 shrink-0" />
       </div>
 
-      <div className="grid h-fit w-full gap-8">
+      <div className="grid h-fit w-full justify-items-center gap-8">
         {monsterData.featuresBlocks.length > 0 &&
           monsterData.featuresBlocks.map((item) => (
             <FeatureBlock key={item.name + item.level} featureBlock={item} />
