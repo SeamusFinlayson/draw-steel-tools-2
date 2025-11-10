@@ -6,8 +6,8 @@ export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
     <div className="w-full max-w-lg space-y-2">
       <div className="bg-mirage-200 rounded-sm p-2">
         <div className="flex items-end justify-between">
-          <div className="text-base font-bold">{statblock.name}</div>
-          <div className="font-bold">{`Level ${statblock.level} ${statblock.roles}`}</div>
+          <div className="text-base font-black">{statblock.name}</div>
+          <div className="font-black">{`Level ${statblock.level} ${statblock.roles}`}</div>
         </div>
         <div className="flex justify-between">
           <div>{statblock.ancestry.join(", ")}</div>
@@ -24,9 +24,9 @@ export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
             { label: "Stability", value: statblock.stability },
             { label: "Free Strike", value: statblock.free_strike },
           ].map((item) => (
-            <div className="flex flex-col items-center" key={item.label}>
-              <div>{item.value}</div>
-              <div className="font-bold">{item.label}</div>
+            <div className="flex-1 text-center" key={item.label}>
+              <div className="text-lg">{item.value}</div>
+              <div className="-mt-1 font-bold text-nowrap">{item.label}</div>
             </div>
           ))}
         </div>
@@ -47,7 +47,7 @@ export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
               <span>{statblock.movement ? statblock.movement : "—"}</span>
             </div>
             {statblock?.with_captain && statblock.roles.includes("Minion") && (
-              <div className="">
+              <div>
                 <span className="font-bold">{"With Captain: "}</span>
                 <span>
                   {statblock.with_captain ? statblock.with_captain : "—"}
@@ -68,9 +68,9 @@ export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
           { label: "Intuition", value: statblock.intuition },
           { label: "Presence", value: statblock.presence },
         ].map((item) => (
-          <div className="flex flex-col items-center" key={item.label}>
-            <div>{item.value}</div>
-            <div className="font-bold">{item.label}</div>
+          <div className="flex-1 text-center" key={item.label}>
+            <div className="text-lg">{`${item.value > 1 ? "+" : ""}${item.value}`}</div>
+            <div className="-mt-1 font-bold">{item.label}</div>
           </div>
         ))}
       </div>

@@ -8,10 +8,10 @@ export function FeatureBlock({
 }) {
   return (
     <div className="w-full max-w-lg">
-      <div className="bg-mirage-100 rounded-sm p-2">
+      <div className="bg-mirage-200 rounded-sm p-2">
         <div className="flex items-end justify-between">
-          <div className="text-base font-bold">{featureBlock.name}</div>
-          <div className="font-bold">
+          <div className="text-base font-black">{featureBlock.name}</div>
+          <div className="font-black">
             {featureBlock.level && (
               <span>{`Level ${featureBlock.level}+ `}</span>
             )}
