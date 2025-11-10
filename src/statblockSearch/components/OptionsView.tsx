@@ -32,6 +32,7 @@ export function OptionsView({
         <h1 className="mb-1">Selected Statblock</h1>
         {selectedIndexBundle === "NONE" ? (
           <NoMonsterCard
+            variant={setupOptions?.type === "MINION" ? "MINION" : "BASIC"}
             onActionClick={() =>
               setAppState({
                 ...appState,
@@ -65,7 +66,7 @@ export function OptionsView({
               <h1 className="mb-1">Minion Squad Options</h1>
               <div className="bg-mirage-99 dark:bg-mirage-901 my-1 space-y-4 rounded-2xl p-4">
                 <div>
-                  <Label htmlFor="nameInput" className="mb-1">
+                  <Label htmlFor="nameInput" className="mb-2">
                     Individual Stamina
                   </Label>
                   <Input id="nameInput" className="w-60 max-w-full">
@@ -75,7 +76,7 @@ export function OptionsView({
                       onUpdate={(target) => {
                         const stamina = parseNumber(target.value, {
                           truncate: true,
-                          min: 0,
+                          min: 1,
                           max: 9999,
                           inlineMath: {
                             previousValue: setupOptions.stamina.value,
@@ -96,7 +97,7 @@ export function OptionsView({
                   </Input>
                 </div>
                 <div>
-                  <Label htmlFor="groupNameInput" className="mb-1">
+                  <Label htmlFor="groupNameInput" className="mb-2">
                     Squad Name
                   </Label>
                   <Input id="groupNameInput" className="w-60 max-w-full">
@@ -170,7 +171,7 @@ export function OptionsView({
                   <CollapsibleContent>
                     <div className="bg-mirage-99 dark:bg-mirage-901 my-1 ml-10 space-y-4 rounded-2xl p-4">
                       <div>
-                        <Label htmlFor="nameInput" className="mb-1">
+                        <Label htmlFor="nameInput" className="mb-2">
                           Stamina
                         </Label>
                         <Input id="nameInput" className="w-60 max-w-full">
@@ -228,7 +229,7 @@ export function OptionsView({
                   <CollapsibleContent>
                     <div className="bg-mirage-99 dark:bg-mirage-901 my-1 ml-10 space-y-4 rounded-2xl p-4">
                       <div>
-                        <Label htmlFor="nameInput" className="mb-1">
+                        <Label htmlFor="nameInput" className="mb-2">
                           Name
                         </Label>
                         <Input id="nameInput" className="w-60 max-w-full">
