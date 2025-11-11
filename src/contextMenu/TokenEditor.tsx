@@ -24,6 +24,7 @@ import { MONSTER_GROUPS_METADATA_KEY } from "../helpers/monsterGroupHelpers";
 import z from "zod";
 import { MinionGroupZod, type MinionGroup } from "../types/minionGroup";
 import MinionGroupEditor from "./components/MinionGroupEditor";
+import { MinionGroupFallback } from "./components/MinionGroupFallback";
 
 const parseMinionGroups = z.array(MinionGroupZod).parse;
 
@@ -50,7 +51,7 @@ export default function TokenEditor() {
     SettingsZod.parse,
   );
 
-  const minionGroups = useSceneMetadata(
+  const minionGroupsMetadata = useSceneMetadata(
     MONSTER_GROUPS_METADATA_KEY,
     parseMinionGroups,
   );
@@ -59,14 +60,14 @@ export default function TokenEditor() {
 
   let minionGroup: MinionGroup | undefined = undefined;
   if (token.type === "MINION") {
-    if (!minionGroups.ready || minionGroups.value === undefined) return <></>;
-    const groupIndex = minionGroups.value.findIndex(
-      (val) => val.id === token.groupId,
-    );
-    minionGroup =
-      groupIndex === -1 ? undefined : minionGroups.value[groupIndex];
-    if (minionGroup === undefined)
-      return <div>could not find minion group</div>;
+    if (!minionGroupsMetadata.ready) return <></>;
+    if (minionGroupsMetadata.value !== undefined) {
+      const groupIndex = minionGroupsMetadata.value.findIndex(
+        (val) => val.id === token.groupId,
+      );
+      minionGroup =
+        groupIndex === -1 ? undefined : minionGroupsMetadata.value[groupIndex];
+    }
   }
 
   const definedSettings = { ...defaultSettings, ...settingsMetadata.value };
@@ -108,18 +109,25 @@ export default function TokenEditor() {
   return (
     <div className="text-foreground space-y-2 p-2">
       {token.type === "MINION" ? (
-        <MinionGroupEditor
-          minionGroup={minionGroup as MinionGroup}
-          setMinionGroup={(minionGroup) => {
-            if (minionGroups.value === undefined) return;
-            minionGroups.update(
-              minionGroups.value.map((val) =>
-                val.id === minionGroup.id ? minionGroup : val,
-              ),
-            );
-          }}
-          settings={definedSettings}
-        />
+        minionGroup === undefined ? (
+          <MinionGroupFallback
+            minionGroups={minionGroupsMetadata.value}
+            groupId={token.groupId}
+          />
+        ) : (
+          <MinionGroupEditor
+            minionGroup={minionGroup}
+            setMinionGroup={(minionGroup) => {
+              if (minionGroupsMetadata.value === undefined) return;
+              minionGroupsMetadata.update(
+                minionGroupsMetadata.value.map((val) =>
+                  val.id === minionGroup.id ? minionGroup : val,
+                ),
+              );
+            }}
+            settings={definedSettings}
+          />
+        )
       ) : (
         <>
           {definedSettings.nameTagsEnabled && (

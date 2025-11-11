@@ -6,17 +6,19 @@ import { getPluginId } from "../../helpers/getPluginId";
 import { Label } from "../trackerInputs/Label";
 
 export default function StatblockControls({
+  label = "Statblock",
   statblockName,
   setStatblockName,
   groupId,
 }: {
+  label?: string;
   statblockName: string;
   setStatblockName: (statblockName: string) => void;
   groupId: string;
 }) {
   return (
     <div className="text-foreground col-span-2 w-full">
-      <Label name="Statblock" />
+      <Label name={label} />
       <div className="flex w-full items-center justify-between gap-0.5">
         {statblockName !== "" ? (
           <>

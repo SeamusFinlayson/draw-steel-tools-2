@@ -5,6 +5,7 @@ import dragonHeadIcon from "./icons/dragonHeadIcon";
 import type { DefinedSettings } from "../types/settingsZod";
 import { getSelectedItems } from "../helpers/getSelectedItem";
 import { TOKEN_METADATA_KEY } from "../helpers/tokenHelpers";
+import { removeCreatureData } from "../helpers/removeCreatureData";
 
 const VERTICAL_PADDING = 16;
 const NAME_HEIGHT = 36 + 18 + 8;
@@ -203,7 +204,7 @@ function createGmMenu(themeMode: "DARK" | "LIGHT", nameTagsEnabled: boolean) {
     icons: [
       {
         icon: dragonHeadIcon,
-        label: "Edit Monster",
+        label: "Edit Minions",
         filter: {
           every: [
             { key: "layer", value: "CHARACTER", coordinator: "||" },
@@ -417,15 +418,7 @@ function createRemoveStats() {
     ],
     onClick: async () => {
       const selectedItems = await getSelectedItems();
-      OBR.scene.items.updateItems(
-        selectedItems.map((item) => item.id),
-        (items) => {
-          items.forEach((item) => {
-            item.metadata[TOKEN_METADATA_KEY] = undefined;
-            item.metadata[getPluginId("name")] = undefined;
-          });
-        },
-      );
+      removeCreatureData(selectedItems);
     },
   });
 }

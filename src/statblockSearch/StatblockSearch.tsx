@@ -28,6 +28,7 @@ import {
 import { MinionGroupZod, type MinionGroup } from "../types/minionGroup";
 import { MONSTER_GROUPS_METADATA_KEY } from "../helpers/monsterGroupHelpers";
 import z from "zod";
+import { generateGroupId } from "../helpers/generateGroupId";
 
 const params = new URLSearchParams(document.location.search);
 let groupId = params.get("groupId");
@@ -104,10 +105,22 @@ export default function StatblockSearch() {
                   const selectedItems = await getSelectedItems();
 
                   if (tokenOptions.type === "BASIC") {
+                    let targetItems = selectedItems;
+                    if (groupId !== null) {
+                      targetItems = await OBR.scene.items.getItems(
+                        (item) =>
+                          isImage(item) &&
+                          (
+                            item.metadata?.[
+                              TOKEN_METADATA_KEY
+                            ] as MinionTokenData
+                          )?.groupId === groupId,
+                      );
+                    }
                     const nameOptions = tokenOptions.name;
                     const staminaOptions = tokenOptions.stamina;
                     OBR.scene.items.updateItems(
-                      selectedItems.map((item) => item.id),
+                      targetItems.map((item) => item.id),
                       (items) => {
                         items.forEach((item) => {
                           const existingDataValidation =
@@ -147,7 +160,7 @@ export default function StatblockSearch() {
                   if (tokenOptions.type === "MINION") {
                     let groupSize: number | null = null;
                     if (groupId === "" || groupId === null) {
-                      groupId = `${Date.now().toString()}-${Math.trunc(Math.random() * 10000)}`;
+                      groupId = generateGroupId();
                       groupSize = (
                         (await OBR.player.getSelection()) as string[]
                       ).length;
