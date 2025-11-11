@@ -140,6 +140,11 @@ function createGmMenu(themeMode: "DARK" | "LIGHT", nameTagsEnabled: boolean) {
               value: "MONSTER",
               operator: "!=",
             },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY, "type"],
+              value: "MINION",
+              operator: "!=",
+            },
           ],
           roles: ["GM"],
           max: 1,
@@ -190,6 +195,39 @@ function createGmMenu(themeMode: "DARK" | "LIGHT", nameTagsEnabled: boolean) {
         MONSTER_STATS_HEIGHT +
         VERTICAL_PADDING +
         ACCESS_TOGGLE_HEIGHT,
+    },
+  });
+
+  OBR.contextMenu.create({
+    id: getPluginId("gm-menu-minion"),
+    icons: [
+      {
+        icon: dragonHeadIcon,
+        label: "Edit Monster",
+        filter: {
+          every: [
+            { key: "layer", value: "CHARACTER", coordinator: "||" },
+            { key: "layer", value: "MOUNT" },
+            { key: "type", value: "IMAGE" },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY],
+              value: undefined,
+              operator: "!=",
+            },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY, "type"],
+              value: "MINION",
+              operator: "==",
+            },
+          ],
+          roles: ["GM"],
+          max: 1,
+        },
+      },
+    ],
+    embed: {
+      url: getUrl(themeMode),
+      height: NAME_HEIGHT + 180 + VERTICAL_PADDING,
     },
   });
 }

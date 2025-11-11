@@ -497,7 +497,11 @@ function updateMinionOverlay(
 
   // Create name tag
   const plainText = minionGroup.name;
-  if (settings.nameTagsEnabled && plainText !== "") {
+  if (
+    settings.nameTagsEnabled &&
+    minionGroup.nameTagsEnabled &&
+    plainText !== ""
+  ) {
     const nameTagPosition = {
       x: origin.x,
       y: origin.y,

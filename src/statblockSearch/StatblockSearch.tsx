@@ -214,6 +214,7 @@ export default function StatblockSearch() {
                                   : "",
                             currentStamina:
                               tokenOptions.stamina.value * groupSize,
+                            nameTagsEnabled: tokenOptions.groupName.nameTags,
                           },
                         ] satisfies MinionGroup[]),
                     });

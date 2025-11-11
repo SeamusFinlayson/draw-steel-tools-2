@@ -17,7 +17,7 @@ export default function StatblockControls({
   return (
     <div className="text-foreground col-span-2 w-full">
       <Label name="Statblock" />
-      <div className="flex w-full items-center justify-between gap-1">
+      <div className="flex w-full items-center justify-between gap-0.5">
         {statblockName !== "" ? (
           <>
             <div className="grow">

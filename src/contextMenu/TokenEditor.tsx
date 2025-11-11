@@ -118,6 +118,7 @@ export default function TokenEditor() {
               ),
             );
           }}
+          settings={definedSettings}
         />
       ) : (
         <>
