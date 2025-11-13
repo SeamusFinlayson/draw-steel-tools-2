@@ -14,7 +14,7 @@ export default function StatblockControls({
   label?: string;
   statblockName: string;
   setStatblockName: (statblockName: string) => void;
-  groupId: string;
+  groupId?: string;
 }) {
   return (
     <div className="text-foreground col-span-2 w-full">
@@ -76,7 +76,9 @@ export default function StatblockControls({
               const themeMode = (await OBR.theme.getTheme()).mode;
               OBR.popover.open({
                 id: getPluginId("statblockSearch"),
-                url: `/statblockSearch?themeMode=${themeMode}&groupId=${groupId}`,
+                url:
+                  `/statblockSearch?themeMode=${themeMode}` +
+                  (groupId ? `&groupId=${groupId}` : ""),
                 height: 1000,
                 width: 800,
                 anchorOrigin: { horizontal: "CENTER", vertical: "CENTER" },

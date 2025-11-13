@@ -141,8 +141,7 @@ export default function TokenEditor() {
           {token.type === "MONSTER" && (
             <StatblockControls
               statblockName={token.statblockName}
-              setStatblockName={() => updateToken({ name: "" })}
-              groupId=""
+              setStatblockName={() => updateToken({ statblockName: "" })}
             />
           )}
           {playerRole === "GM" && (
