@@ -41,7 +41,7 @@ export default function StatblockControls({
                     width: 500,
                     anchorOrigin: {
                       horizontal: "RIGHT",
-                      vertical: "TOP",
+                      vertical: "BOTTOM",
                     },
                     transformOrigin: {
                       horizontal: "CENTER",

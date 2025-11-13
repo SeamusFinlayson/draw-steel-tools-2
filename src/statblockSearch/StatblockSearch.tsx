@@ -6,9 +6,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from "../components/ui/dialog";
-import MonsterView from "./components/MonsterView";
 import { useState } from "react";
-import { ScrollArea } from "../components/ui/scrollArea";
 import Button from "../components/ui/Button";
 import OBR, { isImage } from "@owlbear-rodeo/sdk";
 import { getPluginId } from "../helpers/getPluginId";
@@ -39,6 +37,12 @@ export default function StatblockSearch() {
   return (
     <div>
       <Dialog open={appState.monsterViewerOpen}>
+        <DialogTitle className="max-h-0 overflow-clip">
+          Statblock Viewer
+        </DialogTitle>
+        <DialogDescription className="max-h-0 overflow-clip">
+          View of the selected statblock
+        </DialogDescription>
         <DialogContent
           className="bg-mirage-50 h-11/12 p-0"
           onPointerDownOutside={() =>
@@ -52,24 +56,29 @@ export default function StatblockSearch() {
           }
         >
           <div className="bg-mirage-50 flex h-full flex-col">
-            <ScrollArea className="grow" noDarkMode>
-              <DialogTitle className="max-h-0 overflow-clip">
-                Statblock Viewer
-              </DialogTitle>
-              <DialogDescription className="max-h-0 overflow-clip">
-                View of the selected statblock
-              </DialogDescription>
-              {appState.monsterViewerData ? (
-                <MonsterView monsterData={appState.monsterViewerData} />
-              ) : (
-                <div className="grid h-full place-items-center p-4 text-black/20">
-                  {"Loading..."}
-                </div>
-              )}
-            </ScrollArea>
+            {appState.monsterViewerData ? (
+              <iframe
+                className="w-full grow"
+                src={(() => {
+                  const url = new URL(
+                    "/statblockViewer",
+                    window.location.origin,
+                  );
+                  url.searchParams.set(
+                    "statblockName",
+                    appState.monsterViewerData.statblock.name,
+                  );
+                  return url.toString();
+                })()}
+              />
+            ) : (
+              <div className="grid grow place-items-center p-4 text-black/20">
+                {"Loading..."}
+              </div>
+            )}
             <div className="border-mirage-300 flex gap-4 border-t px-4 py-2 sm:px-6 sm:py-3">
               <Button
-                className="w-full"
+                className="w-full bg-[#9966ff] text-[#f5f2ff]"
                 onClick={() =>
                   setAppState({ ...appState, monsterViewerOpen: false })
                 }
