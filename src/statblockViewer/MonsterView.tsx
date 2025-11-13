@@ -16,9 +16,7 @@ export default function MonsterView({
     <div className="flex grow flex-col">
       <ScrollArea className="grow basis-0">
         <div className="bg-mirage-50 grid justify-items-center gap-y-8 p-4 text-sm text-black">
-          <div>
-            <StatBlock statblock={monsterData.statblock} />
-          </div>
+          <StatBlock statblock={monsterData.statblock} />
 
           <div className="flex w-full justify-center gap-2.5">
             <LeafIcon className="size-4 shrink-0" />
