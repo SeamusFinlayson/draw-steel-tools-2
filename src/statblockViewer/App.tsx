@@ -32,7 +32,7 @@ export function StatblockViewer() {
   }, []);
 
   return (
-    <div className="bg-mirage-50 flex h-screen flex-col overflow-hidden pb-[56px]">
+    <div className="bg-mirage-50 flex h-screen flex-col overflow-hidden">
       {collapsed ? (
         <></>
       ) : !monsterData ? (
@@ -42,6 +42,7 @@ export function StatblockViewer() {
       )}
 
       <PluginGate>
+        <div className="h-[56px]" />
         <div
           className={cn(
             "border-mirage-300 bg-mirage-50 absolute right-0 bottom-0 left-0 flex flex-wrap items-end justify-between gap-x-2 gap-y-2 overflow-hidden px-4 py-2",
