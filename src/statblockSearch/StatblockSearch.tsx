@@ -78,7 +78,7 @@ export default function StatblockSearch() {
             )}
             <div className="border-mirage-300 flex gap-4 border-t px-4 py-2 sm:px-6 sm:py-3">
               <Button
-                className="w-full bg-[#9966ff] text-[#f5f2ff]"
+                className="w-full bg-[#9966ff] text-[#f5f2ff] hover:bg-[#9966ff]/90"
                 onClick={() =>
                   setAppState({ ...appState, monsterViewerOpen: false })
                 }
