@@ -46,7 +46,7 @@ export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
               <span className="font-bold">{"Movement: "}</span>
               <span>{statblock.movement ? statblock.movement : "—"}</span>
             </div>
-            {statblock?.with_captain && statblock.roles.includes("Minion") && (
+            {statblock?.with_captain && (
               <div>
                 <span className="font-bold">{"With Captain: "}</span>
                 <span>
