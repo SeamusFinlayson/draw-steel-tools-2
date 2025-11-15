@@ -95,7 +95,7 @@ export default function MinionGroupEditor({
           }}
         />
       </div>
-      <div className="mb-0.5">
+      <div className="mb-0">
         <Label name="Tokens" />
       </div>
       <InputBackground color="DEFAULT">
