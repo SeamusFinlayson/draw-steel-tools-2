@@ -1,7 +1,7 @@
 import { LeafIcon } from "lucide-react";
 import type { MonsterDataBundle } from "../types/monsterDataBundlesZod";
-import { FeatureBlock } from "../statblockSearch/creatureBlockUI/FeatureBlock";
-import { StatBlock } from "../statblockSearch/creatureBlockUI/StatBlock";
+import { FeatureBlock } from "./creatureBlockUI/FeatureBlock";
+import { StatBlock } from "./creatureBlockUI/StatBlock";
 import { ScrollArea } from "../components/ui/scrollArea";
 
 export default function MonsterView({
