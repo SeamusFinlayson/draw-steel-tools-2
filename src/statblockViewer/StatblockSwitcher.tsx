@@ -8,7 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "../components/ui/popover";
-import { ChevronUpIcon } from "lucide-react";
+import { CheckIcon, ChevronUpIcon } from "lucide-react";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { useItems } from "../helpers/useItems";
 import { useSceneMetadata } from "../helpers/useSceneMetadata";
@@ -80,12 +80,13 @@ export function StatBlockSwitcher({
             <PopoverClose key={value} asChild>
               <Button
                 variant={"ghost"}
-                className="w-full justify-start rounded-[8px]"
+                className="hover:bg-mirage-100/70 w-full justify-between rounded-[8px] px-2"
                 onClick={async () =>
                   setMonsterData(await monsterDataFromStatblockName(value))
                 }
               >
-                {value}
+                <div className="truncate">{value}</div>
+                {monsterData.statblock.name === value && <CheckIcon />}
               </Button>
             </PopoverClose>
           ))}
@@ -94,12 +95,13 @@ export function StatBlockSwitcher({
             <PopoverClose key={value} asChild>
               <Button
                 variant={"ghost"}
-                className="w-full justify-start rounded-[8px]"
+                className="hover:bg-mirage-100/70 w-full justify-between rounded-[8px] px-2"
                 onClick={async () =>
                   setMonsterData(await monsterDataFromStatblockName(value))
                 }
               >
-                {value}
+                <div className="truncate">{value}</div>
+                {monsterData.statblock.name === value && <CheckIcon />}
               </Button>
             </PopoverClose>
           ))}
