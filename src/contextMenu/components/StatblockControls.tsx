@@ -27,6 +27,11 @@ export default function StatblockControls({
                 variant={"secondary"}
                 className="bg-mirage-400/30 dark:bg-mirage-500/30 hover:bg-mirage-400/30 hover:dark:bg-mirage-500/30 group w-full basis-40 overflow-clip p-0 focus-visible:ring-0"
                 onClick={async () => {
+                  OBR.broadcast.sendMessage(
+                    getPluginId("set-viewer-statblock"),
+                    { statblockName },
+                    { destination: "LOCAL" },
+                  );
                   OBR.popover.open({
                     id: getPluginId("statblockViewer"),
                     url: (() => {

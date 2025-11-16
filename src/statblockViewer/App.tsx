@@ -12,7 +12,7 @@ import { monsterDataFromStatblockName } from "../helpers/monsterDataFromStatbloc
 import { cn } from "../helpers/utils.ts";
 import Toggle from "../components/ui/Toggle.tsx";
 
-const monsterId = new URLSearchParams(document.location.search).get(
+const statblockName = new URLSearchParams(document.location.search).get(
   "statblockName",
 );
 
@@ -24,12 +24,29 @@ export function StatblockViewer() {
   const [monsterData, setMonsterData] = useState<MonsterDataBundle>();
 
   useEffect(() => {
-    if (!monsterId) throw new Error("Monster ID is Null");
-    monsterDataFromStatblockName(monsterId).then((monsterData) => {
+    if (!statblockName) throw new Error("Monster ID is Null");
+    monsterDataFromStatblockName(statblockName).then((monsterData) => {
       document.title = monsterData.statblock.name;
       setMonsterData(monsterData);
     });
   }, []);
+  useEffect(
+    () =>
+      OBR.broadcast.onMessage(getPluginId("set-viewer-statblock"), (event) => {
+        const data = event.data;
+        if (!data) return;
+        if (!(typeof data === "object")) return;
+        if (!("statblockName" in data)) return;
+        const statblockName = data.statblockName;
+        if (!(typeof statblockName === "string")) return;
+        monsterDataFromStatblockName(statblockName).then((monsterData) => {
+          document.title = monsterData.statblock.name;
+          setMonsterData(monsterData);
+          setCollapsed(false);
+        });
+      }),
+    [],
+  );
 
   return (
     <div className="bg-mirage-50 flex h-screen flex-col overflow-hidden">
