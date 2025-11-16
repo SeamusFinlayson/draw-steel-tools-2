@@ -24,7 +24,7 @@ export function NoMonsterCard({
         <div className="text-foreground-secondary text-sm">{description}</div>
       </div>
       <button
-        className="bg-mirage-100 hover:bg-mirage-200 dark:hover:bg-mirage-800 dark:bg-mirage-900 grid place-items-center rounded-l-sm p-4 text-start text-sm font-normal duration-150"
+        className="bg-mirage-100 hover:bg-mirage-200 focus-visible:bg-mirage-200 dark:focus-visible:bg-mirage-800 dark:hover:bg-mirage-800 dark:bg-mirage-900 grid place-items-center rounded-l-sm p-4 text-start text-sm font-normal duration-150 outline-none"
         onClick={onActionClick}
       >
         {icon}
