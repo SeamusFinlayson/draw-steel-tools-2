@@ -82,12 +82,12 @@ export function StatBlockSwitcher({
 
   return (
     <Popover>
-      <PopoverTrigger className="group w-full" asChild>
+      <PopoverTrigger className="group" asChild>
         <Button
           variant={"outline"}
-          className="h-10 max-w-full grow justify-between px-2 sm:px-4"
+          className="h-10 w-full justify-between px-2 sm:px-4"
         >
-          <div className="max-w-full truncate font-bold">
+          <div className="truncate text-start font-bold">
             {monsterData ? monsterData.statblock.name : "Select Stat Block"}
           </div>
           <ChevronUpIcon className="transition-transform duration-200 ease-out group-data-[state=open]:-rotate-180" />
