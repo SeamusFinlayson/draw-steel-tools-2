@@ -10,7 +10,7 @@ export const buttonVariants = cva(
         accentOutline: "border border-accent text-accent hover:bg-accent/7",
         primary: "bg-accent text-accent-foreground hover:bg-accent/90",
         secondary:
-          "bg-mirage-100 text-mirage-950 hover:bg-mirage-150 dark:bg-mirage-900 dark:text-mirage-50 dark:hover:bg-mirage-800",
+          "bg-mirage-100 text-mirage-950 hover:bg-mirage-200 dark:bg-mirage-900 dark:text-mirage-50 dark:hover:bg-mirage-800",
         ghost:
           "hover:bg-black/7 dark:hover:bg-white/7 text-mirage-950 dark:text-mirage-50",
       },
