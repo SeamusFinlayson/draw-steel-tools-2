@@ -8,7 +8,7 @@ export function FeatureBlock({
 }) {
   return (
     <div className="w-full max-w-lg">
-      <div className="bg-mirage-200 rounded-sm p-2">
+      <div className="rounded-md border-zinc-950 bg-gradient-to-b from-[#d0d0d3] to-[#d0d0d3]/40 p-2">
         <div className="flex items-end justify-between">
           <div className="text-base font-black">{featureBlock.name}</div>
           <div className="font-black">
