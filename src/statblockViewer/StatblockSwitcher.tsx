@@ -73,7 +73,18 @@ export function StatBlockSwitcher({
       </PopoverTrigger>
       <PopoverContent align="start">
         <div className="space-y-2">
-          <div className="text-sm font-bold">Monsters</div>
+          {monsterStatblocks.length == 0 && minionStatblocks.length === 0 && (
+            <>
+              <div className="text-sm font-bold">No Stat Blocks Found</div>
+              <div className="text-sm">
+                Stat Blocks attached to monster tokens and minion groups in this
+                scene will be listed here
+              </div>
+            </>
+          )}
+          {monsterStatblocks.length > 0 && (
+            <div className="text-sm font-bold">Monsters</div>
+          )}
           {monsterStatblocks.map((value) => (
             <PopoverClose key={value} asChild>
               <Button
@@ -90,7 +101,9 @@ export function StatBlockSwitcher({
               </Button>
             </PopoverClose>
           ))}
-          <div className="text-sm font-bold">Minions</div>
+          {minionStatblocks.length > 0 && (
+            <div className="text-sm font-bold">Minions</div>
+          )}
           {minionStatblocks.map((value) => (
             <PopoverClose key={value} asChild>
               <Button
