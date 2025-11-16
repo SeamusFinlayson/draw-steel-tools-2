@@ -5,6 +5,7 @@ import {
   MenuIcon,
   NotebookTextIcon,
   Settings2,
+  TagIcon,
   XIcon,
 } from "lucide-react";
 import Button from "../../components/ui/Button";
@@ -127,8 +128,25 @@ export default function SideBarMenu() {
               </>
             )}
             <div
-              className={cn("text-foreground-secondary mb-2 px-4 text-sm", {
+              className={cn("text-foreground-secondary mb-1 px-4 text-sm", {
                 "mt-4": playerRole === "GM",
+              })}
+            >
+              Recommended
+            </div>
+            <LinkButton
+              name="Token Labels"
+              icon={<TagIcon />}
+              href={"https://seamus-finlayson.ca/pages/token-labels"}
+            />
+            <LinkButton
+              name="Connected Dice"
+              icon={<ConnectedDiceIcon />}
+              href={"https://seamus-finlayson.ca/pages/connected-dice"}
+            />
+            <div
+              className={cn("text-foreground-secondary mb-1 px-4 text-sm", {
+                "mt-4": true,
               })}
             >
               Links
@@ -137,11 +155,6 @@ export default function SideBarMenu() {
               name="Patreon"
               icon={<PatreonIcon className="size-[19px]" />}
               href={"https://www.patreon.com/SeamusFinlayson"}
-            />
-            <LinkButton
-              name="Connected Dice"
-              icon={<ConnectedDiceIcon />}
-              href={"https://seamus-finlayson.ca/pages/connected-dice"}
             />
             <LinkButton
               name="Change Log"
