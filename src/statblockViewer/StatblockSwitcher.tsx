@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { parseTokenData } from "../helpers/tokenHelpers";
 import Button from "../components/ui/Button";
 import type { MonsterDataBundle } from "../types/monsterDataBundlesZod";
@@ -15,20 +15,42 @@ import { useSceneMetadata } from "../helpers/useSceneMetadata";
 import { MONSTER_GROUPS_METADATA_KEY } from "../helpers/monsterGroupHelpers";
 import z from "zod";
 import { MinionGroupZod } from "../types/minionGroup";
+import OBR from "@owlbear-rodeo/sdk";
+import { getPluginId } from "../helpers/getPluginId";
 
 const parseMinionGroups = z.array(MinionGroupZod).parse;
 
 export function StatBlockSwitcher({
   monsterData,
   setMonsterData,
+  setCollapsed,
 }: {
   monsterData: MonsterDataBundle | null;
   setMonsterData: React.Dispatch<MonsterDataBundle>;
+  setCollapsed: (collapsed: boolean) => void;
 }) {
   const items = useItems();
   const minionGroupsMetadata = useSceneMetadata(
     MONSTER_GROUPS_METADATA_KEY,
     parseMinionGroups,
+  );
+
+  useEffect(
+    () =>
+      OBR.broadcast.onMessage(getPluginId("set-viewer-statblock"), (event) => {
+        setCollapsed(false);
+        const data = event.data;
+        if (!data) return;
+        if (!(typeof data === "object")) return;
+        if (!("statblockName" in data)) return;
+        const statblockName = data.statblockName;
+        if (!(typeof statblockName === "string")) return;
+        monsterDataFromStatblockName(statblockName).then((monsterData) => {
+          document.title = monsterData.statblock.name;
+          setMonsterData(monsterData);
+        });
+      }),
+    [],
   );
 
   let monsterStatblocks: string[] = [];

@@ -33,23 +33,6 @@ export function StatblockViewer() {
       setMonsterData(monsterData);
     });
   }, []);
-  useEffect(
-    () =>
-      OBR.broadcast.onMessage(getPluginId("set-viewer-statblock"), (event) => {
-        setCollapsed(false);
-        const data = event.data;
-        if (!data) return;
-        if (!(typeof data === "object")) return;
-        if (!("statblockName" in data)) return;
-        const statblockName = data.statblockName;
-        if (!(typeof statblockName === "string")) return;
-        monsterDataFromStatblockName(statblockName).then((monsterData) => {
-          document.title = monsterData.statblock.name;
-          setMonsterData(monsterData);
-        });
-      }),
-    [],
-  );
 
   return (
     <div className="bg-mirage-50 flex h-screen flex-col overflow-hidden">
@@ -75,6 +58,7 @@ export function StatblockViewer() {
             <StatBlockSwitcher
               monsterData={monsterData}
               setMonsterData={setMonsterData}
+              setCollapsed={setCollapsed}
             />
           )}
 
