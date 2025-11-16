@@ -116,6 +116,7 @@ export default function SideBarMenu() {
                       },
                       disableClickAway: true,
                     });
+                    setOpen(false);
                   }}
                 >
                   <div className="grid size-6 place-items-center">
