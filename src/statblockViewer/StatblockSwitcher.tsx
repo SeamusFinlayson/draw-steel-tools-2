@@ -93,7 +93,7 @@ export function StatBlockSwitcher({
           <ChevronUpIcon className="transition-transform duration-200 ease-out group-data-[state=open]:-rotate-180" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start">
+      <PopoverContent align="start" className="overflow-y-auto">
         <div className="space-y-2">
           {monsterStatblocks.length == 0 && minionStatblocks.length === 0 && (
             <>
