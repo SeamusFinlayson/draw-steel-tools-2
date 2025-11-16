@@ -2,6 +2,11 @@ import type { MonsterDataBundle } from "../types/monsterDataBundlesZod";
 import { FeatureBlock } from "./creatureBlockUI/FeatureBlock";
 import { StatBlock } from "./creatureBlockUI/StatBlock";
 import { ScrollArea } from "../components/ui/scrollArea";
+import defaultMalice from "./defaultMalice.json";
+import { DrawSteelFeatureBlockZod } from "../types/DrawSteelZod";
+
+const parsedDefaultMaliceFeatures =
+  DrawSteelFeatureBlockZod.parse(defaultMalice);
 
 export default function MonsterView({
   monsterData: monsterData,
@@ -25,6 +30,7 @@ export default function MonsterView({
                   featureBlock={item}
                 />
               ))}
+            <FeatureBlock featureBlock={parsedDefaultMaliceFeatures} />
           </div>
         </div>
       </ScrollArea>
