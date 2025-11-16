@@ -50,7 +50,7 @@ export function StatBlockSwitcher({
           setMonsterData(monsterData);
         });
       }),
-    [],
+    [setCollapsed, setMonsterData],
   );
 
   let monsterStatblocks: string[] = [];
