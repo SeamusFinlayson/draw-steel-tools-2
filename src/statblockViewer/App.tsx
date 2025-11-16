@@ -54,12 +54,14 @@ export function StatblockViewer() {
             { "border-t": !collapsed },
           )}
         >
-          {!collapsed && monsterData !== undefined && (
-            <StatBlockSwitcher
-              monsterData={monsterData}
-              setMonsterData={setMonsterData}
-              setCollapsed={setCollapsed}
-            />
+          {monsterData !== undefined && (
+            <div className={cn({ hidden: collapsed }, "grow")}>
+              <StatBlockSwitcher
+                monsterData={monsterData}
+                setMonsterData={setMonsterData}
+                setCollapsed={setCollapsed}
+              />
+            </div>
           )}
 
           <div className="flex grow basis-0 items-center justify-end gap-2">

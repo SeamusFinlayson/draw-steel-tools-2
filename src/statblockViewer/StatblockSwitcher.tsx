@@ -82,7 +82,7 @@ export function StatBlockSwitcher({
 
   return (
     <Popover>
-      <PopoverTrigger className="group" asChild>
+      <PopoverTrigger className="group w-full" asChild>
         <Button
           variant={"outline"}
           className="h-10 max-w-full grow justify-between px-2 sm:px-4"
