@@ -22,7 +22,7 @@ export function StatBlockSwitcher({
   monsterData,
   setMonsterData,
 }: {
-  monsterData: MonsterDataBundle;
+  monsterData: MonsterDataBundle | null;
   setMonsterData: React.Dispatch<MonsterDataBundle>;
 }) {
   const items = useItems();
@@ -65,11 +65,9 @@ export function StatBlockSwitcher({
           variant={"outline"}
           className="h-10 max-w-full grow justify-between px-2 sm:px-4"
         >
-          {monsterData && (
-            <div className="max-w-full truncate font-bold">
-              {monsterData.statblock.name}
-            </div>
-          )}
+          <div className="max-w-full truncate font-bold">
+            {monsterData ? monsterData.statblock.name : "Select Stat Block"}
+          </div>
           <ChevronUpIcon className="transition-transform duration-200 ease-out group-data-[state=open]:-rotate-180" />
         </Button>
       </PopoverTrigger>
@@ -86,7 +84,9 @@ export function StatBlockSwitcher({
                 }
               >
                 <div className="truncate">{value}</div>
-                {monsterData.statblock.name === value && <CheckIcon />}
+                {monsterData && monsterData.statblock.name === value && (
+                  <CheckIcon />
+                )}
               </Button>
             </PopoverClose>
           ))}
@@ -101,7 +101,9 @@ export function StatBlockSwitcher({
                 }
               >
                 <div className="truncate">{value}</div>
-                {monsterData.statblock.name === value && <CheckIcon />}
+                {monsterData && monsterData.statblock.name === value && (
+                  <CheckIcon />
+                )}
               </Button>
             </PopoverClose>
           ))}

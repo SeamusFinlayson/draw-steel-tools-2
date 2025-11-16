@@ -21,10 +21,13 @@ export function StatblockViewer() {
   url.searchParams.delete("obrref");
 
   const [collapsed, setCollapsed] = useState(false);
-  const [monsterData, setMonsterData] = useState<MonsterDataBundle>();
+  const [monsterData, setMonsterData] = useState<MonsterDataBundle | null>();
 
   useEffect(() => {
-    if (!statblockName) throw new Error("Monster ID is Null");
+    if (!statblockName) {
+      setMonsterData(null);
+      return;
+    }
     monsterDataFromStatblockName(statblockName).then((monsterData) => {
       document.title = monsterData.statblock.name;
       setMonsterData(monsterData);
@@ -33,6 +36,7 @@ export function StatblockViewer() {
   useEffect(
     () =>
       OBR.broadcast.onMessage(getPluginId("set-viewer-statblock"), (event) => {
+        setCollapsed(false);
         const data = event.data;
         if (!data) return;
         if (!(typeof data === "object")) return;
@@ -42,7 +46,6 @@ export function StatblockViewer() {
         monsterDataFromStatblockName(statblockName).then((monsterData) => {
           document.title = monsterData.statblock.name;
           setMonsterData(monsterData);
-          setCollapsed(false);
         });
       }),
     [],
@@ -52,8 +55,10 @@ export function StatblockViewer() {
     <div className="bg-mirage-50 flex h-screen flex-col overflow-hidden">
       {collapsed ? (
         <></>
-      ) : !monsterData ? (
+      ) : monsterData === undefined ? (
         <div className="text-foreground-secondary grow p-4">Loading...</div>
+      ) : monsterData === null ? (
+        <div className="text-foreground-secondary grow p-4"></div>
       ) : (
         <MonsterView monsterData={monsterData} />
       )}
@@ -66,7 +71,7 @@ export function StatblockViewer() {
             { "border-t": !collapsed },
           )}
         >
-          {!collapsed && monsterData && (
+          {!collapsed && monsterData !== undefined && (
             <StatBlockSwitcher
               monsterData={monsterData}
               setMonsterData={setMonsterData}

@@ -3,6 +3,7 @@ import {
   FileQuestionIcon,
   HistoryIcon,
   MenuIcon,
+  NotebookTextIcon,
   Settings2,
   XIcon,
 } from "lucide-react";
@@ -63,26 +64,66 @@ export default function SideBarMenu() {
         <ScrollArea className="h-full">
           <div className="mb-2 grid items-center">
             {playerRole === "GM" && (
-              <Button
-                variant={"ghost"}
-                className="h-10 w-full items-center justify-start gap-4 rounded-none px-4 active:rounded-none"
-                onClick={async () => {
-                  const themeMode = (await OBR.theme.getTheme()).mode;
-                  OBR.popover.open({
-                    id: getPluginId("settings"),
-                    url: `/settings?themeMode=${themeMode}`,
-                    height: 668,
-                    width: 500,
-                    hidePaper: false,
-                  });
-                  setOpen(false);
-                }}
-              >
-                <div className="grid size-6 place-items-center">
-                  <Settings2 />
-                </div>
-                <div>Settings</div>
-              </Button>
+              <>
+                <Button
+                  variant={"ghost"}
+                  className="h-10 w-full items-center justify-start gap-4 rounded-none px-4 active:rounded-none"
+                  onClick={async () => {
+                    const themeMode = (await OBR.theme.getTheme()).mode;
+
+                    OBR.popover.open({
+                      id: getPluginId("settings"),
+                      url: `/settings?themeMode=${themeMode}`,
+                      height: 668,
+                      width: 500,
+                      hidePaper: false,
+                    });
+                    setOpen(false);
+                  }}
+                >
+                  <div className="grid size-6 place-items-center">
+                    <Settings2 />
+                  </div>
+                  <div>Settings</div>
+                </Button>
+                <Button
+                  variant={"ghost"}
+                  className="h-10 w-full items-center justify-start gap-4 rounded-none px-4 active:rounded-none"
+                  onClick={async () => {
+                    OBR.broadcast.sendMessage(
+                      getPluginId("set-viewer-statblock"),
+                      {},
+                      { destination: "LOCAL" },
+                    );
+                    OBR.popover.open({
+                      id: getPluginId("statblockViewer"),
+                      url: (() => {
+                        const url = new URL(
+                          "/statblockViewer",
+                          window.location.origin,
+                        );
+                        return url.toString();
+                      })(),
+                      height: 2000,
+                      width: 500,
+                      anchorOrigin: {
+                        horizontal: "RIGHT",
+                        vertical: "BOTTOM",
+                      },
+                      transformOrigin: {
+                        horizontal: "CENTER",
+                        vertical: "CENTER",
+                      },
+                      disableClickAway: true,
+                    });
+                  }}
+                >
+                  <div className="grid size-6 place-items-center">
+                    <NotebookTextIcon />
+                  </div>
+                  <div>Stat Block Viewer</div>
+                </Button>
+              </>
             )}
             <div
               className={cn("text-foreground-secondary mb-2 px-4 text-sm", {
