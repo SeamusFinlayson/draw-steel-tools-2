@@ -86,7 +86,7 @@ export default function MinionGroupEditor({
             setMinionGroup({
               ...minionGroup,
               individualStamina: parseNumber(target.value, {
-                min: -9999,
+                min: 1,
                 max: 9999,
                 inlineMath: { previousValue: minionGroup.individualStamina },
                 truncate: true,
