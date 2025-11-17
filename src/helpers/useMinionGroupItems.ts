@@ -11,6 +11,7 @@ export function useMinionGroupItems(groupId: string) {
         items.filter(
           (item) =>
             isImage(item) &&
+            ["CHARACTER", "MOUNT"].includes(item.layer) &&
             (item.metadata?.[TOKEN_METADATA_KEY] as MinionTokenData)
               ?.groupId === groupId,
         ) as Image[],
