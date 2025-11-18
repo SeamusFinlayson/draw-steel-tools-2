@@ -1,5 +1,5 @@
 import "./../index.css";
-import MonsterView from "./MonsterView.tsx";
+import MonsterView from "./creatureBlockUI/MonsterView.tsx";
 import Button from "../components/ui/Button.tsx";
 import OBR from "@owlbear-rodeo/sdk";
 import { getPluginId } from "../helpers/getPluginId.ts";

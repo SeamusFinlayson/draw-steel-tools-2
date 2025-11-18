@@ -1,9 +1,9 @@
-import type { MonsterDataBundle } from "../types/monsterDataBundlesZod";
-import { FeatureBlock } from "./creatureBlockUI/FeatureBlock";
-import { StatBlock } from "./creatureBlockUI/StatBlock";
-import { ScrollArea } from "../components/ui/scrollArea";
-import defaultMalice from "./defaultMalice.json";
-import { DrawSteelFeatureBlockZod } from "../types/DrawSteelZod";
+import type { MonsterDataBundle } from "../../types/monsterDataBundlesZod";
+import { FeatureBlock } from "./FeatureBlock";
+import { StatBlock } from "./StatBlock";
+import { ScrollArea } from "../../components/ui/scrollArea";
+import defaultMalice from "../defaultMalice.json";
+import { DrawSteelFeatureBlockZod } from "../../types/DrawSteelZod";
 
 const parsedDefaultMaliceFeatures =
   DrawSteelFeatureBlockZod.parse(defaultMalice);
