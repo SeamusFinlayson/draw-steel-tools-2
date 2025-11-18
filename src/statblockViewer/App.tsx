@@ -109,7 +109,7 @@ export function StatblockViewer() {
                 </Toggle>
                 <Button
                   variant={"primary"}
-                  className="h-10 grow"
+                  className="h-10"
                   onClick={() =>
                     OBR.popover.close(getPluginId("statblockViewer"))
                   }
