@@ -17,6 +17,7 @@ import z from "zod";
 import { MinionGroupZod } from "../types/minionGroup";
 import OBR from "@owlbear-rodeo/sdk";
 import { getPluginId } from "../helpers/getPluginId";
+import usePlayerRole from "../helpers/usePlayerRole";
 
 const parseMinionGroups = z.array(MinionGroupZod).parse;
 
@@ -29,6 +30,7 @@ export function StatBlockSwitcher({
   setMonsterData: React.Dispatch<MonsterDataBundle>;
   setCollapsed: (collapsed: boolean) => void;
 }) {
+  const playerRole = usePlayerRole();
   const items = useItems();
   const minionGroupsMetadata = useSceneMetadata(
     MONSTER_GROUPS_METADATA_KEY,
@@ -54,14 +56,14 @@ export function StatBlockSwitcher({
   );
 
   let monsterStatblocks: string[] = [];
-  const groupIds: string[] = [];
   items.forEach((item) => {
     const token = parseTokenData(item.metadata);
-    if (token.type === "MONSTER" && token.statblockName !== "") {
+    if (
+      token.type === "MONSTER" &&
+      token.statblockName !== "" &&
+      (playerRole === "GM" || !token.gmOnly)
+    ) {
       monsterStatblocks.push(token.statblockName);
-    }
-    if (token.type === "MINION") {
-      groupIds.push(token.groupId);
     }
   });
   monsterStatblocks = [...new Set(monsterStatblocks)].sort((a, b) =>
@@ -71,7 +73,7 @@ export function StatBlockSwitcher({
   let minionStatblocks: string[] = [];
   if (minionGroupsMetadata.ready && minionGroupsMetadata.value !== undefined) {
     minionGroupsMetadata.value.forEach((group) => {
-      if (group.statblock && group.statblock !== "") {
+      if (group.statblock && group.statblock !== "" && playerRole === "GM") {
         minionStatblocks.push(group.statblock);
       }
     });

@@ -29,10 +29,19 @@ import { MinionGroupFallback } from "./components/MinionGroupFallback";
 const parseMinionGroups = z.array(MinionGroupZod).parse;
 
 export default function TokenEditor() {
-  const [token, setToken] = useState<Token>();
-
   const playerRole = usePlayerRole();
 
+  const settingsMetadata = useRoomMetadata(
+    SETTINGS_METADATA_KEY,
+    SettingsZod.parse,
+  );
+
+  const minionGroupsMetadata = useSceneMetadata(
+    MONSTER_GROUPS_METADATA_KEY,
+    parseMinionGroups,
+  );
+
+  const [token, setToken] = useState<Token>();
   useEffect(() => {
     const handleItems = (items: Item[]) => {
       if (items.length !== 1) throw new Error("Too many items selected.");
@@ -45,16 +54,6 @@ export default function TokenEditor() {
       getSelectedItems({ items }).then(handleItems);
     });
   }, []);
-
-  const settingsMetadata = useRoomMetadata(
-    SETTINGS_METADATA_KEY,
-    SettingsZod.parse,
-  );
-
-  const minionGroupsMetadata = useSceneMetadata(
-    MONSTER_GROUPS_METADATA_KEY,
-    parseMinionGroups,
-  );
 
   if (token === undefined || !settingsMetadata.ready) return <></>;
 
@@ -142,6 +141,7 @@ export default function TokenEditor() {
             <StatblockControls
               statblockName={token.statblockName}
               setStatblockName={() => updateToken({ statblockName: "" })}
+              playerRole={playerRole}
             />
           )}
           {playerRole === "GM" && (

@@ -4,21 +4,30 @@ import { XIcon, PlusIcon } from "lucide-react";
 import Button from "../../components/ui/Button";
 import { getPluginId } from "../../helpers/getPluginId";
 import { Label } from "../trackerInputs/Label";
+import { cn } from "../../helpers/utils";
 
 export default function StatblockControls({
   label = "Statblock",
   statblockName,
   setStatblockName,
   groupId,
+  playerRole,
 }: {
   label?: string;
   statblockName: string;
   setStatblockName: (statblockName: string) => void;
   groupId?: string;
+  playerRole: "PLAYER" | "GM";
 }) {
   return (
     <div className="text-foreground col-span-2 w-full">
-      <Label name={label} />
+      <div
+        className={cn({
+          "opacity-50": playerRole === "PLAYER" && statblockName === "",
+        })}
+      >
+        <Label name={label} />
+      </div>
       <div className="flex w-full items-center justify-between gap-0.5">
         {statblockName !== "" ? (
           <>
@@ -63,18 +72,21 @@ export default function StatblockControls({
                 </div>
               </Button>
             </div>
-            <Button
-              variant={"secondary"}
-              className="bg-mirage-400/30 dark:bg-mirage-500/30 hover:bg-mirage-400/30 hover:dark:bg-mirage-500/30 group aspect-square shrink-0 overflow-clip p-0 focus-visible:ring-0"
-              onClick={() => setStatblockName("")}
-            >
-              <div className="group-hover:bg-foreground/7 flex size-full items-center-safe justify-center text-sm duration-150">
-                <XIcon />
-              </div>
-            </Button>
+            {playerRole === "GM" && (
+              <Button
+                variant={"secondary"}
+                className="bg-mirage-400/30 dark:bg-mirage-500/30 hover:bg-mirage-400/30 hover:dark:bg-mirage-500/30 group aspect-square shrink-0 overflow-clip p-0 focus-visible:ring-0"
+                onClick={() => setStatblockName("")}
+              >
+                <div className="group-hover:bg-foreground/7 flex size-full items-center-safe justify-center text-sm duration-150">
+                  <XIcon />
+                </div>
+              </Button>
+            )}
           </>
         ) : (
           <Button
+            disabled={playerRole === "PLAYER"}
             variant={"secondary"}
             className="bg-mirage-400/30 dark:bg-mirage-500/30 hover:bg-mirage-400/30 hover:dark:bg-mirage-500/30 group w-full overflow-clip p-0 focus-visible:ring-0"
             onClick={async () => {
