@@ -7,12 +7,15 @@ import type { MinionTokenData } from "../types/tokenDataZod";
 import { MinionGroupZod, type MinionGroup } from "../types/minionGroup";
 import z from "zod";
 import { MONSTER_GROUPS_METADATA_KEY } from "../helpers/monsterGroupHelpers";
-import { getPluginId } from "../helpers/getPluginId";
 import { setDifference } from "../helpers/setDifference";
 import { sendItemsToScene } from "./sendItemsToScene";
 import { createHeroOverlay } from "./overlays/createHeroOverlay";
 import { createMonsterOverlay } from "./overlays/createMonsterOverlay";
 import { createMinionOverlay } from "./overlays/createMinionOverlay";
+import {
+  getMinionTokenCounts,
+  type TokenCounts,
+} from "../helpers/getMinionTokenCounts";
 
 type AttachmentLog = { image: Image; attachmentIds: string[] } | undefined;
 type AttachmentLogs = {
@@ -25,7 +28,7 @@ let settings = defaultSettings;
 let callbacksStarted = false;
 let themeMode: "DARK" | "LIGHT";
 let minionGroups: MinionGroup[] = [];
-let minionGroupTokenCounts: { [groupId: string]: number } = {};
+let minionTokenCounts: TokenCounts;
 let upToDateSceneItems: Item[] = [];
 
 export default async function startBackground() {
@@ -60,7 +63,12 @@ async function refreshAllAttachments() {
 
   const images = upToDateSceneItems.filter((item) => isImage(item));
 
-  updateMinionGroupCounts(images);
+  const { counts } = getMinionTokenCounts(
+    images,
+    minionGroups,
+    minionTokenCounts,
+  );
+  minionTokenCounts = counts;
 
   // Update attachments
   const newAttachmentLog: AttachmentLogs = {};
@@ -142,10 +150,15 @@ async function startCallbacks() {
       }
 
       //create list of modified and new items, skipping deleted items
-      const minionsChanged = updateMinionGroupCounts(imagesFromCallback);
+      const minionTokens = getMinionTokenCounts(
+        imagesFromCallback,
+        minionGroups,
+        minionTokenCounts,
+      );
+      minionTokenCounts = minionTokens.counts;
       const separatedImages = separateChangedItems(
         imagesFromCallback,
-        minionsChanged,
+        minionTokens.changed,
       );
 
       // Add and delete attachments
@@ -236,7 +249,7 @@ function updateTokenOverlay(image: Image, role: "PLAYER" | "GM", dpi: number) {
       role,
       dpi,
       settings,
-      minionGroupTokenCounts,
+      minionTokenCounts,
     );
   } else {
     attachments = createHeroOverlay(image, token, role, dpi, settings);
@@ -251,36 +264,4 @@ function updateTokenOverlay(image: Image, role: "PLAYER" | "GM", dpi: number) {
   }
 
   return attachmentIds;
-}
-
-function updateMinionGroupCounts(items: Item[]) {
-  const newMinionGroupCounts: { [groupId: string]: number } = {};
-  minionGroups.forEach((group) => {
-    newMinionGroupCounts[group.id] = items
-      .filter((item) => ["CHARACTER", "MOUNT"].includes(item.layer))
-      .map(
-        (item) =>
-          (item.metadata?.[getPluginId("metadata")] as { groupId?: string })
-            ?.groupId,
-      )
-      .filter((val) => val === group.id).length;
-  });
-  if (
-    Object.keys(minionGroupTokenCounts).length !==
-    Object.keys(newMinionGroupCounts).length
-  ) {
-    minionGroupTokenCounts = newMinionGroupCounts;
-    return true;
-  }
-  for (const minionGroup of minionGroups) {
-    if (
-      newMinionGroupCounts[minionGroup.id] !==
-      minionGroupTokenCounts[minionGroup.id]
-    ) {
-      minionGroupTokenCounts = newMinionGroupCounts;
-      return true;
-    }
-  }
-  minionGroupTokenCounts = newMinionGroupCounts;
-  return false;
 }
