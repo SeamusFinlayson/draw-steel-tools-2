@@ -9,6 +9,7 @@ import NameInput from "./NameInput";
 import StatblockControls from "./StatblockControls";
 import InputBackground from "../trackerInputs/InputBackground";
 import type { DefinedSettings } from "../../types/settingsZod";
+import usePlayerRole from "../../helpers/usePlayerRole";
 
 export default function MinionGroupEditor({
   minionGroup,
@@ -20,6 +21,7 @@ export default function MinionGroupEditor({
   settings: DefinedSettings;
 }) {
   const groupItems = useMinionGroupItems(minionGroup.id);
+  const playerRole = usePlayerRole();
 
   return (
     <div className="space-y-2">
@@ -150,6 +152,7 @@ export default function MinionGroupEditor({
           setMinionGroup({ ...minionGroup, statblock: statblockName })
         }
         groupId={minionGroup.id}
+        playerRole={playerRole}
       />
     </div>
   );
