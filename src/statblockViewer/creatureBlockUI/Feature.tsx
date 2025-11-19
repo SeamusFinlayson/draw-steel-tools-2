@@ -37,12 +37,12 @@ export function Feature({ feature: feature }: { feature: DrawSteelFeature }) {
         <div>
           <div className="flex justify-between">
             <div className="flex gap-1">
-              <div className="font-bold">{feature.name}</div>
+              <div className="font-black">{feature.name}</div>
               <div>{roll}</div>
             </div>
-            {feature.cost && <div className="font-bold">{feature.cost}</div>}
+            {feature.cost && <div className="font-black">{feature.cost}</div>}
             {feature.ability_type && (
-              <div className="font-bold">{feature.ability_type}</div>
+              <div className="font-black">{feature.ability_type}</div>
             )}
           </div>
           <div className="flex justify-between">

@@ -5,6 +5,7 @@ import dragonHeadIcon from "./icons/dragonHeadIcon";
 import type { DefinedSettings } from "../types/settingsZod";
 import { getSelectedItems } from "../helpers/getSelectedItem";
 import { TOKEN_METADATA_KEY } from "../helpers/tokenHelpers";
+import { removeCreatureData } from "../helpers/removeCreatureData";
 
 const VERTICAL_PADDING = 16;
 const NAME_HEIGHT = 36 + 18 + 8;
@@ -47,6 +48,11 @@ function createPlayerMenu(
             {
               key: ["metadata", TOKEN_METADATA_KEY, "type"],
               value: "MONSTER",
+              operator: "!=",
+            },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY, "type"],
+              value: "MINION",
               operator: "!=",
             },
             {
@@ -135,6 +141,11 @@ function createGmMenu(themeMode: "DARK" | "LIGHT", nameTagsEnabled: boolean) {
               value: "MONSTER",
               operator: "!=",
             },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY, "type"],
+              value: "MINION",
+              operator: "!=",
+            },
           ],
           roles: ["GM"],
           max: 1,
@@ -185,6 +196,39 @@ function createGmMenu(themeMode: "DARK" | "LIGHT", nameTagsEnabled: boolean) {
         MONSTER_STATS_HEIGHT +
         VERTICAL_PADDING +
         ACCESS_TOGGLE_HEIGHT,
+    },
+  });
+
+  OBR.contextMenu.create({
+    id: getPluginId("gm-menu-minion"),
+    icons: [
+      {
+        icon: dragonHeadIcon,
+        label: "Edit Minions",
+        filter: {
+          every: [
+            { key: "layer", value: "CHARACTER", coordinator: "||" },
+            { key: "layer", value: "MOUNT" },
+            { key: "type", value: "IMAGE" },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY],
+              value: undefined,
+              operator: "!=",
+            },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY, "type"],
+              value: "MINION",
+              operator: "==",
+            },
+          ],
+          roles: ["GM"],
+          max: 1,
+        },
+      },
+    ],
+    embed: {
+      url: getUrl(themeMode),
+      height: NAME_HEIGHT + 180 + VERTICAL_PADDING,
     },
   });
 }
@@ -361,6 +405,11 @@ function createRemoveStats() {
               value: true,
               operator: "!=",
             },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY, "type"],
+              value: "MINION",
+              operator: "!=",
+            },
           ],
           max: 1,
           roles: ["PLAYER"],
@@ -369,15 +418,7 @@ function createRemoveStats() {
     ],
     onClick: async () => {
       const selectedItems = await getSelectedItems();
-      OBR.scene.items.updateItems(
-        selectedItems.map((item) => item.id),
-        (items) => {
-          items.forEach((item) => {
-            item.metadata[TOKEN_METADATA_KEY] = undefined;
-            item.metadata[getPluginId("name")] = undefined;
-          });
-        },
-      );
+      removeCreatureData(selectedItems);
     },
   });
 }

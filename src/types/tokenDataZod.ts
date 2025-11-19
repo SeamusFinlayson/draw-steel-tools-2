@@ -22,8 +22,13 @@ export const MonsterTokenDataZod = z.object({
   statblockName: z.string().optional(),
 });
 
+export const MinionTokenDataZod = z.object({
+  type: z.literal("MINION"),
+  groupId: z.string(),
+});
+
 export const CharacterTokenDataZod = z
-  .union([HeroTokenDataZod, MonsterTokenDataZod])
+  .union([HeroTokenDataZod, MonsterTokenDataZod, MinionTokenDataZod])
   .optional();
 
 export const DefinedHeroTokenDataZod = z.object({
@@ -48,18 +53,26 @@ export const DefinedMonsterTokenDataZod = z.object({
   statblockName: z.string(),
 });
 
+export const DefinedMinionTokenDataZod = z.object({
+  type: z.literal("MINION"),
+  groupId: z.string(),
+});
+
 export const DefinedCharacterTokenDataZod = z.union([
   DefinedHeroTokenDataZod,
   DefinedMonsterTokenDataZod,
+  DefinedMinionTokenDataZod,
 ]);
 
 export type HeroTokenData = z.infer<typeof HeroTokenDataZod>;
 export type MonsterTokenData = z.infer<typeof MonsterTokenDataZod>;
+export type MinionTokenData = z.infer<typeof MinionTokenDataZod>;
 export type CharacterTokenData = z.infer<typeof CharacterTokenDataZod>;
 export type DefinedHeroTokenData = z.infer<typeof DefinedHeroTokenDataZod>;
 export type DefinedMonsterTokenData = z.infer<
   typeof DefinedMonsterTokenDataZod
 >;
+export type DefinedMinionTokenData = z.infer<typeof DefinedMinionTokenDataZod>;
 export type DefinedCharacterTokenData = z.infer<
   typeof DefinedCharacterTokenDataZod
 >;

@@ -19,91 +19,75 @@ export function OptionsView({
   appState: AppState;
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;
 }) {
-  const tokenOptions = appState.tokenOptions;
+  const setupOptions = appState.setupOptions;
+  const selectedIndexBundle = appState.selectedIndexBundle;
+
+  if (selectedIndexBundle === undefined) {
+    throw new Error("Selected index bundle cannot be undefined");
+  }
 
   return (
     <div className="grow space-y-6 p-4 sm:p-6">
       <div>
         <h1 className="mb-1">Selected Statblock</h1>
-        {appState.selectedIndexBundle !== undefined &&
-          (appState.selectedIndexBundle === "NONE" ? (
-            <NoMonsterCard
-              onActionClick={() =>
-                setAppState({
-                  ...appState,
-                  selectedIndexBundle: undefined,
-                  tokenOptions: undefined,
-                })
-              }
-              icon={<XIcon />}
-            />
-          ) : (
-            <MonsterPreviewCard
-              indexBundle={appState.selectedIndexBundle}
-              onCardClick={() =>
-                setAppState({ ...appState, monsterViewerOpen: true })
-              }
-              onActionClick={() =>
-                setAppState({
-                  ...appState,
-                  selectedIndexBundle: undefined,
-                  tokenOptions: undefined,
-                })
-              }
-              icon={<XIcon />}
-            />
-          ))}
+        {selectedIndexBundle === "NONE" ? (
+          <NoMonsterCard
+            variant={setupOptions?.type === "MINION" ? "MINION" : "BASIC"}
+            onActionClick={() =>
+              setAppState({
+                ...appState,
+                selectedIndexBundle: undefined,
+                setupOptions: undefined,
+              })
+            }
+            icon={<XIcon />}
+          />
+        ) : (
+          <MonsterPreviewCard
+            indexBundle={selectedIndexBundle}
+            onCardClick={() =>
+              setAppState({ ...appState, monsterViewerOpen: true })
+            }
+            onActionClick={() =>
+              setAppState({
+                ...appState,
+                selectedIndexBundle: undefined,
+                setupOptions: undefined,
+              })
+            }
+            icon={<XIcon />}
+          />
+        )}
       </div>
-      {tokenOptions ? (
-        <div>
-          <h1 className="mb-1">Token Options</h1>
-          <div className="flex items-center">
-            <Checkbox
-              id="setStaminaCheckbox"
-              checked={tokenOptions.stamina.overwriteTokens}
-              onCheckedChange={(checked) => {
-                setAppState({
-                  ...appState,
-                  tokenOptions: {
-                    ...tokenOptions,
-                    stamina: {
-                      ...tokenOptions.stamina,
-                      overwriteTokens: checked === true,
-                    },
-                  },
-                });
-              }}
-            />
-            <Label className="h-fit" htmlFor="setStaminaCheckbox">
-              {"Set Stamina"}
-            </Label>
-          </div>
-          <Collapsible open={tokenOptions.stamina.overwriteTokens}>
-            <CollapsibleContent>
-              <div className="bg-mirage-99 dark:bg-mirage-901 my-1 ml-10 space-y-4 rounded-2xl p-4">
+      {setupOptions ? (
+        <>
+          {setupOptions.type === "MINION" && (
+            <div>
+              <h1 className="mb-1">Minion Squad Options</h1>
+              <div className="bg-mirage-99 dark:bg-mirage-901 my-1 space-y-4 rounded-2xl p-4">
                 <div>
                   <Label htmlFor="nameInput" className="mb-2">
-                    Stamina
+                    Individual Stamina
                   </Label>
                   <Input id="nameInput" className="w-60 max-w-full">
                     <FreeWheelInput
                       clearContentOnFocus
-                      value={tokenOptions.stamina.value.toString()}
+                      value={setupOptions.stamina.value.toString()}
                       onUpdate={(target) => {
                         const stamina = parseNumber(target.value, {
                           truncate: true,
-                          min: 0,
+                          min: 1,
                           max: 9999,
                           inlineMath: {
-                            previousValue: tokenOptions.stamina.value,
+                            previousValue: setupOptions.stamina.value,
                           },
                         });
                         setAppState({
                           ...appState,
-                          tokenOptions: {
-                            ...tokenOptions,
+                          setupOptions: {
+                            ...setupOptions,
                             stamina: {
-                              ...tokenOptions.stamina,
+                              ...setupOptions.stamina,
                               value: stamina,
                             },
                           },
@@ -112,47 +96,20 @@ export function OptionsView({
                     />
                   </Input>
                 </div>
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
-          <div className="flex items-center">
-            <Checkbox
-              id="setNameCheckbox"
-              checked={tokenOptions.name.overwriteTokens}
-              onCheckedChange={(checked) =>
-                setAppState({
-                  ...appState,
-                  tokenOptions: {
-                    ...tokenOptions,
-                    name: {
-                      ...tokenOptions.name,
-                      overwriteTokens: checked === true,
-                    },
-                  },
-                })
-              }
-            />
-            <Label className="h-fit" htmlFor="setNameCheckbox">
-              {"Set Name"}
-            </Label>
-          </div>
-          <Collapsible open={tokenOptions.name.overwriteTokens}>
-            <CollapsibleContent>
-              <div className="bg-mirage-99 dark:bg-mirage-901 my-1 ml-10 space-y-4 rounded-2xl p-4">
                 <div>
-                  <Label htmlFor="nameInput" className="mb-1">
-                    Name
+                  <Label htmlFor="groupNameInput" className="mb-2">
+                    Squad Name
                   </Label>
-                  <Input id="nameInput" className="w-60 max-w-full">
+                  <Input id="groupNameInput" className="w-60 max-w-full">
                     <FreeWheelInput
-                      value={tokenOptions.name.value}
+                      value={setupOptions.groupName.value}
                       onUpdate={(target) => {
                         setAppState({
                           ...appState,
-                          tokenOptions: {
-                            ...tokenOptions,
-                            name: {
-                              ...tokenOptions.name,
+                          setupOptions: {
+                            ...setupOptions,
+                            groupName: {
+                              ...setupOptions.groupName,
                               value: target.value,
                             },
                           },
@@ -164,28 +121,163 @@ export function OptionsView({
                 <div className="flex items-center">
                   <Checkbox
                     id="AddNameTagCheckbox"
-                    checked={tokenOptions.name.nameTag}
+                    checked={setupOptions.groupName.nameTags}
                     onCheckedChange={(checked) =>
                       setAppState({
                         ...appState,
-                        tokenOptions: {
-                          ...tokenOptions,
-                          name: {
-                            ...tokenOptions.name,
-                            nameTag: checked === true,
+                        setupOptions: {
+                          ...setupOptions,
+                          groupName: {
+                            ...setupOptions.groupName,
+                            nameTags: checked === true,
                           },
                         },
                       })
                     }
                   />
                   <Label className="h-fit" htmlFor="AddNameTagCheckbox">
-                    Add Name Tag
+                    Add Name Tags
                   </Label>
                 </div>
               </div>
-            </CollapsibleContent>
-          </Collapsible>
-        </div>
+            </div>
+          )}
+          <div>
+            {setupOptions.type === "BASIC" && (
+              <>
+                <h1 className="mb-1">Token Options</h1>
+                <div className="flex items-center">
+                  <Checkbox
+                    id="setStaminaCheckbox"
+                    checked={setupOptions.stamina.enabled}
+                    onCheckedChange={(checked) => {
+                      setAppState({
+                        ...appState,
+                        setupOptions: {
+                          ...setupOptions,
+                          stamina: {
+                            ...setupOptions.stamina,
+                            enabled: checked === true,
+                          },
+                        },
+                      });
+                    }}
+                  />
+                  <Label className="h-fit" htmlFor="setStaminaCheckbox">
+                    {"Set Stamina"}
+                  </Label>
+                </div>
+                <Collapsible open={setupOptions.stamina.enabled}>
+                  <CollapsibleContent>
+                    <div className="bg-mirage-99 dark:bg-mirage-901 my-1 ml-10 space-y-4 rounded-2xl p-4">
+                      <div>
+                        <Label htmlFor="nameInput" className="mb-2">
+                          Stamina
+                        </Label>
+                        <Input id="nameInput" className="w-60 max-w-full">
+                          <FreeWheelInput
+                            clearContentOnFocus
+                            value={setupOptions.stamina.value.toString()}
+                            onUpdate={(target) => {
+                              const stamina = parseNumber(target.value, {
+                                truncate: true,
+                                min: 0,
+                                max: 9999,
+                                inlineMath: {
+                                  previousValue: setupOptions.stamina.value,
+                                },
+                              });
+                              setAppState({
+                                ...appState,
+                                setupOptions: {
+                                  ...setupOptions,
+                                  stamina: {
+                                    ...setupOptions.stamina,
+                                    value: stamina,
+                                  },
+                                },
+                              });
+                            }}
+                          />
+                        </Input>
+                      </div>
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+                <div className="flex items-center">
+                  <Checkbox
+                    id="setNameCheckbox"
+                    checked={setupOptions.name.enabled}
+                    onCheckedChange={(checked) =>
+                      setAppState({
+                        ...appState,
+                        setupOptions: {
+                          ...setupOptions,
+                          name: {
+                            ...setupOptions.name,
+                            enabled: checked === true,
+                          },
+                        },
+                      })
+                    }
+                  />
+                  <Label className="h-fit" htmlFor="setNameCheckbox">
+                    {"Set Name"}
+                  </Label>
+                </div>
+                <Collapsible open={setupOptions.name.enabled}>
+                  <CollapsibleContent>
+                    <div className="bg-mirage-99 dark:bg-mirage-901 my-1 ml-10 space-y-4 rounded-2xl p-4">
+                      <div>
+                        <Label htmlFor="nameInput" className="mb-2">
+                          Name
+                        </Label>
+                        <Input id="nameInput" className="w-60 max-w-full">
+                          <FreeWheelInput
+                            value={setupOptions.name.value}
+                            onUpdate={(target) => {
+                              setAppState({
+                                ...appState,
+                                setupOptions: {
+                                  ...setupOptions,
+                                  name: {
+                                    ...setupOptions.name,
+                                    value: target.value,
+                                  },
+                                },
+                              });
+                            }}
+                          />
+                        </Input>
+                      </div>
+                      <div className="flex items-center">
+                        <Checkbox
+                          id="AddNameTagCheckbox"
+                          checked={setupOptions.name.nameTag}
+                          onCheckedChange={(checked) =>
+                            setAppState({
+                              ...appState,
+                              setupOptions: {
+                                ...setupOptions,
+                                name: {
+                                  ...setupOptions.name,
+                                  nameTag: checked === true,
+                                },
+                              },
+                            })
+                          }
+                        />
+                        <Label className="h-fit" htmlFor="AddNameTagCheckbox">
+                          Add Name Tag
+                        </Label>
+                      </div>
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+              </>
+            )}
+          </div>
+        </>
       ) : (
         <div className="text-foreground/20">Loading...</div>
       )}

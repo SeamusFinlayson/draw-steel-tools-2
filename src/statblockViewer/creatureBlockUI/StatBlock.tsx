@@ -1,13 +1,38 @@
+import { cn } from "../../helpers/utils";
 import type { DrawSteelStatblock } from "../../types/DrawSteelZod";
 import { Feature } from "./Feature";
 
 export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
   return (
     <div className="w-full max-w-lg space-y-2">
-      <div className="bg-mirage-200 rounded-sm p-2">
+      <div
+        className={cn(
+          "rounded-md border-zinc-950 bg-gradient-to-b from-neutral-400/60 to-neutral-300/50 p-2",
+          {
+            "from-[#e9db7d] to-[#e9db7d]/50":
+              statblock.roles[0].includes("Ambusher"),
+            "from-[#ccc3d0] to-[#ccc3d0]/50":
+              statblock.roles[0].includes("Artillery"),
+            "from-[#96b2df] to-[#96b2df]/50":
+              statblock.roles[0].includes("Brute"),
+            "from-[#f49392] to-[#f49392]/50":
+              statblock.roles[0].includes("Controller"),
+            "from-[#cac0a3] to-[#cac0a3]/50":
+              statblock.roles[0].includes("Defender"),
+            "from-[#eac1c0] to-[#eac1c0]/50":
+              statblock.roles[0].includes("Harrier"),
+            "from-[#d8e0c2] to-[#d8e0c2]/50":
+              statblock.roles[0].includes("Hexer"),
+            "from-[#b5dae3] to-[#b5dae3]/50":
+              statblock.roles[0].includes("Mount"),
+            "from-[#f0dacc] to-[#f0dacc]/50":
+              statblock.roles[0].includes("Support"),
+          },
+        )}
+      >
         <div className="flex items-end justify-between">
-          <div className="text-base font-bold">{statblock.name}</div>
-          <div className="font-bold">{`Level ${statblock.level} ${statblock.roles}`}</div>
+          <div className="text-base font-black">{statblock.name}</div>
+          <div className="font-black">{`Level ${statblock.level} ${statblock.roles}`}</div>
         </div>
         <div className="flex justify-between">
           <div>{statblock.ancestry.join(", ")}</div>
@@ -24,9 +49,9 @@ export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
             { label: "Stability", value: statblock.stability },
             { label: "Free Strike", value: statblock.free_strike },
           ].map((item) => (
-            <div className="flex flex-col items-center" key={item.label}>
-              <div>{item.value}</div>
-              <div className="font-bold">{item.label}</div>
+            <div className="flex-1 text-center" key={item.label}>
+              <div className="text-lg">{item.value}</div>
+              <div className="-mt-1 font-bold text-nowrap">{item.label}</div>
             </div>
           ))}
         </div>
@@ -46,8 +71,8 @@ export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
               <span className="font-bold">{"Movement: "}</span>
               <span>{statblock.movement ? statblock.movement : "—"}</span>
             </div>
-            {statblock?.with_captain && statblock.roles.includes("Minion") && (
-              <div className="">
+            {statblock?.with_captain && (
+              <div>
                 <span className="font-bold">{"With Captain: "}</span>
                 <span>
                   {statblock.with_captain ? statblock.with_captain : "—"}
@@ -58,7 +83,7 @@ export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
         </div>
       </div>
 
-      <div className="w-full border-b border-zinc-950" />
+      <div className="mb-0.5 w-full border-b border-zinc-950" />
 
       <div className="flex flex-wrap justify-between gap-1.5 px-2 text-sm">
         {[
@@ -68,9 +93,11 @@ export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
           { label: "Intuition", value: statblock.intuition },
           { label: "Presence", value: statblock.presence },
         ].map((item) => (
-          <div className="flex flex-col items-center" key={item.label}>
-            <div>{item.value}</div>
-            <div className="font-bold">{item.label}</div>
+          <div className="flex-1 text-center" key={item.label}>
+            <div className="text-lg">{`${item.value > 1 ? "+" : ""}${item.value}`}</div>
+            <div className="-mt-0.5 rounded-sm bg-black font-bold text-white">
+              {item.label}
+            </div>
           </div>
         ))}
       </div>

@@ -1,7 +1,7 @@
 import { cva } from "class-variance-authority";
 
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-base font-medium transition-all ease-out disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-6 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-foreground focus-visible:ring-[2px]",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-base font-medium transition-all duration-200 ease-out disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-6 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-foreground focus-visible:ring-[2px]",
   {
     variants: {
       variant: {
@@ -10,13 +10,13 @@ export const buttonVariants = cva(
         accentOutline: "border border-accent text-accent hover:bg-accent/7",
         primary: "bg-accent text-accent-foreground hover:bg-accent/90",
         secondary:
-          "bg-mirage-100 text-mirage-950 hover:bg-mirage-150 dark:bg-mirage-900 dark:text-mirage-50 dark:hover:bg-mirage-800",
+          "bg-mirage-100 text-mirage-950 hover:bg-mirage-200 dark:bg-mirage-900 dark:text-mirage-50 dark:hover:bg-mirage-800",
         ghost:
           "hover:bg-black/7 dark:hover:bg-white/7 text-mirage-950 dark:text-mirage-50",
       },
       size: {
         base: "h-9 px-4 py-2 rounded-[18px] active:rounded-[8px]",
-        sm: "h-8 rounded-md px-3 text-xs",
+        sm: "h-8 rounded-[16px] active:rounded-[8px] px-3 ",
         lg: "h-10 px-8 rounded-[20px] active:rounded-[8px]",
         icon: "h-10 w-10 rounded-[20px] active:rounded-[8px]",
       },

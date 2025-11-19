@@ -18,7 +18,8 @@ export default function parseNumber(
   }
 
   let newValue = parseFloat(string);
-  if (Number.isNaN(newValue)) return options?.fallback ? options.fallback : 0;
+  if (Number.isNaN(newValue))
+    newValue = options?.fallback ? options.fallback : 0;
 
   if (
     doInlineMath &&

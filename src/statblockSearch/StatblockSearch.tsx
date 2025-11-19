@@ -6,11 +6,9 @@ import {
   DialogDescription,
   DialogTitle,
 } from "../components/ui/dialog";
-import MonsterView from "./components/MonsterView";
 import { useState } from "react";
-import { ScrollArea } from "../components/ui/scrollArea";
 import Button from "../components/ui/Button";
-import OBR from "@owlbear-rodeo/sdk";
+import OBR, { isImage } from "@owlbear-rodeo/sdk";
 import { getPluginId } from "../helpers/getPluginId";
 import { OptionsView } from "./components/OptionsView";
 import {
@@ -20,9 +18,18 @@ import {
 import { getSelectedItems } from "../helpers/getSelectedItem";
 import { TOKEN_METADATA_KEY } from "../helpers/tokenHelpers";
 import {
+  MinionTokenDataZod,
   MonsterTokenDataZod,
+  type MinionTokenData,
   type MonsterTokenData,
 } from "../types/tokenDataZod";
+import { MinionGroupZod, type MinionGroup } from "../types/minionGroup";
+import { MONSTER_GROUPS_METADATA_KEY } from "../helpers/monsterGroupHelpers";
+import z from "zod";
+import { generateGroupId } from "../helpers/generateGroupId";
+
+const params = new URLSearchParams(document.location.search);
+let groupId = params.get("groupId");
 
 export default function StatblockSearch() {
   const [appState, setAppState] = useState<AppState>(defaultAppState);
@@ -30,6 +37,12 @@ export default function StatblockSearch() {
   return (
     <div>
       <Dialog open={appState.monsterViewerOpen}>
+        <DialogTitle className="max-h-0 overflow-clip">
+          Statblock Viewer
+        </DialogTitle>
+        <DialogDescription className="max-h-0 overflow-clip">
+          View of the selected statblock
+        </DialogDescription>
         <DialogContent
           className="bg-mirage-50 h-11/12 p-0"
           onPointerDownOutside={() =>
@@ -43,24 +56,29 @@ export default function StatblockSearch() {
           }
         >
           <div className="bg-mirage-50 flex h-full flex-col">
-            <ScrollArea className="grow" noDarkMode>
-              <DialogTitle className="max-h-0 overflow-clip">
-                Statblock Viewer
-              </DialogTitle>
-              <DialogDescription className="max-h-0 overflow-clip">
-                View of the selected statblock
-              </DialogDescription>
-              {appState.monsterViewerData ? (
-                <MonsterView monsterData={appState.monsterViewerData} />
-              ) : (
-                <div className="grid h-full place-items-center p-4 text-black/20">
-                  {"Loading..."}
-                </div>
-              )}
-            </ScrollArea>
+            {appState.monsterViewerData ? (
+              <iframe
+                className="w-full grow"
+                src={(() => {
+                  const url = new URL(
+                    "/statblockViewer",
+                    window.location.origin,
+                  );
+                  url.searchParams.set(
+                    "statblockName",
+                    appState.monsterViewerData.statblock.name,
+                  );
+                  return url.toString();
+                })()}
+              />
+            ) : (
+              <div className="grid grow place-items-center p-4 text-black/20">
+                {"Loading..."}
+              </div>
+            )}
             <div className="border-mirage-300 flex gap-4 border-t px-4 py-2 sm:px-6 sm:py-3">
               <Button
-                className="w-full"
+                className="w-full bg-[#9966ff] text-[#f5f2ff] hover:bg-[#9966ff]/90"
                 onClick={() =>
                   setAppState({ ...appState, monsterViewerOpen: false })
                 }
@@ -87,54 +105,142 @@ export default function StatblockSearch() {
             >
               Close
             </Button>
-            {appState.tokenOptions && (
+            {appState.setupOptions && (
               <Button
                 className="grow"
                 onClick={async () => {
-                  const tokenOptions = appState.tokenOptions;
+                  const tokenOptions = appState.setupOptions;
                   if (!tokenOptions) throw new Error("Invalid token options");
-                  const nameOptions = tokenOptions.name;
-                  const staminaOptions = tokenOptions.stamina;
-
                   const selectedItems = await getSelectedItems();
-                  OBR.scene.items.updateItems(
-                    selectedItems.map((item) => item.id),
-                    (items) => {
-                      items.forEach((item) => {
-                        const existingDataValidation =
-                          MonsterTokenDataZod.safeParse(
-                            items[0].metadata[TOKEN_METADATA_KEY],
-                          );
-                        item.metadata[TOKEN_METADATA_KEY] =
-                          MonsterTokenDataZod.parse({
-                            ...(existingDataValidation.success
-                              ? existingDataValidation.data
-                              : undefined),
-                            type: "MONSTER",
-                            gmOnly: true,
-                            ...(nameOptions.overwriteTokens &&
-                            nameOptions.nameTag
-                              ? { name: nameOptions.value }
-                              : {}),
-                            ...(staminaOptions.overwriteTokens
-                              ? {
-                                  stamina: staminaOptions.value,
-                                  staminaMaximum: staminaOptions.value,
-                                }
-                              : {}),
-                            statblockName:
+
+                  if (tokenOptions.type === "BASIC") {
+                    let targetItems = selectedItems;
+                    if (groupId !== null) {
+                      targetItems = await OBR.scene.items.getItems(
+                        (item) =>
+                          isImage(item) &&
+                          (
+                            item.metadata?.[
+                              TOKEN_METADATA_KEY
+                            ] as MinionTokenData
+                          )?.groupId === groupId,
+                      );
+                    }
+                    const nameOptions = tokenOptions.name;
+                    const staminaOptions = tokenOptions.stamina;
+                    OBR.scene.items.updateItems(
+                      targetItems.map((item) => item.id),
+                      (items) => {
+                        items.forEach((item) => {
+                          const existingDataValidation =
+                            MonsterTokenDataZod.safeParse(
+                              items[0].metadata[TOKEN_METADATA_KEY],
+                            );
+                          item.metadata[TOKEN_METADATA_KEY] =
+                            MonsterTokenDataZod.parse({
+                              ...(existingDataValidation.success
+                                ? existingDataValidation.data
+                                : undefined),
+                              type: "MONSTER",
+                              gmOnly: true,
+                              ...(nameOptions.enabled && nameOptions.nameTag
+                                ? { name: nameOptions.value }
+                                : {}),
+                              ...(staminaOptions.enabled
+                                ? {
+                                    stamina: staminaOptions.value,
+                                    staminaMaximum: staminaOptions.value,
+                                  }
+                                : {}),
+                              statblockName:
+                                typeof appState.selectedIndexBundle === "object"
+                                  ? appState.selectedIndexBundle.name
+                                  : appState.selectedIndexBundle === "NONE"
+                                    ? undefined
+                                    : "",
+                            } satisfies MonsterTokenData);
+                          if (nameOptions.enabled) {
+                            item.name = nameOptions.value;
+                          }
+                        });
+                      },
+                    );
+                  }
+                  if (tokenOptions.type === "MINION") {
+                    let groupSize: number | null = null;
+                    if (groupId === "" || groupId === null) {
+                      groupId = generateGroupId();
+                      groupSize = (
+                        (await OBR.player.getSelection()) as string[]
+                      ).length;
+                      OBR.scene.items.updateItems(
+                        selectedItems.map((item) => item.id),
+                        (items) => {
+                          items.forEach(async (item) => {
+                            const existingDataValidation =
+                              MinionTokenDataZod.safeParse(
+                                items[0].metadata[TOKEN_METADATA_KEY],
+                              );
+                            item.metadata[TOKEN_METADATA_KEY] =
+                              MinionTokenDataZod.parse({
+                                ...(existingDataValidation.success
+                                  ? existingDataValidation.data
+                                  : undefined),
+                                type: "MINION",
+                                groupId: groupId as string,
+                              } satisfies MinionTokenData);
+                            item.name = tokenOptions.groupName.value;
+                          });
+                        },
+                      );
+                    } else {
+                      const groupItems = await OBR.scene.items.getItems(
+                        (item) =>
+                          isImage(item) &&
+                          (
+                            item.metadata?.[
+                              TOKEN_METADATA_KEY
+                            ] as MinionTokenData
+                          )?.groupId === groupId,
+                      );
+                      groupSize = groupItems.length;
+                    }
+
+                    const minionGroups = z
+                      .array(MinionGroupZod)
+                      .safeParse(
+                        (await OBR.scene.getMetadata())[
+                          MONSTER_GROUPS_METADATA_KEY
+                        ],
+                      );
+
+                    OBR.scene.setMetadata({
+                      [MONSTER_GROUPS_METADATA_KEY]: z
+                        .array(MinionGroupZod)
+                        .parse([
+                          ...(minionGroups.success
+                            ? minionGroups.data.filter(
+                                (value) => value.id !== groupId,
+                              )
+                            : []),
+                          {
+                            type: "MINION",
+                            id: groupId,
+                            individualStamina: tokenOptions.stamina.value,
+                            name: tokenOptions.groupName.value,
+                            statblock:
                               typeof appState.selectedIndexBundle === "object"
                                 ? appState.selectedIndexBundle.name
                                 : appState.selectedIndexBundle === "NONE"
-                                  ? ""
+                                  ? undefined
                                   : "",
-                          } satisfies MonsterTokenData);
-                        if (nameOptions.overwriteTokens) {
-                          item.name = nameOptions.value;
-                        }
-                      });
-                    },
-                  );
+                            currentStamina:
+                              tokenOptions.stamina.value * groupSize,
+                            nameTagsEnabled: tokenOptions.groupName.nameTags,
+                          },
+                        ] satisfies MinionGroup[]),
+                    });
+                  }
                   OBR.popover.close(getPluginId("statblockSearch"));
                 }}
               >

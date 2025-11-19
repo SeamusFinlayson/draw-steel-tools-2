@@ -1,0 +1,16 @@
+import type { Item } from "@owlbear-rodeo/sdk";
+import OBR from "@owlbear-rodeo/sdk";
+import { useEffect, useState } from "react";
+
+export function useItems() {
+  const [items, setItems] = useState<Item[]>([]);
+  useEffect(() => {
+    const handleItems = (items: Item[]) => {
+      setItems(items);
+    };
+    OBR.scene.items.getItems().then(handleItems);
+    return OBR.scene.items.onChange(handleItems);
+  }, []);
+
+  return items;
+}

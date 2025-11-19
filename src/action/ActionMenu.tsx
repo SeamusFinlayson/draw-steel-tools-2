@@ -29,6 +29,7 @@ import {
   SETTINGS_METADATA_KEY,
 } from "../helpers/settingsHelpers";
 import { SettingsZod } from "../types/settingsZod";
+import { MinionGroupCleanup } from "./MinionGroupCleanup";
 
 function ActionMenu() {
   const playerName = usePlayerName();
@@ -164,6 +165,7 @@ function ActionMenu() {
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
+            <MinionGroupCleanup />
           </div>
         </HeightMatch>
       </ScrollArea>

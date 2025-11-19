@@ -10,7 +10,7 @@ export function applyTextEffects(string: string) {
       index % 2 ? (
         <span
           key={index}
-          className="bg-zinc-950 rounded-sm font-semibold whitespace-nowrap px-0.5  text-xs text-white"
+          className="rounded-sm bg-zinc-950 px-1 py-[1px] text-xs font-semibold whitespace-nowrap text-white"
         >
           {val}
         </span>
@@ -22,8 +22,8 @@ export function applyTextEffects(string: string) {
             </span>
           ) : (
             <span key={index}>{val}</span>
-          )
+          ),
         )
-      )
+      ),
     );
 }

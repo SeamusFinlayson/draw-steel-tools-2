@@ -1,37 +1,47 @@
 import OBR, { type Image, type Item, isImage } from "@owlbear-rodeo/sdk";
-
-import {
-  DIAMETER,
-  FULL_BAR_HEIGHT,
-  SHORT_BAR_HEIGHT,
-  addHealthAttachmentsToArray,
-  addNameTagAttachmentsToArray,
-  bubbleBackgroundId,
-  bubbleTextId,
-  createHealthBar,
-  createNameTag,
-  createStatBubble,
-  hpTextId,
-} from "./compoundItemHelpers";
-import { getOriginAndBounds } from "./mathHelpers";
+import { hpTextId } from "./overlays/compoundItemHelpers";
 import createContextMenuItems from "./contextMenuItems";
 import { defaultSettings, getSettings } from "../helpers/settingsHelpers";
 import { TOKEN_METADATA_KEY, parseTokenData } from "../helpers/tokenHelpers";
+import type { MinionTokenData } from "../types/tokenDataZod";
+import { MinionGroupZod, type MinionGroup } from "../types/minionGroup";
+import z from "zod";
+import { MONSTER_GROUPS_METADATA_KEY } from "../helpers/monsterGroupHelpers";
+import { setDifference } from "../helpers/setDifference";
+import { sendItemsToScene } from "./sendItemsToScene";
+import { createHeroOverlay } from "./overlays/createHeroOverlay";
+import { createMonsterOverlay } from "./overlays/createMonsterOverlay";
+import { createMinionOverlay } from "./overlays/createMinionOverlay";
+import {
+  getMinionTokenCounts,
+  type TokenCounts,
+} from "../helpers/getMinionTokenCounts";
 
-let itemsLast: Image[] = []; // for item change checks
+type AttachmentLog = { image: Image; attachmentIds: string[] } | undefined;
+type AttachmentLogs = {
+  [id: string]: AttachmentLog;
+};
+let attachmentLog: AttachmentLogs = {}; // for item change checks
 const addItemsArray: Item[] = []; // for bulk addition or changing of items
 const deleteItemsArray: string[] = []; // for bulk deletion of scene items
 let settings = defaultSettings;
 let callbacksStarted = false;
-let userRoleLast: "GM" | "PLAYER";
 let themeMode: "DARK" | "LIGHT";
+let minionGroups: MinionGroup[] = [];
+let minionTokenCounts: TokenCounts;
+let upToDateSceneItems: Item[] = [];
 
 export default async function startBackground() {
   const start = async () => {
     settings = (await getSettings(settings)).settings;
     themeMode = (await OBR.theme.getTheme()).mode;
+    upToDateSceneItems = await OBR.scene.items.getItems();
     createContextMenuItems(settings, themeMode);
-    await refreshAllHealthBars();
+    const minionGroupParse = z
+      .array(MinionGroupZod)
+      .safeParse((await OBR.scene.getMetadata())[MONSTER_GROUPS_METADATA_KEY]);
+    minionGroups = minionGroupParse.success ? minionGroupParse.data : [];
+    await refreshAllAttachments();
     await startCallbacks();
   };
 
@@ -45,31 +55,29 @@ export default async function startBackground() {
   if (isReady) start();
 }
 
-async function refreshAllHealthBars() {
-  // console.log("refresh");
-  //get shapes from scene
-  const items: Image[] = await OBR.scene.items.getItems(
-    (item) =>
-      (item.layer === "CHARACTER" || item.layer === "MOUNT") && isImage(item),
+async function refreshAllAttachments() {
+  const [role, sceneDpi] = await Promise.all([
+    OBR.player.getRole(),
+    OBR.scene.grid.getDpi(),
+  ]);
+
+  const images = upToDateSceneItems.filter((item) => isImage(item));
+
+  const { counts } = getMinionTokenCounts(
+    images,
+    minionGroups,
+    minionTokenCounts,
   );
+  minionTokenCounts = counts;
 
-  //store array of all items currently on the board for change monitoring
-  itemsLast = items;
-
-  //draw health bars
-  const roll = await OBR.player.getRole();
-  const sceneDpi = await OBR.scene.grid.getDpi();
-  for (const item of items) {
-    createAttachments(item, roll, sceneDpi);
+  // Update attachments
+  const newAttachmentLog: AttachmentLogs = {};
+  for (const image of images) {
+    const attachmentIds = updateTokenOverlay(image, role, sceneDpi);
+    newAttachmentLog[image.id] = { image, attachmentIds };
   }
-
+  attachmentLog = newAttachmentLog;
   await sendItemsToScene(addItemsArray, deleteItemsArray);
-
-  //update global item id list for orphaned health bar monitoring
-  const itemIds: string[] = [];
-  for (const item of items) {
-    itemIds.push(item.id);
-  }
 }
 
 async function startCallbacks() {
@@ -78,72 +86,98 @@ async function startCallbacks() {
     callbacksStarted = true;
 
     // Handle theme changes
-    const unSubscribeFromTheme = OBR.theme.onChange((theme) => {
+    OBR.theme.onChange((theme) => {
       themeMode = theme.mode;
       createContextMenuItems(settings, themeMode);
     });
 
     // Handle role changes
-    userRoleLast = await OBR.player.getRole();
-    const unSubscribeFromPlayer = OBR.player.onChange(async () => {
+    let userRoleLast = await OBR.player.getRole();
+    OBR.player.onChange(async () => {
       // Do a refresh if player role change is detected
       const userRole = await OBR.player.getRole();
       if (userRole !== userRoleLast) {
-        refreshAllHealthBars();
+        refreshAllAttachments();
         userRoleLast = userRole;
       }
     });
 
-    // Handle metadata changes
-    const unsubscribeFromRoomMetadata = OBR.room.onMetadataChange(
-      async (metadata) => {
-        const { settings: newSettings, isChanged: doRefresh } =
-          await getSettings(settings, metadata);
-        settings = newSettings;
-        if (doRefresh) {
-          createContextMenuItems(settings, themeMode);
-          refreshAllHealthBars();
-        }
+    // Handle room metadata changes
+    OBR.room.onMetadataChange(async (metadata) => {
+      const { settings: newSettings, isChanged: doRefresh } = await getSettings(
+        settings,
+        metadata,
+      );
+      settings = newSettings;
+      if (doRefresh) {
+        createContextMenuItems(settings, themeMode);
+        refreshAllAttachments();
+      }
+    });
+
+    // Handle scene metadata changes
+    const unsubscribeFromSceneMetadata = OBR.scene.onMetadataChange(
+      (metadata) => {
+        const minionGroupParse = z
+          .array(MinionGroupZod)
+          .safeParse(metadata[MONSTER_GROUPS_METADATA_KEY]);
+        if (minionGroupParse.success) {
+          if (
+            JSON.stringify(minionGroups) !==
+            JSON.stringify(minionGroupParse.data)
+          ) {
+            minionGroups = minionGroupParse.success
+              ? minionGroupParse.data
+              : [];
+            refreshAllAttachments();
+          }
+        } else console.error("Invalid minion group data");
       },
     );
 
     // Handle item changes (Update health bars)
-    const unsubscribeFromItems = OBR.scene.items.onChange(
-      async (itemsFromCallback) => {
-        // Filter items for only images from character and mount layers
-        const imagesFromCallback: Image[] = [];
-        for (const item of itemsFromCallback) {
-          if (
-            (item.layer === "CHARACTER" || item.layer === "MOUNT") &&
-            isImage(item)
-          ) {
-            imagesFromCallback.push(item);
-          }
-        }
+    const unsubscribeFromItems = OBR.scene.items.onChange(async (items) => {
+      upToDateSceneItems = items;
+      const [role, sceneDpi] = await Promise.all([
+        OBR.player.getRole(),
+        OBR.scene.grid.getDpi(),
+      ]);
 
-        //create list of modified and new items, skipping deleted items
-        const changedItems: Image[] = getChangedItems(imagesFromCallback);
+      // Filter items for only images from character and mount layers
+      const imagesFromCallback: Image[] = [];
+      for (const item of items) {
+        if (isImage(item)) imagesFromCallback.push(item);
+      }
 
-        //update array of all items currently on the board
-        itemsLast = imagesFromCallback;
+      //create list of modified and new items, skipping deleted items
+      const minionTokens = getMinionTokenCounts(
+        imagesFromCallback,
+        minionGroups,
+        minionTokenCounts,
+      );
+      minionTokenCounts = minionTokens.counts;
+      const separatedImages = separateChangedItems(
+        imagesFromCallback,
+        minionTokens.changed,
+      );
 
-        //draw health bars
-        const role = await OBR.player.getRole();
-        const sceneDpi = await OBR.scene.grid.getDpi();
-        for (const item of changedItems) {
-          createAttachments(item, role, sceneDpi);
-        }
-
-        await sendItemsToScene(addItemsArray, deleteItemsArray);
-      },
-    );
+      // Add and delete attachments
+      const newAttachmentLog: AttachmentLogs = {};
+      for (const image of separatedImages.changed) {
+        const attachmentIds = updateTokenOverlay(image, role, sceneDpi);
+        newAttachmentLog[image.id] = { image, attachmentIds };
+      }
+      for (const image of separatedImages.unchanged) {
+        newAttachmentLog[image.id] = attachmentLog[image.id];
+      }
+      attachmentLog = newAttachmentLog;
+      await sendItemsToScene(addItemsArray, deleteItemsArray);
+    });
 
     // Unsubscribe listeners that rely on the scene if it stops being ready
     const unsubscribeFromScene = OBR.scene.onReadyChange((isReady) => {
       if (!isReady) {
-        unSubscribeFromTheme();
-        unSubscribeFromPlayer();
-        unsubscribeFromRoomMetadata();
+        unsubscribeFromSceneMetadata();
         unsubscribeFromItems();
         unsubscribeFromScene();
         callbacksStarted = false;
@@ -152,222 +186,82 @@ async function startCallbacks() {
   }
 }
 
-function getChangedItems(imagesFromCallback: Image[]) {
-  const changedItems: Image[] = [];
+function separateChangedItems(images: Image[], includeAllMinions: boolean) {
+  const changed: Image[] = [];
+  const unchanged: Image[] = [];
 
-  let s = 0; // # items skipped in itemsLast array, caused by deleted items
-  for (let i = 0; i < imagesFromCallback.length; i++) {
-    if (i > itemsLast.length - s - 1) {
-      //check for new items at the end of the list
-      changedItems.push(imagesFromCallback[i]);
-    } else if (itemsLast[i + s].id !== imagesFromCallback[i].id) {
-      s++; // Skip an index in itemsLast
-      i--; // Reuse the index item in imagesFromCallback
+  for (let i = 0; i < images.length; i++) {
+    const image = images[i];
+    const lastUpdate = attachmentLog[image.id]?.image;
+
+    if (lastUpdate === undefined) {
+      changed.push(image);
     } else if (
       //check for scaling changes
       !(
-        itemsLast[i + s].scale.x === imagesFromCallback[i].scale.x &&
-        itemsLast[i + s].scale.y === imagesFromCallback[i].scale.y &&
-        (itemsLast[i + s].name === imagesFromCallback[i].name ||
-          !settings.nameTagsEnabled)
+        lastUpdate.scale.x === image.scale.x &&
+        lastUpdate.scale.y === image.scale.y &&
+        (lastUpdate.name === image.name || !settings.nameTagsEnabled)
       )
     ) {
       // Attachments must be deleted to prevent ghost selection highlight bug
-      deleteItemsArray.push(hpTextId(imagesFromCallback[i].id));
-      changedItems.push(imagesFromCallback[i]);
+      deleteItemsArray.push(hpTextId(image.id));
+      changed.push(image);
     } else if (
       //check position, visibility, and metadata changes
       !(
-        itemsLast[i + s].position.x === imagesFromCallback[i].position.x &&
-        itemsLast[i + s].position.y === imagesFromCallback[i].position.y &&
-        itemsLast[i + s].grid.offset.x ===
-          imagesFromCallback[i].grid.offset.x &&
-        itemsLast[i + s].grid.offset.y ===
-          imagesFromCallback[i].grid.offset.y &&
-        itemsLast[i + s].grid.dpi === imagesFromCallback[i].grid.dpi &&
-        itemsLast[i + s].visible === imagesFromCallback[i].visible &&
-        JSON.stringify(itemsLast[i + s].metadata[TOKEN_METADATA_KEY]) ===
-          JSON.stringify(imagesFromCallback[i].metadata[TOKEN_METADATA_KEY])
-      )
+        lastUpdate.layer === image.layer &&
+        lastUpdate.position.x === image.position.x &&
+        lastUpdate.position.y === image.position.y &&
+        lastUpdate.grid.offset.x === image.grid.offset.x &&
+        lastUpdate.grid.offset.y === image.grid.offset.y &&
+        lastUpdate.grid.dpi === image.grid.dpi &&
+        lastUpdate.visible === image.visible &&
+        JSON.stringify(lastUpdate.metadata[TOKEN_METADATA_KEY]) ===
+          JSON.stringify(image.metadata[TOKEN_METADATA_KEY])
+      ) ||
+      (includeAllMinions &&
+        (image.metadata[TOKEN_METADATA_KEY] as MinionTokenData)?.type ===
+          "MINION")
     ) {
       //update items
-      changedItems.push(imagesFromCallback[i]);
+      changed.push(image);
+    } else {
+      unchanged.push(image);
     }
   }
-  return changedItems;
+  return { changed, unchanged };
 }
 
-function createAttachments(item: Image, role: "PLAYER" | "GM", dpi: number) {
-  const { origin, bounds } = getOriginAndBounds(settings, item, dpi);
-  const token = parseTokenData(item.metadata);
+function updateTokenOverlay(image: Image, role: "PLAYER" | "GM", dpi: number) {
+  const token = parseTokenData(image.metadata);
 
-  if (role === "PLAYER" && token.gmOnly && !settings.showHealthBars) {
-    // Display nothing, explicitly remove all attachments
-    addHealthAttachmentsToArray(deleteItemsArray, item.id);
-    for (let i = 0; i < 3; i++) {
-      deleteItemsArray.push(
-        bubbleBackgroundId(item.id, i),
-        bubbleTextId(item.id, i),
-      );
-    }
-  } else if (role === "PLAYER" && token.gmOnly && settings.showHealthBars) {
-    // Display limited stats depending on GM configuration
-    createLimitedHealthBar();
+  let attachments: Item[];
+  if (!["MOUNT", "CHARACTER"].includes(image.layer)) {
+    attachments = [];
+  } else if (token.type === "MONSTER") {
+    attachments = createMonsterOverlay(image, token, role, dpi, settings);
+  } else if (token.type === "MINION") {
+    attachments = createMinionOverlay(
+      image,
+      token,
+      minionGroups,
+      role,
+      dpi,
+      settings,
+      minionTokenCounts,
+    );
   } else {
-    // Display full stats
-    const hasHealthBar = createFullHealthBar();
+    attachments = createHeroOverlay(image, token, role, dpi, settings);
+  }
+  addItemsArray.push(...attachments);
 
-    const MARGIN = 2;
-    const bubblePosition = {
-      x: origin.x + bounds.width / 2 - DIAMETER / 2 - MARGIN,
-      y: origin.y - DIAMETER / 2 - 2 * MARGIN,
-    };
-    if (hasHealthBar) bubblePosition.y -= FULL_BAR_HEIGHT;
-    if (settings.justifyHealthBarsTop)
-      bubblePosition.y = origin.y + DIAMETER / 2;
-
-    const stats: { color: string; value: number; showBubble: boolean }[] = [];
-
-    if (token.type === "HERO") {
-      stats.push(
-        {
-          color: "darkgoldenrod",
-          value: token.surges,
-          showBubble: token.surges > 0,
-        },
-        {
-          color: "cornflowerblue",
-          value: token.heroicResource,
-          showBubble: token.heroicResource !== 0,
-        },
-      );
-    }
-    stats.push({
-      color: "olivedrab",
-      value: token.temporaryStamina,
-      showBubble: token.temporaryStamina > 0,
-    });
-
-    for (let i = 0; i < stats.length; i++) {
-      if (stats[i].showBubble) {
-        addItemsArray.push(
-          ...createStatBubble(
-            item,
-            stats[i].value,
-            stats[i].color,
-            bubblePosition,
-            bubbleBackgroundId(item.id, i),
-            bubbleTextId(item.id, i),
-          ),
-        );
-
-        bubblePosition.x -= DIAMETER + MARGIN;
-      } else {
-        deleteItemsArray.push(
-          bubbleBackgroundId(item.id, i),
-          bubbleTextId(item.id, i),
-        );
-      }
-    }
+  const attachmentIds = attachments.map((value) => value.id);
+  const lastUpdate = attachmentLog[image.id];
+  if (lastUpdate) {
+    const unusedIds = setDifference(lastUpdate.attachmentIds, attachmentIds);
+    deleteItemsArray.push(...unusedIds);
   }
 
-  // Create name tag
-  const plainText = token.name;
-  if (settings.nameTagsEnabled && plainText !== "") {
-    const nameTagPosition = {
-      x: origin.x,
-      y: origin.y,
-    };
-    if (settings.justifyHealthBarsTop) {
-      if (
-        token.staminaMaximum <= 0 ||
-        (role === "PLAYER" && token.gmOnly && !settings.showHealthBars)
-      ) {
-        nameTagPosition.y = origin.y - 4;
-      } else if (role === "PLAYER" && token.gmOnly && settings.showHealthBars) {
-        nameTagPosition.y = origin.y - SHORT_BAR_HEIGHT - 4;
-      } else {
-        nameTagPosition.y = origin.y - FULL_BAR_HEIGHT - 4;
-      }
-    }
-    addItemsArray.push(
-      ...createNameTag(
-        item,
-        dpi,
-        plainText,
-        nameTagPosition,
-        settings.justifyHealthBarsTop ? "DOWN" : "UP",
-      ),
-    );
-    // globalItemsWithNameTags.push(item);
-  } else {
-    addNameTagAttachmentsToArray(deleteItemsArray, item.id);
-  }
-
-  function createLimitedHealthBar() {
-    // Clear other attachments
-    deleteItemsArray.push(hpTextId(item.id));
-    for (let i = 0; i < 3; i++) {
-      deleteItemsArray.push(
-        bubbleBackgroundId(item.id, i),
-        bubbleTextId(item.id, i),
-      );
-    }
-
-    // return early if health bar shouldn't be created
-    if (token.staminaMaximum <= 0) {
-      addHealthAttachmentsToArray(deleteItemsArray, item.id);
-      return;
-    }
-
-    deleteItemsArray.push(hpTextId(item.id));
-    addItemsArray.push(
-      ...createHealthBar(
-        item,
-        bounds,
-        token.stamina,
-        token.staminaMaximum,
-        !token.gmOnly,
-        origin,
-        "short",
-        settings.segmentsCount,
-      ),
-    );
-  }
-
-  /**
-   * Create a health bar.
-   * @returns True if a health bar was created.
-   */
-  function createFullHealthBar() {
-    // return early if health bar shouldn't be created
-    if (token.staminaMaximum <= 0) {
-      addHealthAttachmentsToArray(deleteItemsArray, item.id);
-      return false;
-    }
-
-    addItemsArray.push(
-      ...createHealthBar(
-        item,
-        bounds,
-        token.stamina,
-        token.staminaMaximum,
-        !token.gmOnly,
-        origin,
-      ),
-    );
-    return true;
-  }
-}
-
-async function sendItemsToScene(
-  addItemsArray: Item[],
-  deleteItemsArray: string[],
-) {
-  // console.log("added items length", addItemsArray.length);
-  // console.log("deleted items length", deleteItemsArray.length);
-  await OBR.scene.local.deleteItems(deleteItemsArray);
-  await OBR.scene.local.addItems(addItemsArray);
-  deleteItemsArray.length = 0;
-  addItemsArray.length = 0;
+  return attachmentIds;
 }

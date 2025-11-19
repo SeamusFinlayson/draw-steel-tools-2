@@ -6,6 +6,7 @@ export function parseMetadata<T>(
   parser: (value: unknown) => T,
 ) {
   const trackerMetadata = metadata[key];
+  if (trackerMetadata === undefined) return undefined;
   try {
     return parser(trackerMetadata);
   } catch (error) {

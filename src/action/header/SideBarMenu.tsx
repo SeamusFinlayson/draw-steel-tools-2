@@ -3,7 +3,9 @@ import {
   FileQuestionIcon,
   HistoryIcon,
   MenuIcon,
+  NotebookTextIcon,
   Settings2,
+  TagIcon,
   XIcon,
 } from "lucide-react";
 import Button from "../../components/ui/Button";
@@ -63,30 +65,88 @@ export default function SideBarMenu() {
         <ScrollArea className="h-full">
           <div className="mb-2 grid items-center">
             {playerRole === "GM" && (
-              <Button
-                variant={"ghost"}
-                className="h-10 w-full items-center justify-start gap-4 rounded-none px-4 active:rounded-none"
-                onClick={async () => {
-                  const themeMode = (await OBR.theme.getTheme()).mode;
-                  OBR.popover.open({
-                    id: getPluginId("settings"),
-                    url: `/settings?themeMode=${themeMode}`,
-                    height: 592,
-                    width: 500,
-                    hidePaper: false,
-                  });
-                  setOpen(false);
-                }}
-              >
-                <div className="grid size-6 place-items-center">
-                  <Settings2 />
-                </div>
-                <div>Settings</div>
-              </Button>
+              <>
+                <Button
+                  variant={"ghost"}
+                  className="h-10 w-full items-center justify-start gap-4 rounded-none px-4 active:rounded-none"
+                  onClick={async () => {
+                    const themeMode = (await OBR.theme.getTheme()).mode;
+
+                    OBR.popover.open({
+                      id: getPluginId("settings"),
+                      url: `/settings?themeMode=${themeMode}`,
+                      height: 668,
+                      width: 500,
+                      hidePaper: false,
+                    });
+                    setOpen(false);
+                  }}
+                >
+                  <div className="grid size-6 place-items-center">
+                    <Settings2 />
+                  </div>
+                  <div>Settings</div>
+                </Button>
+                <Button
+                  variant={"ghost"}
+                  className="h-10 w-full items-center justify-start gap-4 rounded-none px-4 active:rounded-none"
+                  onClick={async () => {
+                    OBR.broadcast.sendMessage(
+                      getPluginId("set-viewer-statblock"),
+                      {},
+                      { destination: "LOCAL" },
+                    );
+                    OBR.popover.open({
+                      id: getPluginId("statblockViewer"),
+                      url: (() => {
+                        const url = new URL(
+                          "/statblockViewer",
+                          window.location.origin,
+                        );
+                        return url.toString();
+                      })(),
+                      height: 2000,
+                      width: 500,
+                      anchorOrigin: {
+                        horizontal: "RIGHT",
+                        vertical: "BOTTOM",
+                      },
+                      transformOrigin: {
+                        horizontal: "CENTER",
+                        vertical: "CENTER",
+                      },
+                      disableClickAway: true,
+                    });
+                    setOpen(false);
+                  }}
+                >
+                  <div className="grid size-6 place-items-center">
+                    <NotebookTextIcon />
+                  </div>
+                  <div>Stat Block Viewer</div>
+                </Button>
+              </>
             )}
             <div
-              className={cn("text-foreground-secondary mb-2 px-4 text-sm", {
+              className={cn("text-foreground-secondary mb-1 px-4 text-sm", {
                 "mt-4": playerRole === "GM",
+              })}
+            >
+              Recommended
+            </div>
+            <LinkButton
+              name="Token Labels"
+              icon={<TagIcon />}
+              href={"https://seamus-finlayson.ca/pages/token-labels"}
+            />
+            <LinkButton
+              name="Connected Dice"
+              icon={<ConnectedDiceIcon />}
+              href={"https://seamus-finlayson.ca/pages/connected-dice"}
+            />
+            <div
+              className={cn("text-foreground-secondary mb-1 px-4 text-sm", {
+                "mt-4": true,
               })}
             >
               Links
@@ -95,11 +155,6 @@ export default function SideBarMenu() {
               name="Patreon"
               icon={<PatreonIcon className="size-[19px]" />}
               href={"https://www.patreon.com/SeamusFinlayson"}
-            />
-            <LinkButton
-              name="Connected Dice"
-              icon={<ConnectedDiceIcon />}
-              href={"https://seamus-finlayson.ca/pages/connected-dice"}
             />
             <LinkButton
               name="Change Log"

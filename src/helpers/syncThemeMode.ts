@@ -13,7 +13,7 @@ export function syncThemeMode() {
   );
   if (themeMode !== null) setBodyTheme(themeMode);
 
-  // Keep up to date with owlbear rodeo theme when is is available
+  // Keep up to date with owlbear rodeo theme when it is available
   OBR.onReady(() => {
     OBR.theme.getTheme().then((theme) => setBodyTheme(theme.mode));
     OBR.theme.onChange((theme) => setBodyTheme(theme.mode));
