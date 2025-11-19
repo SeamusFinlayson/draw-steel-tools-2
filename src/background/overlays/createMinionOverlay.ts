@@ -45,7 +45,10 @@ export function createMinionOverlay(
       nameTags: [
         {
           text: minionGroup.name,
-          display: settings.nameTagsEnabled && minionGroup.name !== "",
+          display:
+            settings.nameTagsEnabled &&
+            minionGroup.nameTagsEnabled &&
+            minionGroup.name !== "",
         },
       ],
     },
