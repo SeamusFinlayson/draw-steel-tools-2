@@ -18,6 +18,7 @@ import { MinionGroupZod } from "../types/minionGroup";
 import OBR from "@owlbear-rodeo/sdk";
 import { getPluginId } from "../helpers/getPluginId";
 import usePlayerRole from "../helpers/usePlayerRole";
+import { getMinionTokenCounts } from "../helpers/getMinionTokenCounts";
 
 const parseMinionGroups = z.array(MinionGroupZod).parse;
 
@@ -71,16 +72,22 @@ export function StatBlockSwitcher({
   );
 
   let minionStatblocks: string[] = [];
-  if (minionGroupsMetadata.ready && minionGroupsMetadata.value !== undefined) {
-    minionGroupsMetadata.value.forEach((group) => {
-      if (group.statblock && group.statblock !== "" && playerRole === "GM") {
-        minionStatblocks.push(group.statblock);
-      }
-    });
+  if (
+    minionGroupsMetadata.ready &&
+    minionGroupsMetadata.value !== undefined &&
+    playerRole === "GM"
+  ) {
+    const minionGroups = minionGroupsMetadata.value;
+    const { counts } = getMinionTokenCounts(items, minionGroups);
+    minionStatblocks = minionGroups
+      .filter((group) => group.id in counts && counts[group.id] >= 1)
+      .map((group) => group.statblock)
+      .filter((statblock) => statblock !== undefined)
+      .filter((statblock) => statblock !== "");
+    minionStatblocks = [...new Set(minionStatblocks)].sort((a, b) =>
+      a.localeCompare(b),
+    );
   }
-  minionStatblocks = [...new Set(minionStatblocks)].sort((a, b) =>
-    a.localeCompare(b),
-  );
 
   return (
     <Popover>
