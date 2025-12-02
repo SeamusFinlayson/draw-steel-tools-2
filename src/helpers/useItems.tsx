@@ -7,8 +7,13 @@ export function useItems() {
   useEffect(() => {
     const handleItems = (items: Item[]) => {
       setItems(items);
+      console.log("handleItems");
     };
-    OBR.scene.items.getItems().then(handleItems);
+
+    OBR.scene.items.getItems().then(
+      (items) => handleItems(items),
+      () => {},
+    );
     return OBR.scene.items.onChange(handleItems);
   }, []);
 

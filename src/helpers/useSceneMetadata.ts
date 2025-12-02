@@ -31,7 +31,8 @@ export function useSceneMetadata<T>(
       setMetadata(parseMetadata(metadata, key, parser));
       setReady(true);
     };
-    OBR.scene.getMetadata().then(handleSceneMetadata);
+
+    OBR.scene.getMetadata().then(handleSceneMetadata, () => {});
     return OBR.scene.onMetadataChange(handleSceneMetadata);
   }, [key, parser]);
 
