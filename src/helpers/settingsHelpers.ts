@@ -1,4 +1,4 @@
-import OBR, { type Metadata } from "@owlbear-rodeo/sdk";
+import { type Metadata } from "@owlbear-rodeo/sdk";
 import { SettingsZod, type DefinedSettings } from "../types/settingsZod";
 import { parseMetadata } from "./parseMetadata";
 import { getPluginId } from "./getPluginId";
@@ -15,11 +15,10 @@ export const defaultSettings: DefinedSettings = {
   keepActivitiesOpen: false,
 };
 
-export async function getSettings(
+export function getSettings(
+  metadata: Metadata,
   currentSettings?: DefinedSettings,
-  metadata?: Metadata,
 ) {
-  if (metadata === undefined) metadata = await OBR.room.getMetadata();
   const settings = {
     ...defaultSettings,
     ...parseMetadata(metadata, SETTINGS_METADATA_KEY, SettingsZod.parse),
