@@ -151,6 +151,7 @@ export default async function startBackground() {
         newAttachmentLog[image.id] = ObrState.attachmentLogs[image.id];
       }
       ObrState.attachmentLogs = newAttachmentLog;
+
       sendItemsToScene(addItemsArray, deleteItemsArray);
     });
 
@@ -167,9 +168,11 @@ export default async function startBackground() {
 }
 
 async function refreshAllAttachments() {
-  // Update attachments
+  const separatedImages = separateChangedItems(ObrState.images, true);
+
   const newAttachmentLog: AttachmentLogs = {};
-  for (const image of ObrState.images) {
+
+  for (const image of separatedImages.changed) {
     const attachmentIds = updateTokenOverlay(
       image,
       ObrState.playerRole,
@@ -177,7 +180,11 @@ async function refreshAllAttachments() {
     );
     newAttachmentLog[image.id] = { image, attachmentIds };
   }
+  for (const image of separatedImages.unchanged) {
+    newAttachmentLog[image.id] = ObrState.attachmentLogs[image.id];
+  }
   ObrState.attachmentLogs = newAttachmentLog;
+
   sendItemsToScene(addItemsArray, deleteItemsArray);
 }
 
