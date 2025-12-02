@@ -154,6 +154,10 @@ export default async function startBackground() {
       sendItemsToScene(addItemsArray, deleteItemsArray);
     });
 
+    OBR.scene.onReadyChange((isReady) => {
+      if (isReady) refreshAllAttachments();
+    });
+
     createContextMenuItems(ObrState.settings, ObrState.themeMode);
     refreshAllAttachments();
   };
