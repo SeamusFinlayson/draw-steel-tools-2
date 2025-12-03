@@ -104,6 +104,7 @@ export default async function startBackground() {
     OBR.scene.onMetadataChange((metadata) => {
       const minionGroupParse = z
         .array(MinionGroupZod)
+        .optional()
         .safeParse(metadata[MONSTER_GROUPS_METADATA_KEY]);
       if (!minionGroupParse.success)
         return console.error("Invalid minion group data");
@@ -114,9 +115,10 @@ export default async function startBackground() {
       if (oldMinionGroupsString === newMinionGroupsString) return;
 
       // Refresh
-      ObrState.minionGroups = minionGroupParse.success
-        ? minionGroupParse.data
-        : [];
+      ObrState.minionGroups =
+        minionGroupParse.success && minionGroupParse.data
+          ? minionGroupParse.data
+          : [];
       refreshAllAttachments();
     });
 
