@@ -156,7 +156,7 @@ export default async function startBackground() {
     });
 
     OBR.scene.onReadyChange((isReady) => {
-      if (isReady) refreshAllAttachments();
+      if (!isReady) ObrState.attachmentLogs = {};
     });
 
     createContextMenuItems(ObrState.settings, ObrState.themeMode);
@@ -168,20 +168,14 @@ export default async function startBackground() {
 }
 
 async function refreshAllAttachments() {
-  const separatedImages = separateChangedItems(ObrState.images, true);
-
   const newAttachmentLog: AttachmentLogs = {};
-
-  for (const image of separatedImages.changed) {
+  for (const image of ObrState.images) {
     const attachmentIds = updateTokenOverlay(
       image,
       ObrState.playerRole,
       ObrState.sceneDpi,
     );
     newAttachmentLog[image.id] = { image, attachmentIds };
-  }
-  for (const image of separatedImages.unchanged) {
-    newAttachmentLog[image.id] = ObrState.attachmentLogs[image.id];
   }
   ObrState.attachmentLogs = newAttachmentLog;
 
