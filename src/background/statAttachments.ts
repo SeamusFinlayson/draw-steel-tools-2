@@ -114,11 +114,17 @@ export default async function startBackground() {
       const newMinionGroupsString = JSON.stringify(minionGroupParse.data);
       if (oldMinionGroupsString === newMinionGroupsString) return;
 
-      // Refresh
+      // Update state
       ObrState.minionGroups =
         minionGroupParse.success && minionGroupParse.data
           ? minionGroupParse.data
           : [];
+      ObrState.minionTokenCounts = getMinionTokenCounts(
+        ObrState.images,
+        ObrState.minionGroups,
+        ObrState.minionTokenCounts,
+      ).counts;
+
       refreshAllAttachments();
     });
 
