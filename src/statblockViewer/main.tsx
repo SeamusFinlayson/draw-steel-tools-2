@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./../index.css";
 
-import { StatblockViewer } from "./App.tsx";
+import { StatblockViewer } from "./StatblockViewer.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
