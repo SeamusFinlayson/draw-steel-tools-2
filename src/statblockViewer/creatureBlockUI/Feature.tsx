@@ -43,44 +43,46 @@ export function Feature({ feature: feature }: { feature: DrawSteelFeature }) {
       </div>
       <div className="w-full space-y-2">
         <div>
-          <div className="flex justify-between">
-            <div className="flex gap-1">
+          <div className="flex flex-wrap justify-between">
+            <div className="flex flex-wrap gap-1">
               <div className="font-black">{feature.name}</div>
-              <PluginReadyGate alternate={<div>{roll}</div>}>
-                {roll && (
-                  <button
-                    className="hover:bg-mirage-200 bg-mirage-100 rounded-full px-2 duration-200"
-                    onClick={() =>
-                      setRollAttributes((prev) => ({
-                        ...prev,
-                        bonus: parseFloat(rollBonus),
-                      }))
-                    }
-                  >
-                    {roll}
-                  </button>
-                )}
-              </PluginReadyGate>
+              <div className="">
+                <PluginReadyGate alternate={<div>{roll}</div>}>
+                  {roll && (
+                    <button
+                      className="hover:bg-mirage-200 bg-mirage-100 rounded-full px-2 text-nowrap duration-200"
+                      onClick={() =>
+                        setRollAttributes((prev) => ({
+                          ...prev,
+                          bonus: parseFloat(rollBonus),
+                        }))
+                      }
+                    >
+                      {roll}
+                    </button>
+                  )}
+                </PluginReadyGate>
+              </div>
             </div>
             {feature.cost && <div className="font-black">{feature.cost}</div>}
             {feature.ability_type && (
               <div className="font-black">{feature.ability_type}</div>
             )}
           </div>
-          <div className="flex justify-between">
+          <div className="flex flex-wrap justify-between">
             <div>{feature.keywords?.join(", ")}</div>
             <div>{feature.usage}</div>
           </div>
           {(feature.distance || feature.target) && (
-            <div className="flex justify-between">
+            <div className="flex flex-wrap justify-between">
               <div className="flex items-center gap-1">
                 <Ruler className="size-4" />
                 <div>{feature.distance}</div>
               </div>
-              <span className="flex items-center gap-1">
-                <Icon iconNode={targetArrow} className="size-4" />
-                <span>{feature.target}</span>
-              </span>
+              <div className="flex items-center gap-1">
+                <Icon iconNode={targetArrow} className="size-4 shrink-0" />
+                <div>{feature.target}</div>
+              </div>
             </div>
           )}
         </div>
