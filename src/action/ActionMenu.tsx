@@ -4,10 +4,10 @@ import { useCallback, useMemo, useState } from "react";
 import * as DiceProtocol from "../diceProtocol";
 import OBR from "@owlbear-rodeo/sdk";
 import usePlayerName from "../helpers/usePlayerName";
-import { useDiceRoller } from "../helpers/diceCommunicationHelpers";
+import { useDiceRoller } from "../helpers/useDiceRoller";
 import type { Roll, RollAttributes } from "../types/diceRollerTypes";
 import getResetRollAttributes, {
-  defaultRollerAttributes,
+  defaultRollAttributes,
   powerRoll,
 } from "./diceRoller/helpers";
 import { Header } from "./header/Header";
@@ -34,7 +34,7 @@ import { MinionGroupCleanup } from "./MinionGroupCleanup";
 function ActionMenu() {
   const playerName = usePlayerName();
   const [rollAttributes, setRollAttributes] = useState<RollAttributes>(
-    defaultRollerAttributes,
+    defaultRollAttributes,
   );
   const [diceResultViewerOpen, setDiceResultViewerOpen] = useState(false);
   const [result, setResult] = useState<Roll>();
@@ -67,7 +67,6 @@ function ActionMenu() {
           bonus: data.rollProperties.bonus,
           hasSkill: data.rollProperties.hasSkill,
           netEdges: data.rollProperties.netEdges,
-          playerName,
           rollMethod: "givenValues",
           dieValues: rolls,
           selectionStrategy:
@@ -152,7 +151,6 @@ function ActionMenu() {
                 </AccordionTrigger>
                 <AccordionContent>
                   <DiceRoller
-                    playerName={playerName}
                     diceResultViewerOpen={diceResultViewerOpen}
                     setDiceResultViewerOpen={setDiceResultViewerOpen}
                     rollAttributes={rollAttributes}

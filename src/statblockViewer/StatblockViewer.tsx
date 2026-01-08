@@ -3,7 +3,6 @@ import MonsterView from "./creatureBlockUI/MonsterView.tsx";
 import Button from "../components/ui/Button.tsx";
 import OBR from "@owlbear-rodeo/sdk";
 import { getPluginId } from "../helpers/getPluginId.ts";
-import { PluginGate } from "../components/logic/PluginGate.tsx";
 import type { MonsterDataBundle } from "../types/monsterDataBundlesZod.ts";
 import { Maximize2Icon, Minimize2Icon } from "lucide-react";
 import { StatBlockSwitcher } from "./StatblockSwitcher.tsx";
@@ -13,6 +12,7 @@ import { cn } from "../helpers/utils.ts";
 import Toggle from "../components/ui/Toggle.tsx";
 import { OpenInNewTab } from "./OpenInNewTabButton.tsx";
 import HeightMatch from "../components/logic/HeightMatch.tsx";
+import { PluginReadyGate } from "./context/PluginReadyGate.tsx";
 
 const statblockName = new URLSearchParams(document.location.search).get(
   "statblockName",
@@ -46,7 +46,7 @@ export function StatblockViewer() {
         <MonsterView monsterData={monsterData} />
       )}
 
-      <PluginGate>
+      <PluginReadyGate>
         <div style={{ height }} />
         <div className="absolute right-0 bottom-0 left-0">
           <HeightMatch setHeight={(height) => setHeight(height)}>
@@ -120,7 +120,7 @@ export function StatblockViewer() {
             </div>
           </HeightMatch>
         </div>
-      </PluginGate>
+      </PluginReadyGate>
     </div>
   );
 }

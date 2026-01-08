@@ -11,7 +11,7 @@ import Button from "../../components/ui/Button";
 import FreeWheelInput from "../../components/logic/FreeWheelInput";
 import Label from "../../components/ui/Label";
 import getResetRollAttributes, { powerRoll } from "./helpers";
-import { createRollRequest } from "../../helpers/diceCommunicationHelpers";
+import { createRollRequestMessage } from "../../helpers/createRollRequestMessage";
 import Toggle from "../../components/ui/Toggle";
 import DiceStylePicker from "./DiceStylePicker";
 import { ToggleGroup, ToggleGroupItem } from "../../components/ui/toggleGroup";
@@ -38,7 +38,6 @@ import type {
 import type { DefinedSettings } from "../../types/settingsZod";
 
 export default function DiceRoller({
-  playerName,
   rollAttributes,
   setRollAttributes,
   diceRoller,
@@ -48,7 +47,6 @@ export default function DiceRoller({
   setDiceResultViewerOpen,
   settings,
 }: {
-  playerName: string;
   rollAttributes: RollAttributes;
   setRollAttributes: React.Dispatch<React.SetStateAction<RollAttributes>>;
   diceRoller: DiceRoller;
@@ -264,7 +262,6 @@ export default function DiceRoller({
             if (diceRoller.config === undefined) {
               setResult(
                 powerRoll({
-                  playerName,
                   bonus: rollAttributes.bonus,
                   hasSkill: rollAttributes.hasSkill,
                   netEdges,
@@ -278,7 +275,7 @@ export default function DiceRoller({
             } else {
               setResult(undefined);
               diceRoller.requestRoll(
-                createRollRequest({
+                createRollRequestMessage({
                   bonus: rollAttributes.bonus,
                   netEdges,
                   hasSkill: rollAttributes.hasSkill,
@@ -383,7 +380,6 @@ export default function DiceRoller({
                         bonus: rollAttributes.bonus,
                         hasSkill: rollAttributes.hasSkill,
                         netEdges,
-                        playerName,
                         rollMethod: "rollNow",
                         dice: rollAttributes.diceOptions,
                       }),
@@ -394,7 +390,7 @@ export default function DiceRoller({
                   } else {
                     setResult(undefined);
                     diceRoller.requestRoll(
-                      createRollRequest({
+                      createRollRequestMessage({
                         bonus: rollAttributes.bonus,
                         hasSkill: rollAttributes.hasSkill,
                         styleId: rollAttributes.style?.id,

@@ -12,14 +12,22 @@ import {
 } from "lucide-react";
 import { Effect } from "./Effect";
 import type { DrawSteelFeature } from "../../types/DrawSteelZod";
+import { useContext } from "react";
+import { SetRollAttributesContext } from "../context/RollAttributesContext";
+import { PluginReadyGate } from "../context/PluginReadyGate";
 
 export function Feature({ feature: feature }: { feature: DrawSteelFeature }) {
+  const setRollAttributes = useContext(SetRollAttributesContext);
+
   let roll: string | undefined = undefined;
+  let rollBonus: string = "";
   feature.effects.forEach((val) => {
     if ("roll" in val && val.roll) {
       roll = val.roll.replace("Power Roll", "2d10");
+      rollBonus = val.roll.replace("Power Roll", "").replace(/\s/g, "");
     }
   });
+
   return (
     <div className="flex gap-1">
       <div className="flex size-[20px] items-center justify-center">
@@ -38,7 +46,21 @@ export function Feature({ feature: feature }: { feature: DrawSteelFeature }) {
           <div className="flex justify-between">
             <div className="flex gap-1">
               <div className="font-black">{feature.name}</div>
-              <div>{roll}</div>
+              <PluginReadyGate alternate={<div>{roll}</div>}>
+                {roll && (
+                  <button
+                    className="hover:bg-mirage-200 bg-mirage-100 rounded-full px-2 duration-200"
+                    onClick={() =>
+                      setRollAttributes((prev) => ({
+                        ...prev,
+                        bonus: parseFloat(rollBonus),
+                      }))
+                    }
+                  >
+                    {roll}
+                  </button>
+                )}
+              </PluginReadyGate>
             </div>
             {feature.cost && <div className="font-black">{feature.cost}</div>}
             {feature.ability_type && (

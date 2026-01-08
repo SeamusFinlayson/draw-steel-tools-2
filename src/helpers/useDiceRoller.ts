@@ -1,25 +1,7 @@
 import * as DiceProtocol from "../diceProtocol";
 import OBR from "@owlbear-rodeo/sdk";
-import { useEffect, useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 import type { DiceRoller } from "../types/diceRollerTypes";
-
-export function createRollRequest(args: {
-  gmOnly: boolean;
-  bonus: number;
-  netEdges: number;
-  hasSkill: boolean;
-  dice: "2d10" | "3d10kh2" | "3d10kl2";
-  styleId?: string;
-}): DiceProtocol.PowerRollRequest {
-  const { gmOnly, styleId, ...rollProperties } = args;
-  return {
-    id: `drawSteelTools-${Date.now()}`,
-    replyChannel: DiceProtocol.ROLL_RESULT_CHANNEL,
-    styleId,
-    gmOnly,
-    rollProperties,
-  };
-}
 
 function requestDiceRollerConfig() {
   OBR.broadcast.sendMessage(
@@ -35,6 +17,7 @@ export function useDiceRoller({
   onRollResult: (rollResult: DiceProtocol.PowerRollResult) => void;
 }): DiceRoller {
   const [config, setConfig] = useState<DiceProtocol.DiceRollerConfig>();
+  const rollResultHandler = useEffectEvent(onRollResult);
 
   useEffect(() => {
     // Automatically connect to dice roller at startup
@@ -59,16 +42,15 @@ export function useDiceRoller({
     () =>
       OBR.broadcast.onMessage(DiceProtocol.ROLL_RESULT_CHANNEL, (event) => {
         const data = event.data as DiceProtocol.PowerRollResult;
-        onRollResult(data);
+        rollResultHandler(data);
       }),
-    [onRollResult],
+    [],
   );
   const getUnsetConfig = () => ({
     config: undefined,
     connect: requestDiceRollerConfig,
     disconnect: () => setConfig(undefined),
     requestRoll: undefined,
-    onRollResult,
   });
 
   if (config === undefined) return getUnsetConfig();
@@ -88,6 +70,5 @@ export function useDiceRoller({
         destination: "LOCAL",
       });
     },
-    onRollResult,
   };
 }

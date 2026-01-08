@@ -3,9 +3,15 @@ import { createRoot } from "react-dom/client";
 import "./../index.css";
 
 import { StatblockViewer } from "./StatblockViewer.tsx";
+import { PluginReadyProvider } from "./context/PluginReadyProvider.tsx";
+import { RollAttributesProvider } from "./context/RollAttributesProvider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <StatblockViewer />
+    <PluginReadyProvider>
+      <RollAttributesProvider>
+        <StatblockViewer />
+      </RollAttributesProvider>
+    </PluginReadyProvider>
   </StrictMode>,
 );
