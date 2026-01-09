@@ -32,10 +32,6 @@ export function Feature({ feature: feature }: { feature: DrawSteelFeature }) {
   const diceDrawer = useContext(DiceDrawerContext);
   const setDiceDrawer = useContext(SetDiceDrawerContext);
 
-  if (feature.name === "Blade of the Gol King") {
-    console.log(diceDrawer);
-  }
-
   const isRollTarget = diceDrawer.target === feature.name;
   const highlightTier =
     isRollTarget && diceDrawer.result && diceDrawer.rollStatus !== "IDLE"
@@ -127,7 +123,7 @@ export function Feature({ feature: feature }: { feature: DrawSteelFeature }) {
               <Effect
                 key={index}
                 effect={effect}
-                highlightTier={highlightTier}
+                highlightTier={index < 2 ? highlightTier : undefined}
               />
             ))}
           </div>
