@@ -9,18 +9,38 @@ import {
   Icon,
   StarIcon,
   Grid3X3Icon,
+  LoaderCircleIcon,
 } from "lucide-react";
 import { Effect } from "./Effect";
 import type { DrawSteelFeature } from "../../types/DrawSteelZod";
 import { useContext } from "react";
 import { SetRollAttributesContext } from "../context/RollAttributesContext";
 import { PluginReadyGate } from "../context/PluginReadyGate";
-import { SetDiceDrawerContext } from "../context/DiceDrawerContext";
+import {
+  DiceDrawerContext,
+  SetDiceDrawerContext,
+} from "../context/DiceDrawerContext";
 import Button from "../../components/ui/Button";
+import { DiceRollResultViewer } from "../../action/diceRoller/DiceRollResultViewer";
+import {
+  Collapsible,
+  CollapsibleContent,
+} from "../../components/ui/collapsible";
 
 export function Feature({ feature: feature }: { feature: DrawSteelFeature }) {
   const setRollAttributes = useContext(SetRollAttributesContext);
+  const diceDrawer = useContext(DiceDrawerContext);
   const setDiceDrawer = useContext(SetDiceDrawerContext);
+
+  if (feature.name === "Blade of the Gol King") {
+    console.log(diceDrawer);
+  }
+
+  const isRollTarget = diceDrawer.target === feature.name;
+  const highlightTier =
+    isRollTarget && diceDrawer.result && diceDrawer.rollStatus !== "IDLE"
+      ? diceDrawer.result.tier
+      : undefined;
 
   let roll: string | undefined = undefined;
   let rollBonus: string = "";
@@ -60,7 +80,12 @@ export function Feature({ feature: feature }: { feature: DrawSteelFeature }) {
                         ...prev,
                         bonus: parseFloat(rollBonus),
                       }));
-                      setDiceDrawer({ open: true });
+                      setDiceDrawer((prev) => ({
+                        ...prev,
+                        open: true,
+                        rollStatus: "IDLE",
+                        target: feature.name,
+                      }));
                     }}
                   >
                     {roll}
@@ -99,11 +124,29 @@ export function Feature({ feature: feature }: { feature: DrawSteelFeature }) {
         {feature.effects.length > 0 && (
           <div className="space-y-2">
             {feature.effects.map((effect, index) => (
-              <Effect key={index} effect={effect} />
+              <Effect
+                key={index}
+                effect={effect}
+                highlightTier={highlightTier}
+              />
             ))}
           </div>
         )}
         {feature.flavor && <div className="italic">{feature.flavor}</div>}
+        <Collapsible open={isRollTarget && diceDrawer.rollStatus !== "IDLE"}>
+          <CollapsibleContent>
+            <div className="border-mirage-300 rounded-2xl border px-4 py-2">
+              {diceDrawer.result === undefined ? (
+                <div className="flex w-full items-center justify-center gap-4">
+                  <LoaderCircleIcon className="animate-spin opacity-40" />
+                  <div>Rolling Dice</div>
+                </div>
+              ) : (
+                <DiceRollResultViewer result={diceDrawer.result} />
+              )}
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
       </div>
     </div>
   );

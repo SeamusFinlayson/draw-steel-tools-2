@@ -24,7 +24,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../../components/ui/dialog";
-import { DiceRollViewer } from "./DiceRollResultViewer";
+import { DiceRollResultViewer } from "./DiceRollResultViewer";
 import { Separator } from "../../components/ui/Separator";
 import { RadioGroup, RadioGroupItem } from "../../components/ui/radioGroup";
 import Input from "../../components/ui/Input";
@@ -52,7 +52,7 @@ export default function DiceRoller({
   setRollAttributes: React.Dispatch<React.SetStateAction<RollAttributes>>;
   diceRoller: DiceRoller;
   result: Roll | undefined;
-  setResult: React.Dispatch<React.SetStateAction<Roll | undefined>>;
+  setResult: (result: Roll | undefined) => void;
   diceResultViewerOpen: boolean;
   setDiceResultViewerOpen: (diceRollerOpen: boolean) => void;
   settings?: DefinedSettings;
@@ -249,7 +249,7 @@ export default function DiceRoller({
                   <div>Rolling Dice</div>
                 </div>
               ) : (
-                <DiceRollViewer result={result} />
+                <DiceRollResultViewer result={result} />
               )}
             </DialogHeader>
           </DialogContent>

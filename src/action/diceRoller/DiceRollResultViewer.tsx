@@ -4,7 +4,7 @@ import D10Icon from "../../components/icons/D10Icon";
 import { cn } from "../../helpers/utils";
 import { Separator } from "../../components/ui/Separator";
 
-export const DiceRollViewer = ({ result }: { result: Roll }) => (
+export const DiceRollResultViewer = ({ result }: { result: Roll }) => (
   <div className="space-y-4 pt-[0.5px]">
     <div className="flex flex-col items-center space-y-1.5">
       <div className="text-foreground-secondary text-xs">Roll</div>

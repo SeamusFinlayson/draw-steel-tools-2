@@ -9,11 +9,9 @@ import {
 } from "../helpers/settingsHelpers.ts";
 import { useRoomMetadata } from "../helpers/useRoomMetadata.ts";
 import type { Roll } from "../types/diceRollerTypes.ts";
-import { RoomTrackersZod } from "../types/roomTrackersZod.ts";
 import { SettingsZod } from "../types/settingsZod.ts";
-import { useCallback, useContext, useMemo, useState } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import OBR from "@owlbear-rodeo/sdk";
-import { getPluginId } from "../helpers/getPluginId.ts";
 import {
   RollAttributesContext,
   SetRollAttributesContext,
@@ -34,7 +32,6 @@ export function DiceDrawer() {
   const setDiceDrawer = useContext(SetDiceDrawerContext);
   const rollAttributes = useContext(RollAttributesContext);
   const setRollAttributes = useContext(SetRollAttributesContext);
-  const [result, setResult] = useState<Roll>();
   // const trackerMetadata = useRoomMetadata(
   //   getPluginId("trackers"),
   //   RoomTrackersZod.parse,
@@ -58,8 +55,10 @@ export function DiceDrawer() {
         if (rolls[i] === 0) rolls[i] = 10;
       }
 
-      setResult(
-        powerRoll({
+      setDiceDrawer((prev) => ({
+        ...prev,
+        rollStatus: "DONE",
+        result: powerRoll({
           bonus: data.rollProperties.bonus,
           hasSkill: data.rollProperties.hasSkill,
           netEdges: data.rollProperties.netEdges,
@@ -68,7 +67,7 @@ export function DiceDrawer() {
           selectionStrategy:
             data.rollProperties.dice === "3d10kl2" ? "lowest" : "highest",
         }),
-      );
+      }));
       setRollAttributes({
         ...getResetRollAttributes(rollAttributes, definedSettings),
         style: rollAttributes.style,
@@ -81,10 +80,12 @@ export function DiceDrawer() {
   if (!diceRoller.config) return;
 
   return (
-    <div className="bg-mirage-50 border-mirage-300 rounded-t-2xl border border-b-0">
+    <div className="bg-mirage-50 border-mirage-300 z-50 rounded-t-2xl border-t">
       <button
-        className="flex w-full items-center justify-between gap-2 rounded-t-2xl px-4 py-2 font-bold"
-        onClick={() => setDiceDrawer({ open: !diceDrawer.open })}
+        className="bg-mirage-200 flex w-full items-center justify-between gap-2 rounded-t-2xl px-4 py-2 font-bold duration-300"
+        onClick={() =>
+          setDiceDrawer((prev) => ({ ...prev, open: !diceDrawer.open }))
+        }
       >
         <div>Dice Roller</div>
         <ChevronUpIcon
@@ -94,16 +95,25 @@ export function DiceDrawer() {
       </button>
       <Collapsible open={diceDrawer.open}>
         <CollapsibleContent>
+          <div className="border-mirage-300 border-t" />
           <DiceRoller
             diceResultViewerOpen={false}
             setDiceResultViewerOpen={() => {}}
-            result={result}
-            setResult={setResult}
+            result={diceDrawer.result}
+            setResult={(result: Roll | undefined) =>
+              setDiceDrawer((prev) => ({
+                ...prev,
+                result,
+                rollStatus: result ? "DONE" : "PENDING",
+              }))
+            }
             rollAttributes={rollAttributes}
             setRollAttributes={setRollAttributes}
             diceRoller={diceRoller}
             settings={definedSettings}
-            onRollClicked={() => setDiceDrawer({ open: false })}
+            onRollClicked={() =>
+              setDiceDrawer((prev) => ({ ...prev, open: false }))
+            }
           />
         </CollapsibleContent>
       </Collapsible>
