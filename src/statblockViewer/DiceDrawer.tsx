@@ -80,9 +80,9 @@ export function DiceDrawer() {
   if (!diceRoller.config) return;
 
   return (
-    <div className="bg-mirage-50 border-mirage-300 z-50 rounded-t-2xl border-t">
+    <div className="bg-mirage-50 border-mirage-300 z-50 rounded-t-2xl">
       <button
-        className="bg-mirage-200 flex w-full items-center justify-between gap-2 rounded-t-2xl px-4 py-2 font-bold duration-300"
+        className="bg-accent flex w-full items-center justify-between gap-2 rounded-t-2xl px-4 py-2 font-bold text-white duration-200"
         onClick={() =>
           setDiceDrawer((prev) => ({ ...prev, open: !diceDrawer.open }))
         }
@@ -90,12 +90,12 @@ export function DiceDrawer() {
         <div>Dice Roller</div>
         <ChevronUpIcon
           data-open={diceDrawer.open}
-          className="transition-transform duration-200 ease-out data-[open=true]:-rotate-180"
+          className="transition-transform duration-300 ease-out data-[open=true]:-rotate-180"
         />
       </button>
       <Collapsible open={diceDrawer.open}>
         <CollapsibleContent>
-          <div className="border-mirage-300 border-t" />
+          <div className="border-mirage-300" />
           <DiceRoller
             diceResultViewerOpen={false}
             setDiceResultViewerOpen={() => {}}
