@@ -15,9 +15,12 @@ import type { DrawSteelFeature } from "../../types/DrawSteelZod";
 import { useContext } from "react";
 import { SetRollAttributesContext } from "../context/RollAttributesContext";
 import { PluginReadyGate } from "../context/PluginReadyGate";
+import { SetDiceDrawerContext } from "../context/DiceDrawerContext";
+import Button from "../../components/ui/Button";
 
 export function Feature({ feature: feature }: { feature: DrawSteelFeature }) {
   const setRollAttributes = useContext(SetRollAttributesContext);
+  const setDiceDrawer = useContext(SetDiceDrawerContext);
 
   let roll: string | undefined = undefined;
   let rollBonus: string = "";
@@ -46,23 +49,24 @@ export function Feature({ feature: feature }: { feature: DrawSteelFeature }) {
           <div className="flex flex-wrap justify-between">
             <div className="flex flex-wrap gap-1">
               <div className="font-black">{feature.name}</div>
-              <div className="">
-                <PluginReadyGate alternate={<div>{roll}</div>}>
-                  {roll && (
-                    <button
-                      className="hover:bg-mirage-200 bg-mirage-100 rounded-full px-2 text-nowrap duration-200"
-                      onClick={() =>
-                        setRollAttributes((prev) => ({
-                          ...prev,
-                          bonus: parseFloat(rollBonus),
-                        }))
-                      }
-                    >
-                      {roll}
-                    </button>
-                  )}
-                </PluginReadyGate>
-              </div>
+              <PluginReadyGate alternate={<div>{roll}</div>}>
+                {roll && (
+                  <Button
+                    variant={"secondary"}
+                    size={"xs"}
+                    className="-my-0.5 px-3 font-normal text-nowrap"
+                    onClick={() => {
+                      setRollAttributes((prev) => ({
+                        ...prev,
+                        bonus: parseFloat(rollBonus),
+                      }));
+                      setDiceDrawer({ open: true });
+                    }}
+                  >
+                    {roll}
+                  </Button>
+                )}
+              </PluginReadyGate>
             </div>
             {feature.cost && <div className="font-black">{feature.cost}</div>}
             {feature.ability_type && (

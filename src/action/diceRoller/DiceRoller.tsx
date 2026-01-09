@@ -46,6 +46,7 @@ export default function DiceRoller({
   diceResultViewerOpen,
   setDiceResultViewerOpen,
   settings,
+  onRollClicked,
 }: {
   rollAttributes: RollAttributes;
   setRollAttributes: React.Dispatch<React.SetStateAction<RollAttributes>>;
@@ -55,6 +56,7 @@ export default function DiceRoller({
   diceResultViewerOpen: boolean;
   setDiceResultViewerOpen: (diceRollerOpen: boolean) => void;
   settings?: DefinedSettings;
+  onRollClicked?: () => void;
 }) {
   const netEdges = rollAttributes.edges - rollAttributes.banes;
 
@@ -152,7 +154,7 @@ export default function DiceRoller({
                     style={{
                       backgroundColor: rollAttributes.style?.color,
                     }}
-                    className="outline-text-secondary size-5 rounded-full outline duration-150 dark:outline-white/20"
+                    className="size-5 rounded-full outline outline-black/20 duration-150 dark:outline-white/20"
                   />
                 </Button>
               }
@@ -285,6 +287,7 @@ export default function DiceRoller({
                 }),
               );
             }
+            if (onRollClicked) onRollClicked();
           }}
         >
           Roll
@@ -400,6 +403,7 @@ export default function DiceRoller({
                       }),
                     );
                   }
+                  if (onRollClicked) onRollClicked();
                 }}
               >
                 Roll

@@ -5,13 +5,16 @@ import "./../index.css";
 import { StatblockViewer } from "./StatblockViewer.tsx";
 import { PluginReadyProvider } from "./context/PluginReadyProvider.tsx";
 import { RollAttributesProvider } from "./context/RollAttributesProvider.tsx";
+import { DiceDrawerProvider } from "./context/DiceDrawerContextProvider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <PluginReadyProvider>
-      <RollAttributesProvider>
-        <StatblockViewer />
-      </RollAttributesProvider>
+      <DiceDrawerProvider>
+        <RollAttributesProvider>
+          <StatblockViewer />
+        </RollAttributesProvider>
+      </DiceDrawerProvider>
     </PluginReadyProvider>
   </StrictMode>,
 );

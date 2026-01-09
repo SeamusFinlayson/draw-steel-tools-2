@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { defaultRollAttributes } from "../../action/diceRoller/helpers";
+
+import type { RollAttributes } from "../../types/diceRollerTypes";
 import {
   RollAttributesContext,
   SetRollAttributesContext,
 } from "./RollAttributesContext";
-import type { RollAttributes } from "../../types/diceRollerTypes";
 
 export function RollAttributesProvider({ children }: { children: any }) {
   const [rollAttributes, setRollAttributes] = useState<RollAttributes>(

@@ -4,8 +4,6 @@ import { StatBlock } from "./StatBlock";
 import { ScrollArea } from "../../components/ui/scrollArea";
 import defaultMalice from "../defaultMalice.json";
 import { DrawSteelFeatureBlockZod } from "../../types/DrawSteelZod";
-import { DiceRoller } from "../DiceRoller";
-import { PluginReadyGate } from "../context/PluginReadyGate";
 
 const parsedDefaultMaliceFeatures =
   DrawSteelFeatureBlockZod.parse(defaultMalice);
@@ -34,11 +32,6 @@ export default function MonsterView({
               ))}
             <FeatureBlock featureBlock={parsedDefaultMaliceFeatures} />
           </div>
-        </div>
-        <div className="absolute bottom-0 z-50 w-full">
-          <PluginReadyGate>
-            <DiceRoller />
-          </PluginReadyGate>
         </div>
       </ScrollArea>
     </div>

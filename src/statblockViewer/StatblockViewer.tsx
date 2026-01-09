@@ -13,6 +13,7 @@ import Toggle from "../components/ui/Toggle.tsx";
 import { OpenInNewTab } from "./OpenInNewTabButton.tsx";
 import HeightMatch from "../components/logic/HeightMatch.tsx";
 import { PluginReadyGate } from "./context/PluginReadyGate.tsx";
+import { DiceDrawer } from "./DiceDrawer.tsx";
 
 const statblockName = new URLSearchParams(document.location.search).get(
   "statblockName",
@@ -50,6 +51,8 @@ export function StatblockViewer() {
         <div style={{ height }} />
         <div className="absolute right-0 bottom-0 left-0">
           <HeightMatch setHeight={(height) => setHeight(height)}>
+            <DiceDrawer />
+
             <div
               className={cn(
                 "border-mirage-300 bg-mirage-50 flex flex-wrap justify-end gap-x-2 gap-y-2 overflow-hidden px-4 py-2",

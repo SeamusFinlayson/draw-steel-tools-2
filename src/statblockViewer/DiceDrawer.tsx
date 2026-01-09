@@ -2,7 +2,7 @@ import getResetRollAttributes, {
   powerRoll,
 } from "../action/diceRoller/helpers.ts";
 import { useDiceRoller } from "../helpers/useDiceRoller.ts";
-import * as DiceProtocol from "../diceProtocol";
+import * as DiceProtocol from "../diceProtocol.ts";
 import {
   SETTINGS_METADATA_KEY,
   defaultSettings,
@@ -18,15 +18,27 @@ import {
   RollAttributesContext,
   SetRollAttributesContext,
 } from "./context/RollAttributesContext.ts";
+import { ChevronUpIcon } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+} from "../components/ui/collapsible.tsx";
+import DiceRoller from "../action/diceRoller/DiceRoller.tsx";
+import {
+  DiceDrawerContext,
+  SetDiceDrawerContext,
+} from "./context/DiceDrawerContext.ts";
 
-export function DiceRoller() {
+export function DiceDrawer() {
+  const diceDrawer = useContext(DiceDrawerContext);
+  const setDiceDrawer = useContext(SetDiceDrawerContext);
   const rollAttributes = useContext(RollAttributesContext);
   const setRollAttributes = useContext(SetRollAttributesContext);
   const [result, setResult] = useState<Roll>();
-  const trackerMetadata = useRoomMetadata(
-    getPluginId("trackers"),
-    RoomTrackersZod.parse,
-  );
+  // const trackerMetadata = useRoomMetadata(
+  //   getPluginId("trackers"),
+  //   RoomTrackersZod.parse,
+  // );
 
   const settingsMetadata = useRoomMetadata(
     SETTINGS_METADATA_KEY,
@@ -68,29 +80,33 @@ export function DiceRoller() {
 
   if (!diceRoller.config) return;
 
-  const netEdges = rollAttributes.edges - rollAttributes.banes;
-
   return (
-    <div className="flex justify-center bg-white">
-      <div>{`Bonus: ${rollAttributes.bonus}`}</div>
+    <div className="bg-mirage-50 border-mirage-300 rounded-t-2xl border border-b-0">
       <button
-        className="bg-accent rounded-t-md px-3 py-1 text-white"
-        onClick={() => {
-          diceRoller.requestRoll({
-            id: Math.random().toString(),
-            gmOnly: false,
-            replyChannel: DiceProtocol.ROLL_RESULT_CHANNEL,
-            rollProperties: {
-              bonus: rollAttributes.banes,
-              dice: rollAttributes.diceOptions,
-              hasSkill: rollAttributes.hasSkill,
-              netEdges,
-            },
-          });
-        }}
+        className="flex w-full items-center justify-between gap-2 rounded-t-2xl px-4 py-2 font-bold"
+        onClick={() => setDiceDrawer({ open: !diceDrawer.open })}
       >
-        Roll Me
+        <div>Dice Roller</div>
+        <ChevronUpIcon
+          data-open={diceDrawer.open}
+          className="transition-transform duration-200 ease-out data-[open=true]:-rotate-180"
+        />
       </button>
+      <Collapsible open={diceDrawer.open}>
+        <CollapsibleContent>
+          <DiceRoller
+            diceResultViewerOpen={false}
+            setDiceResultViewerOpen={() => {}}
+            result={result}
+            setResult={setResult}
+            rollAttributes={rollAttributes}
+            setRollAttributes={setRollAttributes}
+            diceRoller={diceRoller}
+            settings={definedSettings}
+            onRollClicked={() => setDiceDrawer({ open: false })}
+          />
+        </CollapsibleContent>
+      </Collapsible>
     </div>
   );
 }
