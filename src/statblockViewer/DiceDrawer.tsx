@@ -16,7 +16,7 @@ import {
   RollAttributesContext,
   SetRollAttributesContext,
 } from "./context/RollAttributesContext.ts";
-import { ChevronUpIcon } from "lucide-react";
+import { ChevronUpIcon, XIcon } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -26,6 +26,8 @@ import {
   DiceDrawerContext,
   SetDiceDrawerContext,
 } from "./context/DiceDrawerContext.ts";
+import Button from "../components/ui/Button.tsx";
+import Label from "../components/ui/Label.tsx";
 
 export function DiceDrawer() {
   const diceDrawer = useContext(DiceDrawerContext);
@@ -95,7 +97,27 @@ export function DiceDrawer() {
       </button>
       <Collapsible open={diceDrawer.open}>
         <CollapsibleContent>
-          <div className="border-mirage-300" />
+          {/*<div className="border-mirage-300" />*/}
+          {diceDrawer.target && (
+            <div className="px-4 pt-4">
+              <Label variant="small" htmlFor="bonusInput">
+                Ability
+              </Label>
+              <div className="border-mirage-300 flex items-center justify-between rounded-2xl border pl-4">
+                <div>{diceDrawer.target}</div>
+                <Button
+                  className="size-[36px] rounded-2xl"
+                  size={"icon"}
+                  variant={"ghost"}
+                  onClick={() =>
+                    setDiceDrawer((prev) => ({ ...prev, target: undefined }))
+                  }
+                >
+                  <XIcon />
+                </Button>
+              </div>
+            </div>
+          )}
           <DiceRoller
             diceResultViewerOpen={false}
             setDiceResultViewerOpen={() => {}}

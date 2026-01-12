@@ -61,7 +61,7 @@ export default function DiceRoller({
   const netEdges = rollAttributes.edges - rollAttributes.banes;
 
   return (
-    <div className="bg-mirage-50 dark:bg-mirage-950 mx-4 space-y-4 rounded-2xl p-4">
+    <div className="bg-mirage-50 dark:bg-mirage-950 space-y-4 rounded-2xl p-4">
       <div>
         <Label variant="small" htmlFor="bonusInput">
           Bonus

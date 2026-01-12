@@ -9,7 +9,6 @@ import {
   Icon,
   StarIcon,
   Grid3X3Icon,
-  LoaderCircleIcon,
 } from "lucide-react";
 import { Effect } from "./Effect";
 import type { DrawSteelFeature } from "../../types/DrawSteelZod";
@@ -21,11 +20,11 @@ import {
   SetDiceDrawerContext,
 } from "../context/DiceDrawerContext";
 import Button from "../../components/ui/Button";
-import { DiceRollResultViewer } from "../../action/diceRoller/DiceRollResultViewer";
 import {
   Collapsible,
   CollapsibleContent,
 } from "../../components/ui/collapsible";
+import { ResultDropDown } from "../ResultDropDown";
 
 export function Feature({ feature: feature }: { feature: DrawSteelFeature }) {
   const setRollAttributes = useContext(SetRollAttributesContext);
@@ -130,17 +129,8 @@ export function Feature({ feature: feature }: { feature: DrawSteelFeature }) {
         )}
         {feature.flavor && <div className="italic">{feature.flavor}</div>}
         <Collapsible open={isRollTarget && diceDrawer.rollStatus !== "IDLE"}>
-          <CollapsibleContent>
-            <div className="border-mirage-300 rounded-2xl border px-4 py-2">
-              {diceDrawer.result === undefined ? (
-                <div className="flex w-full items-center justify-center gap-4">
-                  <LoaderCircleIcon className="animate-spin opacity-40" />
-                  <div>Rolling Dice</div>
-                </div>
-              ) : (
-                <DiceRollResultViewer result={diceDrawer.result} />
-              )}
-            </div>
+          <CollapsibleContent className="overflow-visible">
+            <ResultDropDown result={diceDrawer.result} />
           </CollapsibleContent>
         </Collapsible>
       </div>

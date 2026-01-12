@@ -150,16 +150,18 @@ function ActionMenu() {
                   Power Roll
                 </AccordionTrigger>
                 <AccordionContent>
-                  <DiceRoller
-                    diceResultViewerOpen={diceResultViewerOpen}
-                    setDiceResultViewerOpen={setDiceResultViewerOpen}
-                    rollAttributes={rollAttributes}
-                    setRollAttributes={setRollAttributes}
-                    result={result}
-                    setResult={setResult}
-                    diceRoller={diceRoller}
-                    settings={definedSettings}
-                  />
+                  <div className="mx-4">
+                    <DiceRoller
+                      diceResultViewerOpen={diceResultViewerOpen}
+                      setDiceResultViewerOpen={setDiceResultViewerOpen}
+                      rollAttributes={rollAttributes}
+                      setRollAttributes={setRollAttributes}
+                      result={result}
+                      setResult={setResult}
+                      diceRoller={diceRoller}
+                      settings={definedSettings}
+                    />
+                  </div>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
