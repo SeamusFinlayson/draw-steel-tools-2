@@ -79,8 +79,6 @@ export function DiceDrawer() {
   );
   const diceRoller = useDiceRoller({ onRollResult: handleRollResult });
 
-  if (!diceRoller.config) return;
-
   return (
     <div className="bg-mirage-50 border-mirage-300 z-50 rounded-t-2xl">
       <button
