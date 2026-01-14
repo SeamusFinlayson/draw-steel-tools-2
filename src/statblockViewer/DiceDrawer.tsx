@@ -25,6 +25,7 @@ import DiceRoller from "../action/diceRoller/DiceRoller.tsx";
 import {
   DiceDrawerContext,
   SetDiceDrawerContext,
+  type DiceDrawer,
 } from "./context/DiceDrawerContext.ts";
 import Button from "../components/ui/Button.tsx";
 import Label from "../components/ui/Label.tsx";
@@ -116,7 +117,14 @@ export function DiceDrawer() {
                   variant={"secondary"}
                   title={diceDrawer.rollTargetName}
                   onClick={() =>
-                    setDiceDrawer((prev) => ({ ...prev, target: undefined }))
+                    setDiceDrawer(
+                      (prev) =>
+                        ({
+                          ...prev,
+                          rollTargetId: undefined,
+                          rollTargetName: undefined,
+                        }) satisfies DiceDrawer,
+                    )
                   }
                 >
                   <div className="max-w-[calc(100%-32px)] overflow-clip text-clip">
