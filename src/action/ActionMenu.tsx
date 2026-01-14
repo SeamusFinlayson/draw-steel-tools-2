@@ -150,7 +150,7 @@ function ActionMenu() {
                   Power Roll
                 </AccordionTrigger>
                 <AccordionContent>
-                  <div className="mx-4">
+                  <div className="bg-mirage-50 dark:bg-mirage-950 mx-4 rounded-2xl p-4 py-3">
                     <DiceRoller
                       autoOpenResultView
                       diceResultViewerOpen={diceResultViewerOpen}

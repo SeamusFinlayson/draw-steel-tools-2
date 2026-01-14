@@ -98,7 +98,7 @@ export function DiceDrawer() {
       <Collapsible open={diceDrawer.open}>
         <CollapsibleContent>
           {/*<div className="border-mirage-300" />*/}
-          <div className="grid grid-cols-2 gap-x-4 px-4 pt-4">
+          <div className="grid grid-cols-2 gap-x-4 px-4 pt-3">
             <div>
               <Label variant="small" htmlFor="bonusInput">
                 Ability
@@ -163,29 +163,31 @@ export function DiceDrawer() {
               )}
             </div>
           </div>
-          <DiceRoller
-            diceResultViewerOpen={diceResultViewerOpen}
-            setDiceResultViewerOpen={setDiceResultViewerOpen}
-            result={diceDrawer.result}
-            setResult={(result: Roll | undefined) =>
-              setDiceDrawer((prev) => ({
-                ...prev,
-                result,
-                rollStatus: result ? "DONE" : "PENDING",
-              }))
-            }
-            rollAttributes={rollAttributes}
-            setRollAttributes={setRollAttributes}
-            diceRoller={diceRoller}
-            settings={definedSettings}
-            onRollClicked={() =>
-              setDiceDrawer((prev) => ({
-                ...prev,
-                open: false,
-                resultTargetId: prev.rollTargetId,
-              }))
-            }
-          />
+          <div className="bg-mirage-50 dark:bg-mirage-950 px-4 py-3">
+            <DiceRoller
+              diceResultViewerOpen={diceResultViewerOpen}
+              setDiceResultViewerOpen={setDiceResultViewerOpen}
+              result={diceDrawer.result}
+              setResult={(result: Roll | undefined) =>
+                setDiceDrawer((prev) => ({
+                  ...prev,
+                  result,
+                  rollStatus: result ? "DONE" : "PENDING",
+                }))
+              }
+              rollAttributes={rollAttributes}
+              setRollAttributes={setRollAttributes}
+              diceRoller={diceRoller}
+              settings={definedSettings}
+              onRollClicked={() =>
+                setDiceDrawer((prev) => ({
+                  ...prev,
+                  open: false,
+                  resultTargetId: prev.rollTargetId,
+                }))
+              }
+            />
+          </div>
         </CollapsibleContent>
       </Collapsible>
     </div>
