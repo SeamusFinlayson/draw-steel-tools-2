@@ -21,10 +21,6 @@ import {
   type DiceDrawer,
 } from "../context/DiceDrawerContext";
 import Button from "../../components/ui/Button";
-import {
-  Collapsible,
-  CollapsibleContent,
-} from "../../components/ui/collapsible";
 import { ResultDropDown } from "../ResultDropDown";
 
 export function Feature({
@@ -65,83 +61,81 @@ export function Feature({
           return <UserIcon />;
         })()}
       </div>
-      <div className="w-full space-y-2">
-        <div>
-          <div className="flex flex-wrap justify-between">
-            <div className="flex flex-wrap gap-1">
-              <div className="font-black">{feature.name}</div>
-              <PluginReadyGate alternate={<div>{roll}</div>}>
-                {roll && (
-                  <Button
-                    variant={"secondary"}
-                    size={"xs"}
-                    className="-my-0.5 px-3 font-normal text-nowrap"
-                    onClick={() => {
-                      setRollAttributes((prev) => ({
-                        ...prev,
-                        bonus: parseFloat(rollBonus),
-                      }));
-                      setDiceDrawer(
-                        (prev) =>
-                          ({
-                            ...prev,
-                            open: true,
-                            rollTargetId: featureId,
-                            rollTargetName: feature.name,
-                          }) satisfies DiceDrawer,
-                      );
-                    }}
-                  >
-                    {roll}
-                  </Button>
-                )}
-              </PluginReadyGate>
+      <div>
+        <div className="w-full space-y-2">
+          <div>
+            <div className="flex flex-wrap justify-between">
+              <div className="flex flex-wrap gap-1">
+                <div className="font-black">{feature.name}</div>
+                <PluginReadyGate alternate={<div>{roll}</div>}>
+                  {roll && (
+                    <Button
+                      variant={"secondary"}
+                      size={"xs"}
+                      className="-my-0.5 px-3 font-normal text-nowrap"
+                      onClick={() => {
+                        setRollAttributes((prev) => ({
+                          ...prev,
+                          bonus: parseFloat(rollBonus),
+                        }));
+                        setDiceDrawer(
+                          (prev) =>
+                            ({
+                              ...prev,
+                              open: true,
+                              rollTargetId: featureId,
+                              rollTargetName: feature.name,
+                            }) satisfies DiceDrawer,
+                        );
+                      }}
+                    >
+                      {roll}
+                    </Button>
+                  )}
+                </PluginReadyGate>
+              </div>
+              {feature.cost && <div className="font-black">{feature.cost}</div>}
+              {feature.ability_type && (
+                <div className="font-black">{feature.ability_type}</div>
+              )}
             </div>
-            {feature.cost && <div className="font-black">{feature.cost}</div>}
-            {feature.ability_type && (
-              <div className="font-black">{feature.ability_type}</div>
+            <div className="flex flex-wrap justify-between">
+              <div>{feature.keywords?.join(", ")}</div>
+              <div>{feature.usage}</div>
+            </div>
+            {(feature.distance || feature.target) && (
+              <div className="flex flex-wrap justify-between">
+                <div className="flex items-center gap-1">
+                  <Ruler className="size-4" />
+                  <div>{feature.distance}</div>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Icon iconNode={targetArrow} className="size-4 shrink-0" />
+                  <div>{feature.target}</div>
+                </div>
+              </div>
             )}
           </div>
-          <div className="flex flex-wrap justify-between">
-            <div>{feature.keywords?.join(", ")}</div>
-            <div>{feature.usage}</div>
-          </div>
-          {(feature.distance || feature.target) && (
-            <div className="flex flex-wrap justify-between">
-              <div className="flex items-center gap-1">
-                <Ruler className="size-4" />
-                <div>{feature.distance}</div>
-              </div>
-              <div className="flex items-center gap-1">
-                <Icon iconNode={targetArrow} className="size-4 shrink-0" />
-                <div>{feature.target}</div>
-              </div>
+          {feature.trigger && (
+            <div>
+              <span className="font-semibold">{"Trigger: "}</span>
+              {feature.trigger}
             </div>
           )}
+          {feature.effects.length > 0 && (
+            <div className="space-y-2">
+              {feature.effects.map((effect, index) => (
+                <Effect
+                  key={index}
+                  effect={effect}
+                  highlightTier={index < 2 ? highlightTier : undefined}
+                />
+              ))}
+            </div>
+          )}
+          {feature.flavor && <div className="italic">{feature.flavor}</div>}
         </div>
-        {feature.trigger && (
-          <div>
-            <span className="font-semibold">{"Trigger: "}</span>
-            {feature.trigger}
-          </div>
-        )}
-        {feature.effects.length > 0 && (
-          <div className="space-y-2">
-            {feature.effects.map((effect, index) => (
-              <Effect
-                key={index}
-                effect={effect}
-                highlightTier={index < 2 ? highlightTier : undefined}
-              />
-            ))}
-          </div>
-        )}
-        {feature.flavor && <div className="italic">{feature.flavor}</div>}
-        <Collapsible open={isResultTarget}>
-          <CollapsibleContent className="overflow-visible">
-            <ResultDropDown result={diceDrawer.result} />
-          </CollapsibleContent>
-        </Collapsible>
+        <ResultDropDown hidden={isResultTarget} result={diceDrawer.result} />
       </div>
     </div>
   );

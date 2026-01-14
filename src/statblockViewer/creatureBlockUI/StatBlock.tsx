@@ -1,5 +1,6 @@
 import { cn } from "../../helpers/utils";
 import type { DrawSteelStatblock } from "../../types/DrawSteelZod";
+import { Characteristics } from "./Characteristics";
 import { Feature } from "./Feature";
 
 export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
@@ -85,22 +86,7 @@ export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
 
       <div className="mb-0.5 w-full border-b border-zinc-950" />
 
-      <div className="flex flex-wrap justify-between gap-1.5 px-2 text-sm">
-        {[
-          { label: "Might", value: statblock.might },
-          { label: "Agility", value: statblock.agility },
-          { label: "Reason", value: statblock.reason },
-          { label: "Intuition", value: statblock.intuition },
-          { label: "Presence", value: statblock.presence },
-        ].map((item) => (
-          <div className="min-w-16 flex-1 text-center" key={item.label}>
-            <div className="text-lg">{`${item.value > 1 ? "+" : ""}${item.value}`}</div>
-            <div className="-mt-0.5 rounded-sm bg-black font-bold text-white">
-              {item.label}
-            </div>
-          </div>
-        ))}
-      </div>
+      <Characteristics statblock={statblock} />
 
       <div className="mb-0 w-full border-b border-zinc-950" />
 
