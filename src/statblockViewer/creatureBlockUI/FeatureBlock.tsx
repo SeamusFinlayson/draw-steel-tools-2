@@ -27,7 +27,7 @@ export function FeatureBlock({
             key={feature.name}
             className="border-mirage-950 border-b p-2 pl-0"
           >
-            <Feature feature={feature} />
+            <Feature blockName={featureBlock.name} feature={feature} />
           </div>
         ))}
       </div>

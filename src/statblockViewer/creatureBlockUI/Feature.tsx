@@ -18,6 +18,7 @@ import { PluginReadyGate } from "../context/PluginReadyGate";
 import {
   DiceDrawerContext,
   SetDiceDrawerContext,
+  type DiceDrawer,
 } from "../context/DiceDrawerContext";
 import Button from "../../components/ui/Button";
 import {
@@ -26,16 +27,21 @@ import {
 } from "../../components/ui/collapsible";
 import { ResultDropDown } from "../ResultDropDown";
 
-export function Feature({ feature: feature }: { feature: DrawSteelFeature }) {
+export function Feature({
+  blockName,
+  feature: feature,
+}: {
+  blockName: string;
+  feature: DrawSteelFeature;
+}) {
   const setRollAttributes = useContext(SetRollAttributesContext);
   const diceDrawer = useContext(DiceDrawerContext);
   const setDiceDrawer = useContext(SetDiceDrawerContext);
 
-  const isRollTarget = diceDrawer.target === feature.name;
+  const featureId = blockName + feature.name;
+  const isResultTarget = diceDrawer.resultTargetId === featureId;
   const highlightTier =
-    isRollTarget && diceDrawer.result && diceDrawer.rollStatus !== "IDLE"
-      ? diceDrawer.result.tier
-      : undefined;
+    isResultTarget && diceDrawer.result ? diceDrawer.result.tier : undefined;
 
   let roll: string | undefined = undefined;
   let rollBonus: string = "";
@@ -75,12 +81,15 @@ export function Feature({ feature: feature }: { feature: DrawSteelFeature }) {
                         ...prev,
                         bonus: parseFloat(rollBonus),
                       }));
-                      setDiceDrawer((prev) => ({
-                        ...prev,
-                        open: true,
-                        rollStatus: "IDLE",
-                        target: feature.name,
-                      }));
+                      setDiceDrawer(
+                        (prev) =>
+                          ({
+                            ...prev,
+                            open: true,
+                            rollTargetId: featureId,
+                            rollTargetName: feature.name,
+                          }) satisfies DiceDrawer,
+                      );
                     }}
                   >
                     {roll}
@@ -128,7 +137,7 @@ export function Feature({ feature: feature }: { feature: DrawSteelFeature }) {
           </div>
         )}
         {feature.flavor && <div className="italic">{feature.flavor}</div>}
-        <Collapsible open={isRollTarget && diceDrawer.rollStatus !== "IDLE"}>
+        <Collapsible open={isResultTarget}>
           <CollapsibleContent className="overflow-visible">
             <ResultDropDown result={diceDrawer.result} />
           </CollapsibleContent>

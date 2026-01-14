@@ -45,6 +45,7 @@ export default function DiceRoller({
   setResult,
   diceResultViewerOpen,
   setDiceResultViewerOpen,
+  autoOpenResultView = false,
   settings,
   onRollClicked,
 }: {
@@ -55,6 +56,7 @@ export default function DiceRoller({
   setResult: (result: Roll | undefined) => void;
   diceResultViewerOpen: boolean;
   setDiceResultViewerOpen: (diceRollerOpen: boolean) => void;
+  autoOpenResultView?: boolean;
   settings?: DefinedSettings;
   onRollClicked?: () => void;
 }) {
@@ -69,7 +71,6 @@ export default function DiceRoller({
         <div className="grid grid-cols-3 place-items-stretch gap-1">
           <Button
             aria-label="decrement bonus"
-            className="rounded-r-[8px]"
             variant="secondary"
             onClick={() =>
               setRollAttributes((prev) => ({
@@ -102,7 +103,6 @@ export default function DiceRoller({
           </Input>
           <Button
             aria-label="increment bonus"
-            className="rounded-l-[8px]"
             variant="secondary"
             onClick={() =>
               setRollAttributes((prev) => ({
@@ -120,7 +120,7 @@ export default function DiceRoller({
         data-two-col={diceRoller.config !== undefined}
         className="grid gap-2 data-[two-col=true]:grid-cols-2"
       >
-        <div className="col-span-1">
+        <div>
           <Label variant="small" htmlFor="skillToggleButton">
             Skill
           </Label>
@@ -146,10 +146,12 @@ export default function DiceRoller({
               dialogTrigger={
                 <Button
                   id="colorPickerTrigger"
-                  className="w-full"
+                  className="flex w-full items-center"
                   variant="secondary"
                 >
-                  <SwatchBookIcon className="w-10 shrink-0" />
+                  <div>
+                    <SwatchBookIcon className="size-6 shrink-0" />
+                  </div>
                   <div
                     style={{
                       backgroundColor: rollAttributes.style?.color,
@@ -260,7 +262,7 @@ export default function DiceRoller({
           size={"lg"}
           className="grow"
           onClick={() => {
-            setDiceResultViewerOpen(true);
+            if (autoOpenResultView) setDiceResultViewerOpen(true);
             if (diceRoller.config === undefined) {
               setResult(
                 powerRoll({

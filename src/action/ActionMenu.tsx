@@ -152,6 +152,7 @@ function ActionMenu() {
                 <AccordionContent>
                   <div className="mx-4">
                     <DiceRoller
+                      autoOpenResultView
                       diceResultViewerOpen={diceResultViewerOpen}
                       setDiceResultViewerOpen={setDiceResultViewerOpen}
                       rollAttributes={rollAttributes}

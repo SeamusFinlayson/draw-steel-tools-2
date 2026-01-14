@@ -10,13 +10,13 @@ import {
 import { useRoomMetadata } from "../helpers/useRoomMetadata.ts";
 import type { Roll } from "../types/diceRollerTypes.ts";
 import { SettingsZod } from "../types/settingsZod.ts";
-import { useCallback, useContext, useMemo } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import OBR from "@owlbear-rodeo/sdk";
 import {
   RollAttributesContext,
   SetRollAttributesContext,
 } from "./context/RollAttributesContext.ts";
-import { ChevronUpIcon, XIcon } from "lucide-react";
+import { CheckIcon, ChevronUpIcon, PlugZap, XIcon } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -47,6 +47,8 @@ export function DiceDrawer() {
     () => ({ ...defaultSettings, ...settingsMetadata.value }),
     [settingsMetadata],
   );
+
+  const [diceResultViewerOpen, setDiceResultViewerOpen] = useState(false);
 
   // External dice roller
   const handleRollResult = useCallback(
@@ -96,29 +98,74 @@ export function DiceDrawer() {
       <Collapsible open={diceDrawer.open}>
         <CollapsibleContent>
           {/*<div className="border-mirage-300" />*/}
-          {diceDrawer.target && (
-            <div className="px-4 pt-4">
+          <div className="grid grid-cols-2 gap-x-4 px-4 pt-4">
+            <div>
               <Label variant="small" htmlFor="bonusInput">
                 Ability
               </Label>
-              <div className="border-mirage-300 flex items-center justify-between rounded-2xl border pl-4">
-                <div>{diceDrawer.target}</div>
+              {!diceDrawer.rollTargetId ? (
                 <Button
-                  className="size-[36px] rounded-2xl"
-                  size={"icon"}
-                  variant={"ghost"}
+                  className="inert pointer-events-none flex h-[36px] w-full items-center justify-between px-2 pl-4"
+                  variant={"secondary"}
+                >
+                  <div className="overflow-clip">No Ability Selected</div>
+                </Button>
+              ) : (
+                <Button
+                  className="flex h-[36px] w-full items-center justify-between px-2 pl-4"
+                  variant={"secondary"}
+                  title={diceDrawer.rollTargetName}
                   onClick={() =>
                     setDiceDrawer((prev) => ({ ...prev, target: undefined }))
                   }
                 >
-                  <XIcon />
+                  <div className="max-w-[calc(100%-32px)] overflow-clip text-clip">
+                    {diceDrawer.rollTargetName}
+                  </div>
+                  <XIcon className="shrink-0" />
                 </Button>
-              </div>
+              )}
             </div>
-          )}
+            <div>
+              <Label variant="small" htmlFor="bonusInput">
+                Dice Roller
+              </Label>
+              {diceRoller.config === undefined ? (
+                <Button
+                  className="flex h-[36px] w-full items-center justify-between px-2 pl-4"
+                  variant={"secondary"}
+                  onClick={() => {
+                    diceRoller.connect();
+                  }}
+                >
+                  <div className="max-w-[calc(100%-32px)] overflow-clip text-clip">
+                    Connect
+                  </div>
+                  <PlugZap />
+                </Button>
+              ) : (
+                <Button
+                  className="flex h-[36px] w-full items-center justify-between px-2 pl-4"
+                  variant={"secondary"}
+                  onClick={() => {
+                    diceRoller.disconnect();
+                    setRollAttributes((prev) => ({
+                      ...prev,
+                      style: undefined,
+                    }));
+                  }}
+                >
+                  <div className="max-w-[calc(100%-32px)] overflow-clip text-clip">
+                    Connected
+                  </div>
+                  <CheckIcon />
+                </Button>
+              )}
+            </div>
+          </div>
           <DiceRoller
-            diceResultViewerOpen={false}
-            setDiceResultViewerOpen={() => {}}
+            diceResultViewerOpen={diceResultViewerOpen}
+            setDiceResultViewerOpen={setDiceResultViewerOpen}
             result={diceDrawer.result}
             setResult={(result: Roll | undefined) =>
               setDiceDrawer((prev) => ({
@@ -132,7 +179,11 @@ export function DiceDrawer() {
             diceRoller={diceRoller}
             settings={definedSettings}
             onRollClicked={() =>
-              setDiceDrawer((prev) => ({ ...prev, open: false }))
+              setDiceDrawer((prev) => ({
+                ...prev,
+                open: false,
+                resultTargetId: prev.rollTargetId,
+              }))
             }
           />
         </CollapsibleContent>

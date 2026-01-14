@@ -107,7 +107,7 @@ export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
       <div className="mb-0">
         {statblock.features?.map((feature) => (
           <div key={feature.name} className="border-b border-zinc-950 p-2 pl-0">
-            <Feature feature={feature} />
+            <Feature blockName={statblock.name} feature={feature} />
           </div>
         ))}
       </div>
