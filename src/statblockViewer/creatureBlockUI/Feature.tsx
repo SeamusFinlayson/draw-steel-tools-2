@@ -22,6 +22,8 @@ import {
 } from "../context/DiceDrawerContext";
 import Button from "../../components/ui/Button";
 import { ResultDropDown } from "../ResultDropDown";
+import { MaliceSpender } from "./MaliceSpender";
+import parseNumber from "../../helpers/parseNumber";
 
 export function Feature({
   blockName,
@@ -94,7 +96,24 @@ export function Feature({
                   )}
                 </PluginReadyGate>
               </div>
-              {feature.cost && <div className="font-black">{feature.cost}</div>}
+              {feature.cost && (
+                <PluginReadyGate
+                  alternate={<div className="font-black">{feature.cost}</div>}
+                >
+                  <MaliceSpender
+                    trigger={
+                      <Button
+                        variant={"secondary"}
+                        size={"xs"}
+                        className="font-black"
+                      >
+                        {feature.cost}
+                      </Button>
+                    }
+                    cost={parseNumber(feature.cost)}
+                  />
+                </PluginReadyGate>
+              )}
               {feature.ability_type && (
                 <div className="font-black">{feature.ability_type}</div>
               )}

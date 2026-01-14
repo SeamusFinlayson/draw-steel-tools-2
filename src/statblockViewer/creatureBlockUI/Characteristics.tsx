@@ -36,8 +36,9 @@ export function Characteristics({
           { label: "Presence", value: statblock.presence },
         ].map((item) => (
           <PluginReadyGate
+            key={item.label}
             alternate={
-              <div className="min-w-16 flex-1 text-center" key={item.label}>
+              <div className="min-w-16 flex-1 text-center">
                 <div className="text-lg">{`${item.value > 1 ? "+" : ""}${item.value}`}</div>
                 <div className="-mt-0.5 rounded-sm bg-black font-bold text-white">
                   {item.label}
@@ -45,7 +46,7 @@ export function Characteristics({
               </div>
             }
           >
-            <div className="group min-w-16 flex-1 text-center" key={item.label}>
+            <div className="group min-w-16 flex-1 text-center">
               <div className="flex flex-col pt-1 pb-1.5">
                 <Button
                   className="hover:bg-mirage-199"
