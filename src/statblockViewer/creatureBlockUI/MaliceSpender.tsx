@@ -4,7 +4,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "../../components/ui/popover";
-import { RoomTrackersContext } from "../context/RoomTrackersMetadataContext";
+import {
+  RoomTrackersContext,
+  UpdateRoomTrackersContext,
+} from "../context/RoomTrackersMetadataContext";
 import Button from "../../components/ui/Button";
 import { EqualIcon, MinusIcon } from "lucide-react";
 import Input from "../../components/ui/Input";
@@ -22,14 +25,16 @@ export function MaliceSpender({
 }) {
   // TODO: this is unsafe, need ready checking
   const trackerMetadata = useContext(RoomTrackersContext);
-  const malice = trackerMetadata?.malice ? trackerMetadata.malice : 0;
-
+  const updateTrackerMetadata = useContext(UpdateRoomTrackersContext);
   const [configuredCost, setConfiguredCost] = useState(cost);
+
+  const malice = trackerMetadata?.malice ? trackerMetadata.malice : 0;
+  const newMalice = malice - configuredCost;
 
   return (
     <Popover>
       <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-      <PopoverContent side="top" align="end" className="rounded-2xl">
+      <PopoverContent side="top" align="end" className="w-fit rounded-2xl">
         <div aria-label="open focus target" tabIndex={1} />
         <div className="space-y-2">
           <div className="flex items-end gap-2">
@@ -40,7 +45,16 @@ export function MaliceSpender({
                 <FreeWheelInput
                   clearContentOnFocus
                   value={malice.toString()}
-                  onUpdate={() => {}}
+                  onUpdate={(target) =>
+                    updateTrackerMetadata({
+                      ...trackerMetadata,
+                      malice: parseNumber(target.value, {
+                        min: -999,
+                        max: 999,
+                        truncate: true,
+                      }),
+                    })
+                  }
                 />
               </Input>
             </div>
@@ -55,8 +69,8 @@ export function MaliceSpender({
                   onUpdate={(target) =>
                     setConfiguredCost(
                       parseNumber(target.value, {
-                        min: -999,
-                        max: 999,
+                        min: 0,
+                        max: 99,
                         truncate: true,
                       }),
                     )
@@ -65,12 +79,19 @@ export function MaliceSpender({
               </Input>
             </div>
             <EqualIcon className="h-9" />
-            <div className="self-end pb-1 text-lg">
-              {malice - configuredCost}
+            <div className="bg-mirage-100 flex h-9 min-w-12 items-center justify-center self-end rounded-lg">
+              {newMalice}
             </div>
           </div>
           <PopoverClose asChild>
-            <Button className="w-full">Spend</Button>
+            <Button
+              className="w-full"
+              onClick={() =>
+                updateTrackerMetadata({ ...trackerMetadata, malice: newMalice })
+              }
+            >
+              Spend
+            </Button>
           </PopoverClose>
         </div>
       </PopoverContent>

@@ -1,5 +1,8 @@
-import { useEffect, useState } from "react";
-import { RoomTrackersContext } from "./RoomTrackersMetadataContext";
+import { useCallback, useEffect, useState } from "react";
+import {
+  RoomTrackersContext,
+  UpdateRoomTrackersContext,
+} from "./RoomTrackersMetadataContext";
 import { parseMetadata } from "../../helpers/parseMetadata";
 import {
   RoomTrackersZod,
@@ -30,15 +33,15 @@ export function RoomTrackersMetadataProvider({
   });
   const [_ready, setReady] = useState(false);
 
-  // const updateMetadata = useCallback(
-  //   (newValue: RoomTrackers) => {
-  //     setMetadata(newValue);
-  //     OBR.room.setMetadata({
-  //       [key]: newValue,
-  //     });
-  //   },
-  //   [key],
-  // );
+  const updateMetadata = useCallback(
+    (newValue: RoomTrackers) => {
+      setMetadata(newValue);
+      OBR.room.setMetadata({
+        [key]: newValue,
+      });
+    },
+    [key],
+  );
 
   useEffect(() => {
     if (!obrReady) return;
@@ -52,5 +55,11 @@ export function RoomTrackersMetadataProvider({
 
   console.log(obrReady, metadata);
 
-  return <RoomTrackersContext value={metadata}>{children}</RoomTrackersContext>;
+  return (
+    <RoomTrackersContext value={metadata}>
+      <UpdateRoomTrackersContext value={updateMetadata}>
+        {children}
+      </UpdateRoomTrackersContext>
+    </RoomTrackersContext>
+  );
 }

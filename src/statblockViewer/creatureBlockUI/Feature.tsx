@@ -105,7 +105,7 @@ export function Feature({
                       <Button
                         variant={"secondary"}
                         size={"xs"}
-                        className="font-black"
+                        className="-my-0.5 font-black"
                       >
                         {feature.cost}
                       </Button>
