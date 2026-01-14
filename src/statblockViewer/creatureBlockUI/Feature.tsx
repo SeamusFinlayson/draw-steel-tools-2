@@ -61,7 +61,7 @@ export function Feature({
           return <UserIcon />;
         })()}
       </div>
-      <div>
+      <div className="w-full">
         <div className="w-full space-y-2">
           <div>
             <div className="flex flex-wrap justify-between">
