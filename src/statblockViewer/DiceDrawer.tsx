@@ -109,7 +109,7 @@ export function DiceDrawer() {
                   className="inert pointer-events-none flex h-[36px] w-full items-center justify-between px-2 pl-4"
                   variant={"secondary"}
                 >
-                  <div className="overflow-clip">No Ability Selected</div>
+                  <div className="overflow-clip">None</div>
                 </Button>
               ) : (
                 <Button
