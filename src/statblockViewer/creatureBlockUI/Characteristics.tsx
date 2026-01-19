@@ -39,7 +39,7 @@ export function Characteristics({
             key={item.label}
             alternate={
               <div className="min-w-16 flex-1 text-center">
-                <div className="text-lg">{`${item.value > 1 ? "+" : ""}${item.value}`}</div>
+                <div className="text-lg">{`${item.value > 0 ? "+" : ""}${item.value}`}</div>
                 <div className="-mt-0.5 rounded-sm bg-black font-bold text-white">
                   {item.label}
                 </div>
@@ -68,7 +68,7 @@ export function Characteristics({
                     );
                   }}
                 >
-                  <div className="-my-0.5 text-lg">{`${item.value > 1 ? "+" : ""}${item.value}`}</div>
+                  <div className="-my-0.5 text-lg">{`${item.value > 0 ? "+" : ""}${item.value}`}</div>
                 </Button>
               </div>
               <div className="-mt-0.5 rounded-sm bg-black font-bold text-white">
