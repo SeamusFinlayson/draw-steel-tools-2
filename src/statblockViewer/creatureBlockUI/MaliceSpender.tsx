@@ -19,9 +19,15 @@ import { PopoverClose } from "@radix-ui/react-popover";
 export function MaliceSpender({
   trigger,
   cost,
+  align = "end",
+  side = "top",
+  alignOffset,
 }: {
   trigger: React.ReactNode;
   cost: number;
+  align?: "end" | "center" | "start" | undefined;
+  side?: "top" | "right" | "bottom" | "left" | undefined;
+  alignOffset?: number | undefined;
 }) {
   // TODO: this is unsafe, need ready checking
   const trackerMetadata = useContext(RoomTrackersContext);
@@ -34,7 +40,12 @@ export function MaliceSpender({
   return (
     <Popover>
       <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-      <PopoverContent side="top" align="end" className="w-fit rounded-2xl">
+      <PopoverContent
+        side={side}
+        align={align}
+        alignOffset={alignOffset}
+        className="w-fit rounded-2xl"
+      >
         <div aria-label="open focus target" tabIndex={1} />
         <div className="space-y-2">
           <div className="flex items-end gap-2">

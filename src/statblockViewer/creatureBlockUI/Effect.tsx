@@ -1,6 +1,9 @@
+import parseNumber from "../../helpers/parseNumber";
 import { cn } from "../../helpers/utils";
 import type { DrawSteelEffect } from "../../types/DrawSteelZod";
+import { PluginReadyGate } from "../context/PluginReadyGate";
 import { applyTextEffects } from "./applyTextEffects";
+import { MaliceSpender } from "./MaliceSpender";
 
 export function Effect({
   effect,
@@ -46,10 +49,26 @@ export function Effect({
     <>
       <div>
         {effect.name && (
-          <span className="font-semibold">{`${effect.name}: `}</span>
+          <span className="font-semibold">{`${effect.name}`}</span>
         )}
         {effect.cost && (
-          <span className="font-semibold">{`${effect.cost}: `}</span>
+          <PluginReadyGate
+            alternate={
+              <span className="font-semibold">{`${effect.cost}`}</span>
+            }
+          >
+            <MaliceSpender
+              align="start"
+              alignOffset={-16}
+              trigger={
+                <button className="inline font-semibold hover:underline">{`${effect.cost}`}</button>
+              }
+              cost={parseNumber(effect.cost)}
+            />
+          </PluginReadyGate>
+        )}
+        {(effect.name || effect.cost) && (
+          <span className="font-semibold">{": "}</span>
         )}
         {effect.effect && <span>{applyTextEffects(effect.effect)}</span>}
       </div>
