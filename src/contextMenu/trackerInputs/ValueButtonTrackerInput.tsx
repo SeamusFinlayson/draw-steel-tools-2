@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, type Ref } from "react";
 import { Label } from "./Label";
 import FreeWheelInput from "../../components/logic/FreeWheelInput";
 import type { InputColor } from "./InputColorTypes";
@@ -6,6 +6,7 @@ import InputBackground from "./InputBackground";
 import { cn } from "../../helpers/utils";
 
 export default function ValueButtonTrackerInput({
+  ref,
   parentValue,
   color = "DEFAULT",
   updateHandler,
@@ -14,7 +15,9 @@ export default function ValueButtonTrackerInput({
   label,
   labelTitle,
   clearInputOnFocus = true,
+  backgroundProps,
 }: {
+  ref?: Ref<HTMLInputElement>;
   parentValue: number | string;
   color?: InputColor;
   updateHandler: (target: HTMLInputElement) => void;
@@ -23,6 +26,10 @@ export default function ValueButtonTrackerInput({
   label: string;
   labelTitle?: string;
   clearInputOnFocus?: boolean;
+  backgroundProps?: React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLDivElement>,
+    HTMLDivElement
+  >;
 }): React.JSX.Element {
   const [hasFocus, setHasFocus] = useState(false);
 
@@ -49,9 +56,13 @@ export default function ValueButtonTrackerInput({
       </div>
 
       <InputBackground className="w-full overflow-clip" color={color}>
-        <div className="flex w-full">
+        <div
+          {...backgroundProps}
+          className={cn("flex w-full", backgroundProps?.className)}
+        >
           <FreeWheelInput
             {...inputProps}
+            ref={ref}
             onFocus={() => setHasFocus(true)}
             onBlur={() => setHasFocus(false)}
             value={parentValue.toString()}
