@@ -111,10 +111,10 @@ function ActionMenu() {
                   preview={
                     <>
                       <Badge
-                        text={`Malice: ${trackerMetadata.value ? trackerMetadata.value.malice : 0}`}
+                        text={`Malice: ${trackerMetadata.value?.malice ? trackerMetadata.value.malice : 0}`}
                       />
                       <Badge
-                        text={`Hero Tokens: ${trackerMetadata.value ? trackerMetadata.value.heroTokens : 0}`}
+                        text={`Hero Tokens: ${trackerMetadata.value?.heroTokens ? trackerMetadata.value.heroTokens : 0}`}
                       />
                     </>
                   }
