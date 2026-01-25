@@ -15,6 +15,8 @@ import FreeWheelInput from "../../components/logic/FreeWheelInput";
 import Label from "../../components/ui/Label";
 import parseNumber from "../../helpers/parseNumber";
 import { PopoverClose } from "@radix-ui/react-popover";
+import { SetMaliceSpentContext } from "../context/MaliceSpentContext";
+import { FeatureIdContext } from "../context/FeatureIdContext";
 
 export function MaliceSpender({
   trigger,
@@ -32,10 +34,12 @@ export function MaliceSpender({
   // TODO: this is unsafe, need ready checking
   const trackerMetadata = useContext(RoomTrackersContext);
   const updateTrackerMetadata = useContext(UpdateRoomTrackersContext);
+  const setMaliceSpent = useContext(SetMaliceSpentContext);
   const [configuredCost, setConfiguredCost] = useState(cost);
 
   const malice = trackerMetadata?.malice ? trackerMetadata.malice : 0;
   const newMalice = malice - configuredCost;
+  const featureId = useContext(FeatureIdContext);
 
   return (
     <Popover>
@@ -97,9 +101,13 @@ export function MaliceSpender({
           <PopoverClose asChild>
             <Button
               className="w-full"
-              onClick={() =>
-                updateTrackerMetadata({ ...trackerMetadata, malice: newMalice })
-              }
+              onClick={() => {
+                updateTrackerMetadata({
+                  ...trackerMetadata,
+                  malice: newMalice,
+                });
+                setMaliceSpent({ target: featureId, value: configuredCost });
+              }}
             >
               Spend
             </Button>

@@ -7,6 +7,7 @@ import { PluginReadyProvider } from "./context/PluginReadyProvider.tsx";
 import { RollAttributesProvider } from "./context/RollAttributesProvider.tsx";
 import { DiceDrawerProvider } from "./context/DiceDrawerContextProvider.tsx";
 import { RoomTrackersMetadataProvider } from "./context/RoomTrackersMetadataProvider.tsx";
+import { MaliceSpentContextProvider } from "./context/MaliceSpentContextProvider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -14,7 +15,9 @@ createRoot(document.getElementById("root")!).render(
       <DiceDrawerProvider>
         <RollAttributesProvider>
           <RoomTrackersMetadataProvider>
-            <StatblockViewer />
+            <MaliceSpentContextProvider>
+              <StatblockViewer />
+            </MaliceSpentContextProvider>
           </RoomTrackersMetadataProvider>
         </RollAttributesProvider>
       </DiceDrawerProvider>
