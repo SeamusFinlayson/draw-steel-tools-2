@@ -6,7 +6,7 @@ import {
   type DiceDrawer,
 } from "../context/DiceDrawerContext";
 import { SetRollAttributesContext } from "../context/RollAttributesContext";
-import { ResultDropDown } from "../ResultDropDown";
+import { ResultDropDown } from "./AbilityResultIndicator";
 import Button from "../../components/ui/Button";
 import { PluginReadyGate } from "../context/PluginReadyGate";
 

@@ -21,7 +21,7 @@ import {
   type DiceDrawer,
 } from "../context/DiceDrawerContext";
 import Button from "../../components/ui/Button";
-import { ResultDropDown } from "../ResultDropDown";
+import { ResultDropDown } from "./AbilityResultIndicator";
 import { MaliceSpender } from "./MaliceSpender";
 import parseNumber from "../../helpers/parseNumber";
 

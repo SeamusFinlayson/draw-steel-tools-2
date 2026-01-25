@@ -1,10 +1,13 @@
 import { ChevronDownIcon, LoaderCircleIcon } from "lucide-react";
-import Button from "../components/ui/Button";
-import { Badge } from "../components/ui/badge";
+import Button from "../../components/ui/Button";
+import { Badge } from "../../components/ui/badge";
 import { useEffect, useState } from "react";
-import { DiceRollResultViewer } from "../action/diceRoller/DiceRollResultViewer";
-import type { Roll } from "../types/diceRollerTypes";
-import { Collapsible, CollapsibleContent } from "../components/ui/collapsible";
+import { DiceRollResultViewer } from "../../action/diceRoller/DiceRollResultViewer";
+import type { Roll } from "../../types/diceRollerTypes";
+import {
+  Collapsible,
+  CollapsibleContent,
+} from "../../components/ui/collapsible";
 
 export function ResultDropDown({
   badges = [],
