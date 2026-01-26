@@ -10,7 +10,7 @@ import {
 import { useRoomMetadata } from "../helpers/useRoomMetadata.ts";
 import type { Roll } from "../types/diceRollerTypes.ts";
 import { SettingsZod } from "../types/settingsZod.ts";
-import { useCallback, useContext, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import OBR from "@owlbear-rodeo/sdk";
 import {
   RollAttributesContext,
@@ -29,6 +29,7 @@ import {
 } from "./context/DiceDrawerContext.ts";
 import Button from "../components/ui/Button.tsx";
 import Label from "../components/ui/Label.tsx";
+import ConnectedDiceIcon from "../components/icons/ConnectedDiceIcon.tsx";
 
 export function DiceDrawer() {
   const diceDrawer = useContext(DiceDrawerContext);
@@ -81,6 +82,11 @@ export function DiceDrawer() {
     [rollAttributes, rollAttributes, definedSettings],
   );
   const diceRoller = useDiceRoller({ onRollResult: handleRollResult });
+
+  const [noDiceRollersFound, setNoDiceRollersFound] = useState(true);
+  useEffect(() => {
+    if (diceRoller.config) setNoDiceRollersFound(false);
+  }, [diceRoller]);
 
   return (
     <div className="bg-mirage-50 border-mirage-300 z-50 rounded-t-2xl">
@@ -138,7 +144,27 @@ export function DiceDrawer() {
               <Label variant="small" htmlFor="bonusInput">
                 Dice Roller
               </Label>
-              {diceRoller.config === undefined ? (
+              {noDiceRollersFound ? (
+                <div className="flex gap-2">
+                  <div className="bg-mirage-100 flex h-9 grow items-center rounded-full pl-4">
+                    Internal
+                  </div>
+                  <Button
+                    asChild
+                    className="size-9"
+                    variant={"secondary"}
+                    size={"icon"}
+                  >
+                    <a
+                      href="https://seamus-finlayson.ca/pages/connected-dice"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <ConnectedDiceIcon className="stroke-black dark:stroke-white" />
+                    </a>
+                  </Button>
+                </div>
+              ) : diceRoller.config === undefined ? (
                 <Button
                   className="flex h-[36px] w-full items-center justify-between px-2 pl-4"
                   variant={"secondary"}
@@ -173,6 +199,7 @@ export function DiceDrawer() {
           </div>
           <div className="bg-mirage-50 dark:bg-mirage-950 px-4 py-3">
             <DiceRoller
+              autoOpenResultView={diceDrawer.rollTargetId === undefined}
               diceResultViewerOpen={diceResultViewerOpen}
               setDiceResultViewerOpen={setDiceResultViewerOpen}
               result={diceDrawer.result}
@@ -190,7 +217,7 @@ export function DiceDrawer() {
               onRollClicked={() =>
                 setDiceDrawer((prev) => ({
                   ...prev,
-                  open: false,
+                  open: prev.rollTargetId ? false : true,
                   resultTargetId: prev.rollTargetId,
                 }))
               }
