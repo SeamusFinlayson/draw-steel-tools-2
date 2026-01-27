@@ -7,7 +7,7 @@ import {
 import {
   RoomTrackersContext,
   UpdateRoomTrackersContext,
-} from "../context/RoomTrackersMetadataContext";
+} from "../context/RoomTrackersContext";
 import Button from "../../components/ui/Button";
 import { EqualIcon, MinusIcon } from "lucide-react";
 import Input from "../../components/ui/Input";

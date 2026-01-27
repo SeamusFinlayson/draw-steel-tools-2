@@ -3,13 +3,8 @@ import getResetRollAttributes, {
 } from "../action/diceRoller/helpers.ts";
 import { useDiceRoller } from "../helpers/useDiceRoller.ts";
 import * as DiceProtocol from "../diceProtocol.ts";
-import {
-  SETTINGS_METADATA_KEY,
-  defaultSettings,
-} from "../helpers/settingsHelpers.ts";
-import { useRoomMetadata } from "../helpers/useRoomMetadata.ts";
+import { defaultSettings } from "../helpers/settingsHelpers.ts";
 import type { Roll } from "../types/diceRollerTypes.ts";
-import { SettingsZod } from "../types/settingsZod.ts";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import OBR from "@owlbear-rodeo/sdk";
 import {
@@ -30,23 +25,17 @@ import {
 import Button from "../components/ui/Button.tsx";
 import Label from "../components/ui/Label.tsx";
 import ConnectedDiceIcon from "../components/icons/ConnectedDiceIcon.tsx";
+import { RoomSettingsContext } from "./context/RoomSettingsContext.ts";
 
 export function DiceDrawer() {
   const diceDrawer = useContext(DiceDrawerContext);
   const setDiceDrawer = useContext(SetDiceDrawerContext);
   const rollAttributes = useContext(RollAttributesContext);
   const setRollAttributes = useContext(SetRollAttributesContext);
-  // const trackerMetadata = useRoomMetadata(
-  //   getPluginId("trackers"),
-  //   RoomTrackersZod.parse,
-  // );
 
-  const settingsMetadata = useRoomMetadata(
-    SETTINGS_METADATA_KEY,
-    SettingsZod.parse,
-  );
+  const settingsMetadata = useContext(RoomSettingsContext);
   const definedSettings = useMemo(
-    () => ({ ...defaultSettings, ...settingsMetadata.value }),
+    () => ({ ...defaultSettings, ...settingsMetadata }),
     [settingsMetadata],
   );
 
