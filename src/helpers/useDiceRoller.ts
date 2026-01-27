@@ -1,25 +1,7 @@
 import * as DiceProtocol from "../diceProtocol";
 import OBR from "@owlbear-rodeo/sdk";
-import { useEffect, useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 import type { DiceRoller } from "../types/diceRollerTypes";
-
-export function createRollRequest(args: {
-  gmOnly: boolean;
-  bonus: number;
-  netEdges: number;
-  hasSkill: boolean;
-  dice: "2d10" | "3d10kh2" | "3d10kl2";
-  styleId?: string;
-}): DiceProtocol.PowerRollRequest {
-  const { gmOnly, styleId, ...rollProperties } = args;
-  return {
-    id: `drawSteelTools-${Date.now()}`,
-    replyChannel: DiceProtocol.ROLL_RESULT_CHANNEL,
-    styleId,
-    gmOnly,
-    rollProperties,
-  };
-}
 
 function requestDiceRollerConfig() {
   OBR.broadcast.sendMessage(
@@ -31,10 +13,13 @@ function requestDiceRollerConfig() {
 
 export function useDiceRoller({
   onRollResult,
+  channel,
 }: {
   onRollResult: (rollResult: DiceProtocol.PowerRollResult) => void;
+  channel?: string;
 }): DiceRoller {
   const [config, setConfig] = useState<DiceProtocol.DiceRollerConfig>();
+  const rollResultHandler = useEffectEvent(onRollResult);
 
   useEffect(() => {
     // Automatically connect to dice roller at startup
@@ -55,39 +40,49 @@ export function useDiceRoller({
     );
   }, []);
 
+  const replyChannel =
+    channel === undefined
+      ? DiceProtocol.ROLL_RESULT_CHANNEL
+      : `${DiceProtocol.ROLL_RESULT_CHANNEL}/${channel}`;
+
   useEffect(
     () =>
-      OBR.broadcast.onMessage(DiceProtocol.ROLL_RESULT_CHANNEL, (event) => {
+      OBR.broadcast.onMessage(replyChannel, (event) => {
         const data = event.data as DiceProtocol.PowerRollResult;
-        onRollResult(data);
+        rollResultHandler(data);
       }),
-    [onRollResult],
+    [],
   );
   const getUnsetConfig = () => ({
     config: undefined,
     connect: requestDiceRollerConfig,
     disconnect: () => setConfig(undefined),
     requestRoll: undefined,
-    onRollResult,
   });
 
   if (config === undefined) return getUnsetConfig();
 
-  const channel = config.rollRequestChannels.find((val) =>
+  const requestChannel = config.rollRequestChannels.find((val) =>
     val.includes("powerRollRequest"),
   );
 
-  if (channel === undefined) return getUnsetConfig();
+  if (requestChannel === undefined) return getUnsetConfig();
 
   return {
     config,
     connect: requestDiceRollerConfig,
     disconnect: () => setConfig(undefined),
     requestRoll: (rollRequest) => {
-      OBR.broadcast.sendMessage(channel, rollRequest, {
-        destination: "LOCAL",
-      });
+      OBR.broadcast.sendMessage(
+        requestChannel,
+        {
+          ...rollRequest,
+          replyChannel: replyChannel,
+        } satisfies DiceProtocol.PowerRollRequest,
+        {
+          destination: "LOCAL",
+        },
+      );
     },
-    onRollResult,
   };
 }

@@ -4,10 +4,10 @@ import { useCallback, useMemo, useState } from "react";
 import * as DiceProtocol from "../diceProtocol";
 import OBR from "@owlbear-rodeo/sdk";
 import usePlayerName from "../helpers/usePlayerName";
-import { useDiceRoller } from "../helpers/diceCommunicationHelpers";
+import { useDiceRoller } from "../helpers/useDiceRoller";
 import type { Roll, RollAttributes } from "../types/diceRollerTypes";
 import getResetRollAttributes, {
-  defaultRollerAttributes,
+  defaultRollAttributes,
   powerRoll,
 } from "./diceRoller/helpers";
 import { Header } from "./header/Header";
@@ -34,7 +34,7 @@ import { MinionGroupCleanup } from "./MinionGroupCleanup";
 function ActionMenu() {
   const playerName = usePlayerName();
   const [rollAttributes, setRollAttributes] = useState<RollAttributes>(
-    defaultRollerAttributes,
+    defaultRollAttributes,
   );
   const [diceResultViewerOpen, setDiceResultViewerOpen] = useState(false);
   const [result, setResult] = useState<Roll>();
@@ -67,7 +67,6 @@ function ActionMenu() {
           bonus: data.rollProperties.bonus,
           hasSkill: data.rollProperties.hasSkill,
           netEdges: data.rollProperties.netEdges,
-          playerName,
           rollMethod: "givenValues",
           dieValues: rolls,
           selectionStrategy:
@@ -112,10 +111,10 @@ function ActionMenu() {
                   preview={
                     <>
                       <Badge
-                        text={`Malice: ${trackerMetadata.value ? trackerMetadata.value.malice : 0}`}
+                        text={`Malice: ${trackerMetadata.value?.malice ? trackerMetadata.value.malice : 0}`}
                       />
                       <Badge
-                        text={`Hero Tokens: ${trackerMetadata.value ? trackerMetadata.value.heroTokens : 0}`}
+                        text={`Hero Tokens: ${trackerMetadata.value?.heroTokens ? trackerMetadata.value.heroTokens : 0}`}
                       />
                     </>
                   }
@@ -151,17 +150,19 @@ function ActionMenu() {
                   Power Roll
                 </AccordionTrigger>
                 <AccordionContent>
-                  <DiceRoller
-                    playerName={playerName}
-                    diceResultViewerOpen={diceResultViewerOpen}
-                    setDiceResultViewerOpen={setDiceResultViewerOpen}
-                    rollAttributes={rollAttributes}
-                    setRollAttributes={setRollAttributes}
-                    result={result}
-                    setResult={setResult}
-                    diceRoller={diceRoller}
-                    settings={definedSettings}
-                  />
+                  <div className="bg-mirage-50 dark:bg-mirage-950 mx-4 rounded-2xl p-4 py-3">
+                    <DiceRoller
+                      autoOpenResultView
+                      diceResultViewerOpen={diceResultViewerOpen}
+                      setDiceResultViewerOpen={setDiceResultViewerOpen}
+                      rollAttributes={rollAttributes}
+                      setRollAttributes={setRollAttributes}
+                      result={result}
+                      setResult={setResult}
+                      diceRoller={diceRoller}
+                      settings={definedSettings}
+                    />
+                  </div>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>

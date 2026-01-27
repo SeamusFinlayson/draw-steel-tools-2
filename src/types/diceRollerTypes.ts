@@ -14,7 +14,6 @@ export type RollAttributes = {
 
 export type Roll = {
   timeStamp: number;
-  playerName: string;
   bonus: number;
   hasSkill: boolean;
   netEdges: number;
@@ -32,7 +31,6 @@ export type DieResult = {
 export type DiceRoller = {
   connect: () => void;
   disconnect: () => void;
-  onRollResult: (rollResult: DiceProtocol.PowerRollResult) => void;
 } & (
   | {
       config: DiceProtocol.DiceRollerConfig;

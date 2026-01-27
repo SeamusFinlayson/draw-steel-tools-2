@@ -1,5 +1,4 @@
 import OBR from "@owlbear-rodeo/sdk";
-
 import { XIcon, PlusIcon } from "lucide-react";
 import Button from "../../components/ui/Button";
 import { getPluginId } from "../../helpers/getPluginId";

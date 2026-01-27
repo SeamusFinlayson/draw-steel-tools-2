@@ -10,7 +10,6 @@ export function powerRoll(
     bonus: number;
     hasSkill: boolean;
     netEdges: number;
-    playerName: string;
   } & (
     | {
         rollMethod: "rollNow";
@@ -72,7 +71,6 @@ export function powerRoll(
 
   return {
     timeStamp: Date.now(),
-    playerName: args.playerName,
     bonus: naturalBonus,
     hasSkill: args.hasSkill,
     netEdges: args.netEdges,
@@ -143,7 +141,7 @@ export const netEdgesTextAndLabel = (
   return { text: "", label: "" };
 };
 
-export const defaultRollerAttributes = {
+export const defaultRollAttributes = {
   edges: 0,
   banes: 0,
   bonus: 0,
@@ -157,7 +155,7 @@ export default function getResetRollAttributes(
   settings?: DefinedSettings,
 ) {
   return {
-    ...defaultRollerAttributes,
+    ...defaultRollAttributes,
     ...(settings?.keepPowerRollBonus ? { bonus: rollAttributes.bonus } : {}),
   };
 }

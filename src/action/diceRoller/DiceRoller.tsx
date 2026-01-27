@@ -11,7 +11,7 @@ import Button from "../../components/ui/Button";
 import FreeWheelInput from "../../components/logic/FreeWheelInput";
 import Label from "../../components/ui/Label";
 import getResetRollAttributes, { powerRoll } from "./helpers";
-import { createRollRequest } from "../../helpers/diceCommunicationHelpers";
+import { createRollRequestMessage } from "../../helpers/createRollRequestMessage";
 import Toggle from "../../components/ui/Toggle";
 import DiceStylePicker from "./DiceStylePicker";
 import { ToggleGroup, ToggleGroupItem } from "../../components/ui/toggleGroup";
@@ -24,7 +24,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../../components/ui/dialog";
-import { DiceRollViewer } from "./DiceRollResultViewer";
+import { DiceRollResultViewer } from "./DiceRollResultViewer";
 import { Separator } from "../../components/ui/Separator";
 import { RadioGroup, RadioGroupItem } from "../../components/ui/radioGroup";
 import Input from "../../components/ui/Input";
@@ -38,7 +38,6 @@ import type {
 import type { DefinedSettings } from "../../types/settingsZod";
 
 export default function DiceRoller({
-  playerName,
   rollAttributes,
   setRollAttributes,
   diceRoller,
@@ -46,22 +45,25 @@ export default function DiceRoller({
   setResult,
   diceResultViewerOpen,
   setDiceResultViewerOpen,
+  autoOpenResultView = false,
   settings,
+  onRollClicked,
 }: {
-  playerName: string;
   rollAttributes: RollAttributes;
   setRollAttributes: React.Dispatch<React.SetStateAction<RollAttributes>>;
   diceRoller: DiceRoller;
   result: Roll | undefined;
-  setResult: React.Dispatch<React.SetStateAction<Roll | undefined>>;
+  setResult: (result: Roll | undefined) => void;
   diceResultViewerOpen: boolean;
   setDiceResultViewerOpen: (diceRollerOpen: boolean) => void;
+  autoOpenResultView?: boolean;
   settings?: DefinedSettings;
+  onRollClicked?: () => void;
 }) {
   const netEdges = rollAttributes.edges - rollAttributes.banes;
 
   return (
-    <div className="bg-mirage-50 dark:bg-mirage-950 mx-4 space-y-4 rounded-2xl p-4">
+    <div className="space-y-3">
       <div>
         <Label variant="small" htmlFor="bonusInput">
           Bonus
@@ -69,7 +71,6 @@ export default function DiceRoller({
         <div className="grid grid-cols-3 place-items-stretch gap-1">
           <Button
             aria-label="decrement bonus"
-            className="rounded-r-[8px]"
             variant="secondary"
             onClick={() =>
               setRollAttributes((prev) => ({
@@ -102,7 +103,6 @@ export default function DiceRoller({
           </Input>
           <Button
             aria-label="increment bonus"
-            className="rounded-l-[8px]"
             variant="secondary"
             onClick={() =>
               setRollAttributes((prev) => ({
@@ -120,7 +120,7 @@ export default function DiceRoller({
         data-two-col={diceRoller.config !== undefined}
         className="grid gap-2 data-[two-col=true]:grid-cols-2"
       >
-        <div className="col-span-1">
+        <div>
           <Label variant="small" htmlFor="skillToggleButton">
             Skill
           </Label>
@@ -146,15 +146,17 @@ export default function DiceRoller({
               dialogTrigger={
                 <Button
                   id="colorPickerTrigger"
-                  className="w-full"
+                  className="flex w-full items-center"
                   variant="secondary"
                 >
-                  <SwatchBookIcon className="w-10 shrink-0" />
+                  <div>
+                    <SwatchBookIcon className="size-6 shrink-0" />
+                  </div>
                   <div
                     style={{
                       backgroundColor: rollAttributes.style?.color,
                     }}
-                    className="outline-text-secondary size-5 rounded-full outline duration-150 dark:outline-white/20"
+                    className="size-5 rounded-full outline outline-black/20 duration-150 dark:outline-white/20"
                   />
                 </Button>
               }
@@ -249,7 +251,7 @@ export default function DiceRoller({
                   <div>Rolling Dice</div>
                 </div>
               ) : (
-                <DiceRollViewer result={result} />
+                <DiceRollResultViewer result={result} />
               )}
             </DialogHeader>
           </DialogContent>
@@ -260,11 +262,10 @@ export default function DiceRoller({
           size={"lg"}
           className="grow"
           onClick={() => {
-            setDiceResultViewerOpen(true);
+            if (autoOpenResultView) setDiceResultViewerOpen(true);
             if (diceRoller.config === undefined) {
               setResult(
                 powerRoll({
-                  playerName,
                   bonus: rollAttributes.bonus,
                   hasSkill: rollAttributes.hasSkill,
                   netEdges,
@@ -278,7 +279,7 @@ export default function DiceRoller({
             } else {
               setResult(undefined);
               diceRoller.requestRoll(
-                createRollRequest({
+                createRollRequestMessage({
                   bonus: rollAttributes.bonus,
                   netEdges,
                   hasSkill: rollAttributes.hasSkill,
@@ -288,6 +289,7 @@ export default function DiceRoller({
                 }),
               );
             }
+            if (onRollClicked) onRollClicked();
           }}
         >
           Roll
@@ -383,7 +385,6 @@ export default function DiceRoller({
                         bonus: rollAttributes.bonus,
                         hasSkill: rollAttributes.hasSkill,
                         netEdges,
-                        playerName,
                         rollMethod: "rollNow",
                         dice: rollAttributes.diceOptions,
                       }),
@@ -394,7 +395,7 @@ export default function DiceRoller({
                   } else {
                     setResult(undefined);
                     diceRoller.requestRoll(
-                      createRollRequest({
+                      createRollRequestMessage({
                         bonus: rollAttributes.bonus,
                         hasSkill: rollAttributes.hasSkill,
                         styleId: rollAttributes.style?.id,
@@ -404,6 +405,7 @@ export default function DiceRoller({
                       }),
                     );
                   }
+                  if (onRollClicked) onRollClicked();
                 }}
               >
                 Roll

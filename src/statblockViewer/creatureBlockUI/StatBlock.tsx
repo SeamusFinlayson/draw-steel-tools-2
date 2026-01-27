@@ -1,5 +1,6 @@
 import { cn } from "../../helpers/utils";
 import type { DrawSteelStatblock } from "../../types/DrawSteelZod";
+import { Characteristics } from "./Characteristics";
 import { Feature } from "./Feature";
 
 export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
@@ -30,18 +31,18 @@ export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
           },
         )}
       >
-        <div className="flex items-end justify-between">
+        <div className="flex flex-wrap items-baseline justify-between text-nowrap">
           <div className="text-base font-black">{statblock.name}</div>
-          <div className="font-black">{`Level ${statblock.level} ${statblock.roles}`}</div>
+          <div className="text-right font-black">{`Level ${statblock.level} ${statblock.roles}`}</div>
         </div>
-        <div className="flex justify-between">
+        <div className="flex flex-wrap justify-between text-nowrap">
           <div>{statblock.ancestry.join(", ")}</div>
-          <div>{`EV ${statblock.ev}`}</div>
+          <div className="text-right">{`EV ${statblock.ev}`}</div>
         </div>
       </div>
 
       <div className="space-y-2 px-2">
-        <div className="flex flex-wrap justify-between gap-2">
+        <div className="flex flex-wrap justify-between gap-1.5">
           {[
             { label: "Size", value: statblock.size },
             { label: "Speed", value: statblock.speed },
@@ -49,14 +50,14 @@ export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
             { label: "Stability", value: statblock.stability },
             { label: "Free Strike", value: statblock.free_strike },
           ].map((item) => (
-            <div className="flex-1 text-center" key={item.label}>
+            <div className="min-w-16 flex-1 text-center" key={item.label}>
               <div className="text-lg">{item.value}</div>
               <div className="-mt-1 font-bold text-nowrap">{item.label}</div>
             </div>
           ))}
         </div>
         <div>
-          <div className="flex justify-between">
+          <div className="flex flex-wrap justify-between">
             <div>
               <span className="font-bold">{"Immunity: "}</span>
               {statblock.immunities ? statblock.immunities.join(", ") : "—"}
@@ -66,7 +67,7 @@ export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
               {statblock.weaknesses ? statblock.weaknesses.join(", ") : "—"}
             </div>
           </div>
-          <div className="flex justify-between">
+          <div className="flex flex-wrap justify-between">
             <div>
               <span className="font-bold">{"Movement: "}</span>
               <span>{statblock.movement ? statblock.movement : "—"}</span>
@@ -85,29 +86,14 @@ export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
 
       <div className="mb-0.5 w-full border-b border-zinc-950" />
 
-      <div className="flex flex-wrap justify-between gap-1.5 px-2 text-sm">
-        {[
-          { label: "Might", value: statblock.might },
-          { label: "Agility", value: statblock.agility },
-          { label: "Reason", value: statblock.reason },
-          { label: "Intuition", value: statblock.intuition },
-          { label: "Presence", value: statblock.presence },
-        ].map((item) => (
-          <div className="flex-1 text-center" key={item.label}>
-            <div className="text-lg">{`${item.value > 1 ? "+" : ""}${item.value}`}</div>
-            <div className="-mt-0.5 rounded-sm bg-black font-bold text-white">
-              {item.label}
-            </div>
-          </div>
-        ))}
-      </div>
+      <Characteristics statblock={statblock} />
 
       <div className="mb-0 w-full border-b border-zinc-950" />
 
       <div className="mb-0">
         {statblock.features?.map((feature) => (
           <div key={feature.name} className="border-b border-zinc-950 p-2 pl-0">
-            <Feature feature={feature} />
+            <Feature blockName={statblock.name} feature={feature} />
           </div>
         ))}
       </div>
