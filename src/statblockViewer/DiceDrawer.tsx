@@ -6,7 +6,6 @@ import * as DiceProtocol from "../diceProtocol.ts";
 import { defaultSettings } from "../helpers/settingsHelpers.ts";
 import type { Roll } from "../types/diceRollerTypes.ts";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import OBR from "@owlbear-rodeo/sdk";
 import {
   RollAttributesContext,
   SetRollAttributesContext,
@@ -44,7 +43,6 @@ export function DiceDrawer() {
   // External dice roller
   const handleRollResult = useCallback(
     (data: DiceProtocol.PowerRollResult) => {
-      OBR.action.open();
       const rolls = data.result.map((val) => val.result);
       for (let i = 0; i < rolls.length; i++) {
         if (rolls[i] === 0) rolls[i] = 10;
@@ -70,7 +68,10 @@ export function DiceDrawer() {
     },
     [rollAttributes, rollAttributes, definedSettings],
   );
-  const diceRoller = useDiceRoller({ onRollResult: handleRollResult });
+  const diceRoller = useDiceRoller({
+    onRollResult: handleRollResult,
+    channel: "statblockViewer",
+  });
 
   const [noDiceRollersFound, setNoDiceRollersFound] = useState(true);
   useEffect(() => {
