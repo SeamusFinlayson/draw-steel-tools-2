@@ -31,18 +31,21 @@ export function MaliceSpender({
   side?: "top" | "right" | "bottom" | "left" | undefined;
   alignOffset?: number | undefined;
 }) {
-  // TODO: this is unsafe, need ready checking
   const trackerMetadata = useContext(RoomTrackersContext);
   const updateTrackerMetadata = useContext(UpdateRoomTrackersContext);
   const setMaliceSpent = useContext(SetMaliceSpentContext);
-  const [configuredCost, setConfiguredCost] = useState(cost);
-
-  const malice = trackerMetadata?.malice ? trackerMetadata.malice : 0;
-  const newMalice = malice - configuredCost;
   const featureId = useContext(FeatureIdContext);
 
+  const [configuredCost, setConfiguredCost] = useState(cost);
+  const malice = trackerMetadata?.malice ? trackerMetadata.malice : 0;
+  const newMalice = malice - configuredCost;
+
   return (
-    <Popover>
+    <Popover
+      onOpenChange={(open) => {
+        if (open) setConfiguredCost(cost);
+      }}
+    >
       <PopoverTrigger asChild>{trigger}</PopoverTrigger>
       <PopoverContent
         side={side}
