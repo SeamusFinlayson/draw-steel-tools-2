@@ -17,12 +17,6 @@ import { useRoomMetadata } from "../helpers/useRoomMetadata";
 import { getPluginId } from "../helpers/getPluginId";
 import { RoomTrackersZod } from "../types/roomTrackersZod";
 import usePlayerRole from "../helpers/usePlayerRole";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../components/ui/accordion";
 import { Badge } from "../components/ui/badge";
 import {
   defaultSettings,
@@ -30,6 +24,7 @@ import {
 } from "../helpers/settingsHelpers";
 import { SettingsZod } from "../types/settingsZod";
 import { MinionGroupCleanup } from "./MinionGroupCleanup";
+import Button from "../components/ui/Button";
 
 function ActionMenu() {
   const playerName = usePlayerName();
@@ -96,76 +91,69 @@ function ActionMenu() {
               diceRoller={diceRoller}
               setRollAttributes={setRollAttributes}
             />
-            <Accordion
-              {...(definedSettings.keepActivitiesOpen
-                ? { type: "multiple" }
-                : {
-                    type: "single",
-                    defaultValue: "item-2",
-                    collapsible: true,
-                  })}
-              className="w-full"
-            >
-              <AccordionItem value="item-1">
-                <AccordionTrigger
-                  preview={
-                    <>
-                      <Badge
-                        text={`Malice: ${trackerMetadata.value?.malice ? trackerMetadata.value.malice : 0}`}
-                      />
-                      <Badge
-                        text={`Hero Tokens: ${trackerMetadata.value?.heroTokens ? trackerMetadata.value.heroTokens : 0}`}
-                      />
-                    </>
-                  }
+
+            <div className="flex flex-wrap items-center justify-between border-t-4 px-4 py-2 dark:border-black/20">
+              <div className="font-bold"> Resources</div>
+              {playerRole === "GM" && (
+                <Button
+                  size={"xs"}
+                  onClick={async () => {
+                    const themeMode = (await OBR.theme.getTheme()).mode;
+                    OBR.popover.open({
+                      id: getPluginId("resourceCalculator"),
+                      height: 400,
+                      width: 300,
+                      url: `/resourceCalculator?themeMode=${themeMode}&showNone=true`,
+                    });
+                  }}
                 >
-                  Room Resources
-                </AccordionTrigger>
-                <AccordionContent>
-                  <ResourceTracker
-                    trackers={trackerMetadata.value}
-                    setTrackers={trackerMetadata.update}
-                    playerRole={playerRole}
-                  />
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-2">
-                <AccordionTrigger
-                  alwaysShowPreview
-                  preview={
-                    result === undefined ? (
-                      <Badge text={"Make a Roll"} />
-                    ) : (
-                      <>
-                        <Badge text={`Total: ${result.total}`} />
-                        <Badge
-                          text={
-                            result.critical ? "Critical" : `Tier ${result.tier}`
-                          }
-                        />
-                      </>
-                    )
-                  }
-                >
-                  Power Roll
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="bg-mirage-50 dark:bg-mirage-950 mx-4 rounded-2xl p-4 py-3">
-                    <DiceRoller
-                      autoOpenResultView
-                      diceResultViewerOpen={diceResultViewerOpen}
-                      setDiceResultViewerOpen={setDiceResultViewerOpen}
-                      rollAttributes={rollAttributes}
-                      setRollAttributes={setRollAttributes}
-                      result={result}
-                      setResult={setResult}
-                      diceRoller={diceRoller}
-                      settings={definedSettings}
+                  Open Calculator
+                </Button>
+              )}
+            </div>
+
+            <div className="pb-2">
+              <ResourceTracker
+                trackers={trackerMetadata.value}
+                setTrackers={trackerMetadata.update}
+                playerRole={playerRole}
+              />
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between border-t-4 px-4 py-2 dark:border-black/20">
+              <div className="font-bold">Power Roll</div>
+              <div className="flex gap-2">
+                {result === undefined ? (
+                  <Badge text={"Make a Roll"} />
+                ) : (
+                  <>
+                    <Badge text={`Total: ${result.total}`} />
+                    <Badge
+                      text={
+                        result.critical ? "Critical" : `Tier ${result.tier}`
+                      }
                     />
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+                  </>
+                )}
+              </div>
+            </div>
+
+            <div className="pb-2">
+              <div className="bg-mirage-50 dark:bg-mirage-950 mx-4 rounded-2xl p-4 py-3">
+                <DiceRoller
+                  autoOpenResultView
+                  diceResultViewerOpen={diceResultViewerOpen}
+                  setDiceResultViewerOpen={setDiceResultViewerOpen}
+                  rollAttributes={rollAttributes}
+                  setRollAttributes={setRollAttributes}
+                  result={result}
+                  setResult={setResult}
+                  diceRoller={diceRoller}
+                  settings={definedSettings}
+                />
+              </div>
+            </div>
+
             <MinionGroupCleanup />
           </div>
         </HeightMatch>

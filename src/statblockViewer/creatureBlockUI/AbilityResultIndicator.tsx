@@ -42,23 +42,13 @@ export function ResultDropDown({
               >
                 <div className="flex flex-wrap content-start items-center gap-2 px-1.5">
                   {badges.map((value) => (
-                    <Badge
-                      key={value}
-                      className="bg-black text-sm"
-                      text={value}
-                    />
+                    <Badge key={value} className="bg-black" text={value} />
                   ))}
-                  <Badge
-                    className="bg-black text-sm"
-                    text={`Total: ${result.total}`}
-                  />
+                  <Badge className="bg-black" text={`Total: ${result.total}`} />
                   {result.critical ? (
-                    <Badge className="bg-accent text-sm" text={`Critical`} />
+                    <Badge className="bg-accent" text={`Critical`} />
                   ) : (
-                    <Badge
-                      className="bg-black text-sm"
-                      text={`Tier: ${result.tier}`}
-                    />
+                    <Badge className="bg-black" text={`Tier: ${result.tier}`} />
                   )}
                 </div>
                 <ChevronDownIcon
