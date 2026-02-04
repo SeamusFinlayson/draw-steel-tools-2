@@ -2,18 +2,26 @@ import OBR from "@owlbear-rodeo/sdk";
 import Button from "../components/ui/Button";
 import { getPluginId } from "../helpers/getPluginId";
 import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { CalculatorIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import FreeWheelInput from "../components/logic/FreeWheelInput";
 import z from "zod";
 import parseNumber from "../helpers/parseNumber";
 import { useRoomMetadata } from "../helpers/useRoomMetadata";
 import { RoomTrackersZod } from "../types/roomTrackersZod";
 
+const getLocalItem = (keyName: string, fallback = 0): number => {
+  let value = localStorage.getItem(keyName);
+  if (value === null) return fallback;
+  return parseNumber(value, { fallback });
+};
+
 export function ResourceCalculator() {
-  const [heroCount, setHeroCount] = useState(1);
-  const [round, setRound] = useState(1);
-  const [victories, setVictories] = useState(0);
-  const ignoreVictories = round > 1;
+  const [heroCount, setHeroCount] = useState(getLocalItem("heroCount", 1));
+  const [roundNumber, setRoundNumber] = useState(
+    getLocalItem("roundNumber", 1),
+  );
+  const [victories, setVictories] = useState(getLocalItem("victories"));
+  const ignoreVictories = roundNumber > 1;
   const includedVictories = ignoreVictories ? 0 : victories;
 
   const trackerMetadata = useRoomMetadata(
@@ -24,29 +32,40 @@ export function ResourceCalculator() {
     ? trackerMetadata.value.malice
     : 0;
 
-  const newMalice = heroCount + round + includedVictories + malice;
+  const newMalice = heroCount + roundNumber + includedVictories + malice;
 
   return (
     <div className="text-foreground bg-mirage-50 dark:bg-mirage-950 border-mirage-300 dark:border-mirage-700 flex h-screen flex-col rounded-2xl border">
       <div className="flex h-full flex-col justify-between p-4">
         <div className="space-y-3">
-          <h1 className="text-lg font-bold">Gain Malice</h1>
+          <div className="border-mirage-300 dark:border-mirage-700 -mx-4 -mt-4 mb-4 flex items-center justify-between border-b p-4">
+            <h1 className="text-lg font-bold">New Round Malice</h1>
+            <Button inert className="-my-4" variant={"ghost"} size={"icon"}>
+              <CalculatorIcon className="" />
+            </Button>
+          </div>
 
           <div className="flex flex-wrap items-center justify-between">
             <div className="min-w-36 text-nowrap">Heroes</div>
             <Counter
-              label="average victories"
+              label="number of heroes"
               value={heroCount}
-              setValue={setHeroCount}
+              setValue={(value) => {
+                localStorage.setItem("heroCount", value.toString());
+                setHeroCount(value);
+              }}
               min={0}
             />
           </div>
           <div className="flex flex-wrap items-center justify-between">
             <div className="min-w-36 text-nowrap">Round</div>
             <Counter
-              label="average victories"
-              value={round}
-              setValue={setRound}
+              label="round number"
+              value={roundNumber}
+              setValue={(value) => {
+                localStorage.setItem("roundNumber", value.toString());
+                setRoundNumber(value);
+              }}
               min={0}
             />
           </div>
@@ -58,9 +77,12 @@ export function ResourceCalculator() {
           >
             <div className="min-w-36 text-nowrap">Average Victories</div>
             <Counter
-              label="average victories"
-              value={includedVictories}
-              setValue={setVictories}
+              label="average victories of heroes"
+              value={victories}
+              setValue={(value) => {
+                localStorage.setItem("victories", value.toString());
+                setVictories(value);
+              }}
               min={0}
             />
           </div>
