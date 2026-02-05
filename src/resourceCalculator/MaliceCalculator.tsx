@@ -80,7 +80,7 @@ export function MaliceCalculator({
           />
         </div>
         <div className="flex flex-wrap items-center justify-between">
-          <div className="text-nowrap">Current Malice</div>
+          <div className="text-nowrap">Current </div>
           <FreeWheelInput
             clearContentOnFocus
             className="h-8 w-28 rounded-md text-center transition-colors outline-none hover:bg-black/5 focus:bg-black/10 dark:hover:bg-white/5 dark:focus:bg-white/10"
