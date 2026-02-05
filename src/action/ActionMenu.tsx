@@ -25,6 +25,7 @@ import {
 import { SettingsZod } from "../types/settingsZod";
 import { MinionGroupCleanup } from "./MinionGroupCleanup";
 import Button from "../components/ui/Button";
+import { useRoundMessageHandler } from "../helpers/useRoundMessageHandler";
 
 function ActionMenu() {
   const playerName = usePlayerName();
@@ -82,6 +83,8 @@ function ActionMenu() {
     [],
   );
 
+  useRoundMessageHandler();
+
   return (
     <div className="bg-mirage-50/75 dark:bg-mirage-950/50 h-screen">
       <ScrollArea className="h-full" type="always">
@@ -103,7 +106,7 @@ function ActionMenu() {
                       id: getPluginId("resourceCalculator"),
                       height: 400,
                       width: 300,
-                      url: `/resourceCalculator?themeMode=${themeMode}&showNone=true`,
+                      url: `/resourceCalculator?themeMode=${themeMode}`,
                     });
                   }}
                 >

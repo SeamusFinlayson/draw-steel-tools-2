@@ -8,19 +8,19 @@ import z from "zod";
 import parseNumber from "../helpers/parseNumber";
 import { useRoomMetadata } from "../helpers/useRoomMetadata";
 import { RoomTrackersZod } from "../types/roomTrackersZod";
-
-const getLocalItem = (keyName: string, fallback = 0): number => {
-  let value = localStorage.getItem(keyName);
-  if (value === null) return fallback;
-  return parseNumber(value, { fallback });
-};
+import { getLocalStorageNumber } from "../helpers/localStorageHelpers";
+import { broadcastSetRoundNumberMessage } from "../helpers/broadcastRoundImplementation";
 
 export function ResourceCalculator() {
-  const [heroCount, setHeroCount] = useState(getLocalItem("heroCount", 1));
-  const [roundNumber, setRoundNumber] = useState(
-    getLocalItem("roundNumber", 1),
+  const [heroCount, setHeroCount] = useState(
+    getLocalStorageNumber("heroCount", 1),
   );
-  const [victories, setVictories] = useState(getLocalItem("victories"));
+  const [roundNumber, setRoundNumber] = useState(
+    getLocalStorageNumber("roundNumber", 1),
+  );
+  const [victories, setVictories] = useState(
+    getLocalStorageNumber("victories"),
+  );
   const ignoreVictories = roundNumber > 1;
   const includedVictories = ignoreVictories ? 0 : victories;
 
@@ -46,6 +46,20 @@ export function ResourceCalculator() {
           </div>
 
           <div className="flex flex-wrap items-center justify-between">
+            <div className="min-w-36 text-nowrap">Round</div>
+            <Counter
+              label="round number"
+              value={roundNumber}
+              setValue={(value) => {
+                localStorage.setItem("roundNumber", value.toString());
+                setRoundNumber(value);
+                broadcastSetRoundNumberMessage(value);
+              }}
+              min={1}
+            />
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between">
             <div className="min-w-36 text-nowrap">Heroes</div>
             <Counter
               label="number of heroes"
@@ -57,18 +71,7 @@ export function ResourceCalculator() {
               min={0}
             />
           </div>
-          <div className="flex flex-wrap items-center justify-between">
-            <div className="min-w-36 text-nowrap">Round</div>
-            <Counter
-              label="round number"
-              value={roundNumber}
-              setValue={(value) => {
-                localStorage.setItem("roundNumber", value.toString());
-                setRoundNumber(value);
-              }}
-              min={0}
-            />
-          </div>
+
           <div
             inert={ignoreVictories}
             className={
