@@ -1,7 +1,6 @@
 import {
   AlignVerticalJustifyEndIcon,
   AlignVerticalJustifyStartIcon,
-  ChevronDownIcon,
   DicesIcon,
   DramaIcon,
   MoveVerticalIcon,
@@ -153,20 +152,6 @@ export default function SettingsList({
             checked={definedSettings.keepPowerRollBonus}
             onCheckedChange={(checked) =>
               setSettings({ ...settings, keepPowerRollBonus: checked })
-            }
-          />
-        }
-      />
-      <SettingsRow
-        label="Keep Activities Open"
-        icon={<ChevronDownIcon />}
-        description="Allow multiple activity drop downs to stay open at the same time"
-        action={
-          <Switch
-            aria-label="Keep Activities Open"
-            checked={definedSettings.keepActivitiesOpen}
-            onCheckedChange={(checked) =>
-              setSettings({ ...settings, keepActivitiesOpen: checked })
             }
           />
         }

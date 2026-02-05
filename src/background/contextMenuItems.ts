@@ -6,6 +6,7 @@ import type { DefinedSettings } from "../types/settingsZod";
 import { getSelectedItems } from "../helpers/getSelectedItem";
 import { TOKEN_METADATA_KEY } from "../helpers/tokenHelpers";
 import { removeCreatureData } from "../helpers/removeCreatureData";
+import type { ThemeMode } from "../types/themeMode";
 
 const VERTICAL_PADDING = 16;
 const NAME_HEIGHT = 36 + 18 + 8;
@@ -17,7 +18,7 @@ const getUrl = (themeMode: string) => `/contextMenu?themeMode=${themeMode}`;
 
 export default async function createContextMenuItems(
   settings: DefinedSettings,
-  themeMode: "DARK" | "LIGHT",
+  themeMode: ThemeMode,
 ) {
   createPlayerMenu(themeMode, settings.nameTagsEnabled);
   createGmMenu(themeMode, settings.nameTagsEnabled);
@@ -25,10 +26,7 @@ export default async function createContextMenuItems(
   createRemoveStats();
 }
 
-function createPlayerMenu(
-  themeMode: "DARK" | "LIGHT",
-  nameTagsEnabled: boolean,
-) {
+function createPlayerMenu(themeMode: ThemeMode, nameTagsEnabled: boolean) {
   OBR.contextMenu.create({
     id: getPluginId("player-menu"),
     icons: [
@@ -119,7 +117,7 @@ function createPlayerMenu(
   });
 }
 
-function createGmMenu(themeMode: "DARK" | "LIGHT", nameTagsEnabled: boolean) {
+function createGmMenu(themeMode: ThemeMode, nameTagsEnabled: boolean) {
   OBR.contextMenu.create({
     id: getPluginId("gm-menu"),
     icons: [

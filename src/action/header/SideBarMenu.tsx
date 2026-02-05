@@ -75,7 +75,7 @@ export default function SideBarMenu() {
                     OBR.popover.open({
                       id: getPluginId("settings"),
                       url: `/settings?themeMode=${themeMode}`,
-                      height: 668,
+                      height: 590,
                       width: 500,
                       hidePaper: false,
                     });

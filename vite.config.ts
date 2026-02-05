@@ -15,6 +15,7 @@ export default defineConfig({
         contextMenu: resolve(__dirname, "contextMenu.html"),
         statblockSearch: resolve(__dirname, "statblockSearch.html"),
         statblockViewer: resolve(__dirname, "statblockViewer.html"),
+        resourceCalculator: resolve(__dirname, "resourceCalculator.html"),
       },
     },
   },
