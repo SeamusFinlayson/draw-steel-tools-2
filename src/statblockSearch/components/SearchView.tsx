@@ -9,13 +9,9 @@ import {
   type SearchData,
 } from "../../types/statblockSearchData";
 import { FiltersDropdown } from "./FiltersDropdown";
-import { DevActionButtons } from "./DevActionButtons";
 import { StatblockSearchList } from "./StatblockSearchList";
 import DebounceInput from "../../components/logic/DebounceInput";
 import type { AppState } from "../../types/statblockLookupAppState";
-
-const params = new URLSearchParams(document.location.search);
-const devMode = params.get("dev");
 
 export default function SearchView({
   monsterIndex,
@@ -77,12 +73,6 @@ export default function SearchView({
 
       <ScrollArea className="grow basis-50">
         <div className="flex grow flex-col">
-          {devMode === "true" && (
-            <div className="p-4 sm:p-6">
-              <DevActionButtons monsterIndex={monsterIndex} />
-            </div>
-          )}
-
           <>
             <FiltersDropdown
               search={search}

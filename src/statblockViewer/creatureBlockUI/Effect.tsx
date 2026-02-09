@@ -1,7 +1,7 @@
 import parseNumber from "../../helpers/parseNumber";
 import { cn } from "../../helpers/utils";
 import type { DrawSteelEffect } from "../../types/DrawSteelZod";
-import { PluginReadyGate } from "../context/PluginReadyGate";
+import { PluginReadyGate } from "../../components/logic/PluginReadyGate";
 import { applyTextEffects } from "./applyTextEffects";
 import { MaliceSpender } from "./MaliceSpender";
 

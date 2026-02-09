@@ -1,4 +1,3 @@
-import monsterIndex from "./monsterIndex.json";
 import SearchView from "./components/SearchView";
 import {
   Dialog,
@@ -27,11 +26,16 @@ import { MinionGroupZod, type MinionGroup } from "../types/minionGroup";
 import { MONSTER_GROUPS_METADATA_KEY } from "../helpers/monsterGroupHelpers";
 import z from "zod";
 import { generateGroupId } from "../helpers/generateGroupId";
+import type { IndexBundle } from "../types/monsterDataBundlesZod";
 
 const params = new URLSearchParams(document.location.search);
 let groupId = params.get("groupId");
 
-export default function StatblockSearch() {
+export default function StatblockSearch({
+  monsterIndex,
+}: {
+  monsterIndex: IndexBundle[];
+}) {
   const [appState, setAppState] = useState<AppState>(defaultAppState);
 
   return (

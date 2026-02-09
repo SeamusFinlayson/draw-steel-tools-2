@@ -8,7 +8,7 @@ import {
 import { SetRollAttributesContext } from "../context/RollAttributesContext";
 import { ResultDropDown } from "./AbilityResultIndicator";
 import Button from "../../components/ui/Button";
-import { PluginReadyGate } from "../context/PluginReadyGate";
+import { PluginReadyGate } from "../../components/logic/PluginReadyGate";
 
 export function Characteristics({
   statblock,

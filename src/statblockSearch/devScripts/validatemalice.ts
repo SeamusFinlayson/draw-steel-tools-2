@@ -1,7 +1,7 @@
 import { DrawSteelFeatureBlockZod } from "../../types/DrawSteelZod";
 import type { PathBundle } from "../../types/monsterDataBundlesZod";
 import fetchTypedData from "../helpers/getTypedData";
-import getUrl from "../helpers/getUrl";
+import getStatblockUrl from "../helpers/getStatblockUrl";
 
 export async function validateMalice(
   pathBundles: PathBundle[],
@@ -15,7 +15,7 @@ export async function validateMalice(
     pathBundles
       .map((val) => val.features)
       .map(async (features) => {
-        const maliceUrls = features.map((item) => getUrl(item));
+        const maliceUrls = features.map((item) => getStatblockUrl(item));
         await Promise.all(
           maliceUrls.map(async (url) => {
             await fetchTypedData(url, (value) => {

@@ -14,7 +14,7 @@ import { Effect } from "./Effect";
 import type { DrawSteelFeature } from "../../types/DrawSteelZod";
 import { useContext } from "react";
 import { SetRollAttributesContext } from "../context/RollAttributesContext";
-import { PluginReadyGate } from "../context/PluginReadyGate";
+import { PluginReadyGate } from "../../components/logic/PluginReadyGate";
 import {
   DiceDrawerContext,
   SetDiceDrawerContext,

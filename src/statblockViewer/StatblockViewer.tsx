@@ -12,7 +12,7 @@ import { cn } from "../helpers/utils.ts";
 import Toggle from "../components/ui/Toggle.tsx";
 import { OpenInNewTab } from "./OpenInNewTabButton.tsx";
 import HeightMatch from "../components/logic/HeightMatch.tsx";
-import { PluginReadyGate } from "./context/PluginReadyGate.tsx";
+import { PluginReadyGate } from "../components/logic/PluginReadyGate.tsx";
 import { DiceDrawer } from "./DiceDrawer.tsx";
 
 const statblockName = new URLSearchParams(document.location.search).get(

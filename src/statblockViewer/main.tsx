@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./../index.css";
 
 import { StatblockViewer } from "./StatblockViewer.tsx";
-import { PluginReadyProvider } from "./context/PluginReadyProvider.tsx";
+import { PluginReadyProvider } from "../components/logic/PluginReadyProvider.tsx";
 import { RollAttributesProvider } from "./context/RollAttributesProvider.tsx";
 import { DiceDrawerProvider } from "./context/DiceDrawerContextProvider.tsx";
 import { RoomMetadataProvider } from "./context/RoomMetadataProvider.tsx";

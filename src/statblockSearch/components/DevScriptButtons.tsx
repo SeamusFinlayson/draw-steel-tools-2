@@ -1,8 +1,8 @@
 import { useState } from "react";
 import type { IndexBundle } from "../../types/monsterDataBundlesZod";
-import { generateIndex } from "../actions/generateIndex";
-import { validateMalice } from "../actions/validatemalice";
-import { validateStatblocks } from "../actions/validateStatblocks";
+import { generateIndex } from "../devScripts/generateIndex";
+import { validateMalice } from "../devScripts/validatemalice";
+import { validateStatblocks } from "../devScripts/validateStatblocks";
 import Button from "../../components/ui/Button";
 
 export function DevActionButtons({
@@ -16,7 +16,7 @@ export function DevActionButtons({
   }>();
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 p-4">
       <div className="font-bold">Actions</div>
       <div className="flex flex-wrap gap-3">
         <Button onClick={() => validateStatblocks(monsterIndex)}>
