@@ -12,6 +12,7 @@ import type { DefinedSettings } from "../../types/settingsZod";
 import usePlayerRole from "../../helpers/usePlayerRole";
 import { useRef } from "react";
 import Button from "../../components/ui/Button";
+import VisibilityToggle from "./VisibilityToggle";
 
 export default function MinionGroupEditor({
   minionGroup,
@@ -26,6 +27,8 @@ export default function MinionGroupEditor({
   const playerRole = usePlayerRole();
 
   const staminaInputRef = useRef<HTMLInputElement>(null);
+
+  const gmOnly = minionGroup.gmOnly || minionGroup.gmOnly === undefined;
 
   return (
     <div className="space-y-2">
@@ -165,6 +168,11 @@ export default function MinionGroupEditor({
         }
         groupId={minionGroup.id}
         playerRole={playerRole}
+      />
+
+      <VisibilityToggle
+        value={gmOnly}
+        onClick={() => setMinionGroup({ ...minionGroup, gmOnly: !gmOnly })}
       />
     </div>
   );

@@ -22,6 +22,7 @@ export const MonsterTokenDataZod = z.object({
   statblockName: z.string().optional(),
 });
 
+// Don't add anything that can will change after initialization
 export const MinionTokenDataZod = z.object({
   type: z.literal("MINION"),
   groupId: z.string(),

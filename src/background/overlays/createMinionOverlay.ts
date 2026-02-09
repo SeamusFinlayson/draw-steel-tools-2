@@ -30,7 +30,9 @@ export function createMinionOverlay(
         {
           color: "#a0201f",
           value: minionGroup.individualStamina,
-          display: role !== "PLAYER",
+          display:
+            role === "GM" ||
+            ("gmOnly" in minionGroup && minionGroup.gmOnly === false),
         },
         {
           color: "black",

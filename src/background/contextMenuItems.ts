@@ -1,4 +1,4 @@
-import OBR from "@owlbear-rodeo/sdk";
+import OBR, { type KeyFilter } from "@owlbear-rodeo/sdk";
 import { getPluginId } from "../helpers/getPluginId";
 import knightHelmetIcon from "./icons/knightHelmetIcon";
 import dragonHeadIcon from "./icons/dragonHeadIcon";
@@ -7,11 +7,13 @@ import { getSelectedItems } from "../helpers/getSelectedItem";
 import { TOKEN_METADATA_KEY } from "../helpers/tokenHelpers";
 import { removeCreatureData } from "../helpers/removeCreatureData";
 import type { ThemeMode } from "../types/themeMode";
+import type { MinionGroup } from "../types/minionGroup";
 
 const VERTICAL_PADDING = 16;
 const NAME_HEIGHT = 36 + 18 + 8;
 const HERO_STATS_HEIGHT = 178;
 const MONSTER_STATS_HEIGHT = 54 + 62;
+const MINION_STATS_HEIGHT = 222;
 const ACCESS_TOGGLE_HEIGHT = 20 + 16 + 8;
 
 const getUrl = (themeMode: string) => `/contextMenu?themeMode=${themeMode}`;
@@ -19,14 +21,19 @@ const getUrl = (themeMode: string) => `/contextMenu?themeMode=${themeMode}`;
 export default async function createContextMenuItems(
   settings: DefinedSettings,
   themeMode: ThemeMode,
+  minionGroups: MinionGroup[],
 ) {
-  createPlayerMenu(themeMode, settings.nameTagsEnabled);
+  createPlayerMenu(themeMode, settings.nameTagsEnabled, minionGroups);
   createGmMenu(themeMode, settings.nameTagsEnabled);
   createAddStats();
   createRemoveStats();
 }
 
-function createPlayerMenu(themeMode: ThemeMode, nameTagsEnabled: boolean) {
+function createPlayerMenu(
+  themeMode: ThemeMode,
+  nameTagsEnabled: boolean,
+  minionGroups: MinionGroup[],
+) {
   OBR.contextMenu.create({
     id: getPluginId("player-menu"),
     icons: [
@@ -113,6 +120,51 @@ function createPlayerMenu(themeMode: ThemeMode, nameTagsEnabled: boolean) {
         (nameTagsEnabled ? NAME_HEIGHT : 0) +
         MONSTER_STATS_HEIGHT +
         VERTICAL_PADDING,
+    },
+  });
+
+  const restrictedMinionGroupRules = minionGroups
+    .filter((group) => group.gmOnly || group.gmOnly === undefined)
+    .map(
+      (group) =>
+        ({
+          key: ["metadata", TOKEN_METADATA_KEY, "groupId"],
+          value: group.id,
+          operator: "!=",
+        }) satisfies KeyFilter,
+    );
+
+  OBR.contextMenu.create({
+    id: getPluginId("player-menu-minion"),
+    icons: [
+      {
+        icon: dragonHeadIcon,
+        label: "Edit Minions",
+        filter: {
+          every: [
+            { key: "layer", value: "CHARACTER", coordinator: "||" },
+            { key: "layer", value: "MOUNT" },
+            { key: "type", value: "IMAGE" },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY],
+              value: undefined,
+              operator: "!=",
+            },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY, "type"],
+              value: "MINION",
+              operator: "==",
+            },
+            ...restrictedMinionGroupRules,
+          ],
+          roles: ["PLAYER"],
+          max: 1,
+        },
+      },
+    ],
+    embed: {
+      url: getUrl(themeMode),
+      height: NAME_HEIGHT + MINION_STATS_HEIGHT + VERTICAL_PADDING,
     },
   });
 }
@@ -226,7 +278,7 @@ function createGmMenu(themeMode: ThemeMode, nameTagsEnabled: boolean) {
     ],
     embed: {
       url: getUrl(themeMode),
-      height: NAME_HEIGHT + 180 + VERTICAL_PADDING,
+      height: NAME_HEIGHT + MINION_STATS_HEIGHT + VERTICAL_PADDING,
     },
   });
 }
