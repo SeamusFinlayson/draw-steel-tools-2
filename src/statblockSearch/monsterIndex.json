@@ -2393,7 +2393,7 @@
     "features": ["Monsters/Olothec/Features/Olothec Malice.json"],
     "name": "Olothec",
     "level": 6,
-    "ev": "84",
+    "ev": "96",
     "roles": ["Solo"],
     "ancestry": ["Horror", "Olothec"]
   },
@@ -3406,7 +3406,7 @@
     "level": 7,
     "ev": "36",
     "roles": ["Leader"],
-    "ancestry": ["Undead"]
+    "ancestry": ["Undead", "Vampire"]
   },
   {
     "statblock": "Monsters/Undead/Statblocks/Vampire Spawn.json",

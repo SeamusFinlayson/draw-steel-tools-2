@@ -124,5 +124,5 @@ export async function generateIndex() {
 
   console.log("Index Generation Done");
 
-  return { href: url, download: "statblockIndex" };
+  return { href: url, download: "monsterIndex" };
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { IndexBundle } from "../../types/monsterDataBundlesZod";
-import { generateIndex } from "../devScripts/generateIndex";
+import { generateIndex } from "../devScripts/generateMonsterIndex";
 import { validateMalice } from "../devScripts/validatemalice";
 import { validateStatblocks } from "../devScripts/validateStatblocks";
 import Button from "../../components/ui/Button";
