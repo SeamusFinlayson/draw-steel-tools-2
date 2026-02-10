@@ -170,10 +170,12 @@ export default function MinionGroupEditor({
         playerRole={playerRole}
       />
 
-      <VisibilityToggle
-        value={gmOnly}
-        onClick={() => setMinionGroup({ ...minionGroup, gmOnly: !gmOnly })}
-      />
+      {playerRole === "GM" && (
+        <VisibilityToggle
+          value={gmOnly}
+          onClick={() => setMinionGroup({ ...minionGroup, gmOnly: !gmOnly })}
+        />
+      )}
     </div>
   );
 }

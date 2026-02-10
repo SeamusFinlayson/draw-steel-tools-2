@@ -13,7 +13,7 @@ const VERTICAL_PADDING = 16;
 const NAME_HEIGHT = 36 + 18 + 8;
 const HERO_STATS_HEIGHT = 178;
 const MONSTER_STATS_HEIGHT = 54 + 62;
-const MINION_STATS_HEIGHT = 222;
+const MINION_STATS_HEIGHT = 178;
 const ACCESS_TOGGLE_HEIGHT = 20 + 16 + 8;
 
 const getUrl = (themeMode: string) => `/contextMenu?themeMode=${themeMode}`;
@@ -278,7 +278,11 @@ function createGmMenu(themeMode: ThemeMode, nameTagsEnabled: boolean) {
     ],
     embed: {
       url: getUrl(themeMode),
-      height: NAME_HEIGHT + MINION_STATS_HEIGHT + VERTICAL_PADDING,
+      height:
+        NAME_HEIGHT +
+        MINION_STATS_HEIGHT +
+        VERTICAL_PADDING +
+        ACCESS_TOGGLE_HEIGHT,
     },
   });
 }
