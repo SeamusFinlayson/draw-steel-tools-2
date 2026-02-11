@@ -370,19 +370,19 @@ function createAddStats() {
               operator: "==",
             },
           ],
-          roles: ["GM"],
         },
       },
     ],
     onClick: async () => {
       const selectedItems = await getSelectedItems();
+      const playerRole = await OBR.player.getRole();
       OBR.scene.items.updateItems(
         selectedItems.map((item) => item.id),
         (items) => {
           items.forEach((item) => {
             item.metadata[TOKEN_METADATA_KEY] = {
               type: "MONSTER",
-              gmOnly: true,
+              gmOnly: playerRole === "GM" ? true : false,
             };
           });
         },
@@ -408,7 +408,6 @@ function createAddStats() {
               operator: "==",
             },
           ],
-          roles: ["GM"],
         },
       },
     ],
@@ -416,7 +415,7 @@ function createAddStats() {
       const themeMode = (await OBR.theme.getTheme()).mode;
       OBR.popover.open({
         id: getPluginId("statblockSearch"),
-        url: `/statblockSearch?themeMode=${themeMode}&showNone=true`,
+        url: `/statblockSearch?themeMode=${themeMode}`,
         height: 1000,
         width: 800,
         anchorOrigin: { horizontal: "CENTER", vertical: "CENTER" },
