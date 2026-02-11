@@ -1,4 +1,4 @@
-import OBR, { type KeyFilter } from "@owlbear-rodeo/sdk";
+import OBR, { type ContextMenuIcon, type KeyFilter } from "@owlbear-rodeo/sdk";
 import { getPluginId } from "../helpers/getPluginId";
 import knightHelmetIcon from "./icons/knightHelmetIcon";
 import dragonHeadIcon from "./icons/dragonHeadIcon";
@@ -24,7 +24,7 @@ export default async function createContextMenuItems(
   minionGroups: MinionGroup[],
 ) {
   createPlayerMenu(themeMode, settings.nameTagsEnabled, minionGroups);
-  createGmMenu(themeMode, settings.nameTagsEnabled);
+  createGmMenu(themeMode, settings.nameTagsEnabled, minionGroups);
   createAddStats();
   createRemoveStats();
 }
@@ -123,7 +123,7 @@ function createPlayerMenu(
     },
   });
 
-  const restrictedMinionGroupRules = minionGroups
+  const gmOnlyRestrictions = minionGroups
     .filter((group) => group.gmOnly || group.gmOnly === undefined)
     .map(
       (group) =>
@@ -136,12 +136,24 @@ function createPlayerMenu(
 
   OBR.contextMenu.create({
     id: getPluginId("player-menu-minion"),
-    icons: [
-      {
+    icons: minionGroups.map((group) => {
+      const mutualExclusionRestrictions = minionGroups
+        .filter((item) => item.id !== group.id)
+        .map(
+          (item) =>
+            ({
+              key: ["metadata", TOKEN_METADATA_KEY, "groupId"],
+              value: item.id,
+              operator: "!=",
+            }) satisfies KeyFilter,
+        );
+
+      return {
         icon: dragonHeadIcon,
         label: "Edit Minions",
         filter: {
-          every: [
+          every: [...mutualExclusionRestrictions, ...gmOnlyRestrictions],
+          some: [
             { key: "layer", value: "CHARACTER", coordinator: "||" },
             { key: "layer", value: "MOUNT" },
             { key: "type", value: "IMAGE" },
@@ -155,21 +167,23 @@ function createPlayerMenu(
               value: "MINION",
               operator: "==",
             },
-            ...restrictedMinionGroupRules,
           ],
           roles: ["PLAYER"],
-          max: 1,
         },
-      },
-    ],
+      } satisfies ContextMenuIcon;
+    }),
     embed: {
-      url: getUrl(themeMode),
+      url: `${getUrl(themeMode)}&minionEditor=true`,
       height: NAME_HEIGHT + MINION_STATS_HEIGHT + VERTICAL_PADDING,
     },
   });
 }
 
-function createGmMenu(themeMode: ThemeMode, nameTagsEnabled: boolean) {
+function createGmMenu(
+  themeMode: ThemeMode,
+  nameTagsEnabled: boolean,
+  minionGroups: MinionGroup[],
+) {
   OBR.contextMenu.create({
     id: getPluginId("gm-menu"),
     icons: [
@@ -250,13 +264,25 @@ function createGmMenu(themeMode: ThemeMode, nameTagsEnabled: boolean) {
   });
 
   OBR.contextMenu.create({
-    id: getPluginId("gm-menu-minion"),
-    icons: [
-      {
+    id: getPluginId(`gm-menu-minion`),
+    icons: minionGroups.map((group) => {
+      const mutualExclusionRestrictions = minionGroups
+        .filter((item) => item.id !== group.id)
+        .map(
+          (item) =>
+            ({
+              key: ["metadata", TOKEN_METADATA_KEY, "groupId"],
+              value: item.id,
+              operator: "!=",
+            }) satisfies KeyFilter,
+        );
+
+      return {
         icon: dragonHeadIcon,
         label: "Edit Minions",
         filter: {
-          every: [
+          every: mutualExclusionRestrictions,
+          some: [
             { key: "layer", value: "CHARACTER", coordinator: "||" },
             { key: "layer", value: "MOUNT" },
             { key: "type", value: "IMAGE" },
@@ -270,14 +296,18 @@ function createGmMenu(themeMode: ThemeMode, nameTagsEnabled: boolean) {
               value: "MINION",
               operator: "==",
             },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY, "groupId"],
+              value: group.id,
+              operator: "==",
+            },
           ],
           roles: ["GM"],
-          max: 1,
         },
-      },
-    ],
+      } satisfies ContextMenuIcon;
+    }),
     embed: {
-      url: getUrl(themeMode),
+      url: `${getUrl(themeMode)}&minionEditor=true`,
       height:
         NAME_HEIGHT +
         MINION_STATS_HEIGHT +
