@@ -6,8 +6,10 @@ import type { DefinedSettings } from "../types/settingsZod";
 import { getSelectedItems } from "../helpers/getSelectedItem";
 import { TOKEN_METADATA_KEY } from "../helpers/tokenHelpers";
 import { removeCreatureData } from "../helpers/removeCreatureData";
+const gmOnlyRestrictions = getGmOnlyRestrictions(minionGroups);
 import type { ThemeMode } from "../types/themeMode";
 import type { MinionGroup } from "../types/minionGroup";
+import { getGmOnlyRestrictions } from "./getGmOnlyRestrictions";
 
 const VERTICAL_PADDING = 16;
 const NAME_HEIGHT = 36 + 18 + 8;
@@ -26,7 +28,7 @@ export default async function createContextMenuItems(
   createPlayerMenu(themeMode, settings.nameTagsEnabled, minionGroups);
   createGmMenu(themeMode, settings.nameTagsEnabled, minionGroups);
   createAddStats();
-  createRemoveStats();
+  createRemoveStats(minionGroups);
 }
 
 function createPlayerMenu(
@@ -123,16 +125,7 @@ function createPlayerMenu(
     },
   });
 
-  const gmOnlyRestrictions = minionGroups
-    .filter((group) => group.gmOnly || group.gmOnly === undefined)
-    .map(
-      (group) =>
-        ({
-          key: ["metadata", TOKEN_METADATA_KEY, "groupId"],
-          value: group.id,
-          operator: "!=",
-        }) satisfies KeyFilter,
-    );
+  const gmOnlyRestrictions = getGmOnlyRestrictions(minionGroups);
 
   OBR.contextMenu.create({
     id: getPluginId("player-menu-minion"),
@@ -428,7 +421,9 @@ function createAddStats() {
   });
 }
 
-function createRemoveStats() {
+function createRemoveStats(minionGroups: MinionGroup[]) {
+  const gmOnlyRestrictions = getGmOnlyRestrictions(minionGroups);
+
   OBR.contextMenu.create({
     id: getPluginId("remove-stats"),
     icons: [
@@ -488,13 +483,8 @@ function createRemoveStats() {
               value: true,
               operator: "!=",
             },
-            {
-              key: ["metadata", TOKEN_METADATA_KEY, "type"],
-              value: "MINION",
-              operator: "!=",
-            },
+            ...gmOnlyRestrictions,
           ],
-          max: 1,
           roles: ["PLAYER"],
         },
       },
