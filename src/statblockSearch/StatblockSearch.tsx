@@ -27,6 +27,7 @@ import { MONSTER_GROUPS_METADATA_KEY } from "../helpers/monsterGroupHelpers";
 import z from "zod";
 import { generateGroupId } from "../helpers/generateGroupId";
 import type { IndexBundle } from "../types/monsterDataBundlesZod";
+import usePlayerRole from "../helpers/usePlayerRole";
 
 const params = new URLSearchParams(document.location.search);
 let groupId = params.get("groupId");
@@ -37,6 +38,7 @@ export default function StatblockSearch({
   monsterIndex: IndexBundle[];
 }) {
   const [appState, setAppState] = useState<AppState>(defaultAppState);
+  const playerRole = usePlayerRole();
 
   return (
     <div>
@@ -95,7 +97,11 @@ export default function StatblockSearch({
       </Dialog>
       <div className="text-foreground bg-mirage-50 dark:bg-mirage-950 border-mirage-300 dark:border-mirage-700 flex h-screen min-h-screen flex-col rounded-2xl border">
         {appState.selectedIndexBundle === undefined ? (
-          <SearchView monsterIndex={monsterIndex} setAppState={setAppState} />
+          <SearchView
+            monsterIndex={monsterIndex}
+            setAppState={setAppState}
+            playerRole={playerRole}
+          />
         ) : (
           <OptionsView appState={appState} setAppState={setAppState} />
         )}
@@ -146,7 +152,7 @@ export default function StatblockSearch({
                                 ? existingDataValidation.data
                                 : undefined),
                               type: "MONSTER",
-                              gmOnly: true,
+                              gmOnly: playerRole === "GM" ? true : false,
                               ...(nameOptions.enabled && nameOptions.nameTag
                                 ? { name: nameOptions.value }
                                 : {}),
@@ -241,6 +247,7 @@ export default function StatblockSearch({
                             currentStamina:
                               tokenOptions.stamina.value * groupSize,
                             nameTagsEnabled: tokenOptions.groupName.nameTags,
+                            gmOnly: playerRole === "GM" ? true : false,
                           },
                         ] satisfies MinionGroup[]),
                     });

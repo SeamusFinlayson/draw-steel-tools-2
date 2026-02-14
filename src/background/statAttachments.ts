@@ -1,6 +1,6 @@
 import OBR, { type Image, type Item, isImage } from "@owlbear-rodeo/sdk";
 import { hpTextId } from "./overlays/compoundItemHelpers";
-import createContextMenuItems from "./contextMenuItems";
+import createContextMenuItems from "./createContextMenuItems";
 import { defaultSettings, getSettings } from "../helpers/settingsHelpers";
 import { TOKEN_METADATA_KEY, parseTokenData } from "../helpers/tokenHelpers";
 import type { MinionTokenData } from "../types/tokenDataZod";
@@ -90,14 +90,22 @@ export default async function startBackground() {
 
     OBR.theme.onChange((theme) => {
       ObrState.themeMode = theme.mode;
-      createContextMenuItems(ObrState.settings, ObrState.themeMode);
+      createContextMenuItems(
+        ObrState.settings,
+        ObrState.themeMode,
+        ObrState.minionGroups,
+      );
     });
 
     OBR.room.onMetadataChange(async (metadata) => {
       const settings = getSettings(metadata, ObrState.settings);
       ObrState.settings = settings.settings;
       if (!settings.isChanged) return;
-      createContextMenuItems(ObrState.settings, ObrState.themeMode);
+      createContextMenuItems(
+        ObrState.settings,
+        ObrState.themeMode,
+        ObrState.minionGroups,
+      );
       refreshAllAttachments();
     });
 
@@ -124,6 +132,11 @@ export default async function startBackground() {
         ObrState.minionGroups,
         ObrState.minionTokenCounts,
       ).counts;
+      createContextMenuItems(
+        ObrState.settings,
+        ObrState.themeMode,
+        ObrState.minionGroups,
+      );
 
       refreshAllAttachments();
     });
@@ -167,7 +180,11 @@ export default async function startBackground() {
       if (!isReady) ObrState.attachmentLogs = {};
     });
 
-    createContextMenuItems(ObrState.settings, ObrState.themeMode);
+    createContextMenuItems(
+      ObrState.settings,
+      ObrState.themeMode,
+      ObrState.minionGroups,
+    );
     refreshAllAttachments();
   };
 

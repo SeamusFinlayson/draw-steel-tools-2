@@ -72,14 +72,11 @@ export function StatBlockSwitcher({
   );
 
   let minionStatblocks: string[] = [];
-  if (
-    minionGroupsMetadata.ready &&
-    minionGroupsMetadata.value !== undefined &&
-    playerRole === "GM"
-  ) {
+  if (minionGroupsMetadata.ready && minionGroupsMetadata.value !== undefined) {
     const minionGroups = minionGroupsMetadata.value;
     const { counts } = getMinionTokenCounts(items, minionGroups);
     minionStatblocks = minionGroups
+      .filter((group) => !group.gmOnly || playerRole === "GM")
       .filter((group) => group.id in counts && counts[group.id] >= 1)
       .map((group) => group.statblock)
       .filter((statblock) => statblock !== undefined)

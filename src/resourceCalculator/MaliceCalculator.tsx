@@ -63,9 +63,9 @@ export function MaliceCalculator({
         </div>
 
         <div
-          inert={ignoreVictories}
+          data-ignore={ignoreVictories}
           className={
-            "flex flex-wrap items-center justify-between inert:opacity-50"
+            "flex flex-wrap items-center justify-between data-[ignore=true]:opacity-50"
           }
         >
           <div className="min-w-32 text-nowrap">Average Victories</div>

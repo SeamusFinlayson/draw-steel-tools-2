@@ -16,9 +16,11 @@ import type { AppState } from "../../types/statblockLookupAppState";
 export default function SearchView({
   monsterIndex,
   setAppState,
+  playerRole,
 }: {
   monsterIndex: IndexBundle[];
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;
+  playerRole: "PLAYER" | "GM";
 }) {
   const [search, setSearch] = useState<SearchData>(defaultSearchData);
 
@@ -81,6 +83,7 @@ export default function SearchView({
             />
 
             <StatblockSearchList
+              playerRole={playerRole}
               search={search}
               setAppState={setAppState}
               monsterIndex={monsterIndex}
