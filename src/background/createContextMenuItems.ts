@@ -6,7 +6,6 @@ import type { DefinedSettings } from "../types/settingsZod";
 import { getSelectedItems } from "../helpers/getSelectedItem";
 import { TOKEN_METADATA_KEY } from "../helpers/tokenHelpers";
 import { removeCreatureData } from "../helpers/removeCreatureData";
-const gmOnlyRestrictions = getGmOnlyRestrictions(minionGroups);
 import type { ThemeMode } from "../types/themeMode";
 import type { MinionGroup } from "../types/minionGroup";
 import { getGmOnlyRestrictions } from "./getGmOnlyRestrictions";
