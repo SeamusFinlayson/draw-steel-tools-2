@@ -1,6 +1,6 @@
 import OBR, { type Image, type Item, isImage } from "@owlbear-rodeo/sdk";
 import { hpTextId } from "./overlays/compoundItemHelpers";
-import createContextMenuItems from "./contextMenuItems";
+import createContextMenuItems from "./createContextMenuItems";
 import { defaultSettings, getSettings } from "../helpers/settingsHelpers";
 import { TOKEN_METADATA_KEY, parseTokenData } from "../helpers/tokenHelpers";
 import type { MinionTokenData } from "../types/tokenDataZod";
