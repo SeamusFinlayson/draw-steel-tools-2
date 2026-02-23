@@ -102,7 +102,7 @@ export function MaliceCalculator({
       <div className="flex flex-wrap gap-2">
         <Button
           className="flex-1"
-          variant={"outline"}
+          variant={"accentOutline"}
           onClick={() => OBR.popover.close(getPluginId("resourceCalculator"))}
         >
           Close
