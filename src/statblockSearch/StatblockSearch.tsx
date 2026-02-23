@@ -50,7 +50,7 @@ export default function StatblockSearch({
           View of the selected statblock
         </DialogDescription>
         <DialogContent
-          className="bg-mirage-50 h-11/12 p-0"
+          className="bg-mirage-50 h-10/12 w-lg p-0"
           onPointerDownOutside={() =>
             setAppState({ ...appState, monsterViewerOpen: false })
           }
