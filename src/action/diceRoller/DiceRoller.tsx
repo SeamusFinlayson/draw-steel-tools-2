@@ -278,7 +278,7 @@ export default function DiceRoller({
               );
             } else {
               setResult(undefined);
-              diceRoller.requestRoll(
+              diceRoller.requestPowerRoll(
                 createRollRequestMessage({
                   bonus: rollAttributes.bonus,
                   netEdges,
@@ -394,7 +394,7 @@ export default function DiceRoller({
                     );
                   } else {
                     setResult(undefined);
-                    diceRoller.requestRoll(
+                    diceRoller.requestPowerRoll(
                       createRollRequestMessage({
                         bonus: rollAttributes.bonus,
                         hasSkill: rollAttributes.hasSkill,

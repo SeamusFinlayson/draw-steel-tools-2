@@ -7,6 +7,8 @@ export const toggleVariants = cva(
       variant: {
         default:
           "dark:data-[state=on]:bg-mirage-100 data-[state=on]:bg-mirage-900 data-[state=on]:hover:bg-mirage-800 data-[state=on]:text-mirage-50 dark:data-[state=on]:text-mirage-950 dark:data-[state=on]:hover:bg-mirage-200 w-full dark:bg-mirage-900 dark:hover:bg-mirage-800 bg-mirage-100 hover:bg-mirage-200",
+        accent:
+          "dark:data-[state=on]:bg-accent  data-[state=on]:text-accent-foreground w-full dark:bg-mirage-900 dark:hover:bg-mirage-800 bg-mirage-100 hover:bg-mirage-200",
         outline:
           "border border-foreground/20 dark:data-[state=on]:bg-mirage-100 data-[state=on]:bg-mirage-900 data-[state=on]:hover:bg-mirage-800 data-[state=on]:text-mirage-50 dark:data-[state=on]:text-mirage-950 dark:data-[state=on]:hover:bg-mirage-200 w-full dark:bg-mirage-900 dark:hover:bg-mirage-800 bg-mirage-100 hover:bg-mirage-200",
         ghost:
