@@ -8,6 +8,10 @@ export function Input(
   },
 ): React.ReactNode {
   return (
-    <BaseInput {...props} className={cn("h-8 px-2 text-sm", props.className)} />
+    <BaseInput
+      {...props}
+      className={cn("h-8 px-2 text-sm", props.className)}
+      hasFocusHighlight
+    />
   );
 }

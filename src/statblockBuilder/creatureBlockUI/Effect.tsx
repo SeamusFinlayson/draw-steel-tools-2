@@ -1,3 +1,5 @@
+import { Textarea } from "../../components/ui/textarea";
+import { ToggleGroup, ToggleGroupItem } from "../../components/ui/toggleGroup";
 import { cn } from "../../helpers/utils";
 import type { DrawSteelEffect } from "../../types/DrawSteelZod";
 
@@ -32,7 +34,8 @@ export function Effect({
                   if (key === "tier3") return "17+";
                 })()}
               </span>
-              <textarea
+              <Textarea
+                hasFocusHighlight
                 className="block w-full rounded-md border border-black/30 px-2 py-1 shadow-xs"
                 value={(effect as { [k: string]: string })[key]}
               />
@@ -45,7 +48,8 @@ export function Effect({
   return (
     <div>
       {(effect.name || effect.cost || effect.effect) && (
-        <textarea
+        <Textarea
+          hasFocusHighlight
           className="block w-full rounded-md border border-black/30 px-2 py-1 shadow-xs"
           value={
             (effect.name ? effect.name : "") +
@@ -56,7 +60,22 @@ export function Effect({
         />
       )}
       {PowerRollEntries.length > 0 && (
-        <div className="space-y-1">{PowerRollEntries}</div>
+        <div className="space-y-1">
+          <ToggleGroup
+            className="w-full"
+            value={effect.roll !== undefined ? "roll" : "targetRolls"}
+            type="single"
+            variant={"default"}
+          >
+            <ToggleGroupItem size={"sm"} value="roll">
+              Roll
+            </ToggleGroupItem>
+            <ToggleGroupItem size={"sm"} value="targetRolls">
+              Target Rolls
+            </ToggleGroupItem>
+          </ToggleGroup>
+          {PowerRollEntries}
+        </div>
       )}
     </div>
   );

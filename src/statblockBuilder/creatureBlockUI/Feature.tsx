@@ -9,11 +9,17 @@ import {
   Icon,
   StarIcon,
   Grid3X3Icon,
+  Trash2Icon,
+  ArrowDownIcon,
+  ArrowUpIcon,
 } from "lucide-react";
 import { Effect } from "./Effect";
 import type { DrawSteelFeature } from "../../types/DrawSteelZod";
 import { Input } from "./Input";
 import FreeWheelInput from "../../components/logic/FreeWheelInput";
+import Button from "../../components/ui/Button";
+import { useState } from "react";
+import Toggle from "../../components/ui/Toggle";
 
 export function Feature({
   feature: feature,
@@ -21,16 +27,11 @@ export function Feature({
   blockName: string;
   feature: DrawSteelFeature;
 }) {
-  let roll: string | undefined = undefined;
-  feature.effects.forEach((val) => {
-    if ("roll" in val && val.roll) {
-      roll = val.roll.replace("Power Roll", "2d10");
-    }
-  });
+  const [organizeMode, setOrganizeMode] = useState(false);
 
   return (
     <div className="flex gap-1">
-      <button className="bg-accent text-accent-foreground flex size-[32px] items-center justify-center rounded-2xl p-1">
+      <Button variant={"primary"} size={"icon"}>
         {(() => {
           if (feature.icon === "☠️") return <SkullIcon />;
           if (feature.icon === "❗️") return <AlertCircleIcon />;
@@ -40,11 +41,11 @@ export function Feature({
           if (feature.icon === "⭐️") return <StarIcon />;
           return <UserIcon />;
         })()}
-      </button>
+      </Button>
       <div className="w-full">
-        <div className="w-full space-y-2">
-          <div className="space-y-2">
-            <div className="flex flex-wrap justify-between gap-4">
+        <div className="w-full space-y-4">
+          <div className="space-y-1">
+            <div className="flex flex-wrap justify-between gap-x-4 gap-y-1">
               <Input>
                 <FreeWheelInput
                   className="grow font-black"
@@ -64,7 +65,7 @@ export function Feature({
                 />
               </Input>
             </div>
-            <div className="flex flex-wrap justify-between gap-4">
+            <div className="flex flex-wrap justify-between gap-x-4 gap-y-1">
               <Input>
                 <FreeWheelInput
                   className="grow"
@@ -82,7 +83,7 @@ export function Feature({
               </Input>
             </div>
 
-            <div className="flex flex-wrap justify-between gap-4">
+            <div className="flex flex-wrap justify-between gap-x-4 gap-y-1">
               <div className="flex grow items-center gap-1">
                 <Ruler className="size-4" />
                 <Input>
@@ -120,12 +121,61 @@ export function Feature({
             </div>
           )}
           {feature.effects.length > 0 && (
-            <div className="space-y-2">
+            <div className="space-y-4">
               {feature.effects.map((effect, index) => (
-                <Effect key={index} effect={effect} />
+                <div key={index} className="grid">
+                  <div inert={organizeMode} className="col-start-1 row-start-1">
+                    <Effect effect={effect} />
+                  </div>
+                  {organizeMode && (
+                    <div className="bg-accent/50 border-accent z-50 col-start-1 row-start-1 flex items-end justify-end place-self-stretch rounded-md border p-1">
+                      <div className="flex items-center gap-4">
+                        <div className="flex h-9 gap-0.5">
+                          <Button
+                            size={"sm"}
+                            variant={"secondary"}
+                            disabled={index === 0}
+                            className={"self-start"}
+                          >
+                            <ArrowUpIcon />
+                          </Button>
+                          <Button
+                            size={"sm"}
+                            variant={"secondary"}
+                            disabled={index >= feature.effects.length - 1}
+                            className="self-end"
+                          >
+                            <ArrowDownIcon />
+                          </Button>
+                        </div>
+                        <Button size={"icon"} variant={"secondary"}>
+                          <Trash2Icon />
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           )}
+          <div className="flex flex-wrap justify-between gap-1">
+            <div className="flex flex-wrap gap-1">
+              <Button variant={"secondary"} size={"sm"}>
+                Add Text
+              </Button>
+              <Button variant={"secondary"} size={"sm"}>
+                Add Roll
+              </Button>
+            </div>
+            <Toggle
+              className="w-fit"
+              variant={"default"}
+              size={"sm"}
+              onClick={() => setOrganizeMode(!organizeMode)}
+            >
+              Organize
+            </Toggle>
+          </div>
           {feature.flavor && <div className="italic">{feature.flavor}</div>}
         </div>
       </div>

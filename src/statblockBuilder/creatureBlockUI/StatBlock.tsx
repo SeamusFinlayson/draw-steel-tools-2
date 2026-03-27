@@ -1,4 +1,3 @@
-import FreeWheelInput from "../../components/logic/FreeWheelInput";
 import { cn } from "../../helpers/utils";
 import type { DrawSteelStatblock } from "../../types/DrawSteelZod";
 import { Characteristics } from "./Characteristics";
@@ -7,10 +6,10 @@ import { Input } from "./Input";
 
 export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
   return (
-    <div className="w-full max-w-2xl space-y-2">
+    <div className="w-full max-w-2xl space-y-4">
       <div
         className={cn(
-          "space-y-2 rounded-md border-zinc-950 bg-gradient-to-b from-neutral-400/60 to-neutral-300/50 p-2",
+          "space-y-1 rounded-md border-zinc-950 bg-gradient-to-b from-neutral-400/60 to-neutral-300/50 p-2",
           {
             "from-[#e9db7d] to-[#e9db7d]/50":
               statblock.roles[0].includes("Ambusher"),
@@ -33,72 +32,54 @@ export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
           },
         )}
       >
-        <div className="flex flex-wrap items-baseline justify-between gap-4 text-nowrap">
-          <Input>
-            <FreeWheelInput
-              className="grow text-base font-black"
-              placeholder="Name"
-              value={statblock.name}
-              onUpdate={() => {}}
-            />
-          </Input>
+        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-nowrap">
+          <Input
+            className="grow text-base font-black"
+            placeholder="Name"
+            value={statblock.name}
+          />
           <div className="flex items-center justify-end gap-1 text-right">
             <div>Level</div>
-            <Input>
-              <FreeWheelInput
-                className="w-10 text-center"
-                placeholder="#"
-                value={statblock.level.toString()}
-                onUpdate={() => {}}
-              />
-            </Input>
-            <Input>
-              <FreeWheelInput
-                className="w-26"
-                placeholder="Organization"
-                value={statblock.roles
-                  .toString()
-                  .substring(0, statblock.roles.toString().indexOf(" "))}
-                onUpdate={() => {}}
-              />
-            </Input>
-            <Input>
-              <FreeWheelInput
-                className="w-24"
-                placeholder="Role"
-                value={statblock.roles
-                  .toString()
-                  .substring(statblock.roles.toString().indexOf(" "))}
-                onUpdate={() => {}}
-              />
-            </Input>
+            <Input
+              className="w-10 text-center"
+              placeholder="#"
+              value={statblock.level.toString()}
+            />
+            <Input
+              className="w-26"
+              placeholder="Organization"
+              value={statblock.roles
+                .toString()
+                .substring(0, statblock.roles.toString().indexOf(" "))}
+            />
+            <Input
+              className="w-24"
+              placeholder="Role"
+              value={statblock.roles
+                .toString()
+                .substring(statblock.roles.toString().indexOf(" "))}
+            />
           </div>
         </div>
-        <div className="flex flex-wrap justify-between gap-4 text-nowrap">
-          <Input>
-            <FreeWheelInput
-              className="grow"
-              placeholder="Ancestry"
-              value={statblock.ancestry.join(", ")}
-              onUpdate={() => {}}
-            />
-          </Input>
+        <div className="flex flex-wrap justify-between gap-x-4 gap-y-1 text-nowrap">
+          <Input
+            className="grow"
+            placeholder="Ancestry"
+            value={statblock.ancestry.join(", ")}
+          />
 
           <div className="flex items-center gap-1">
             <div className="text-right">EV</div>
-            <Input>
-              <FreeWheelInput
-                className="w-12 text-center"
-                placeholder="#"
-                value={statblock.ev}
-                onUpdate={() => {}}
-              />
-            </Input>
+            <Input
+              className="w-12 text-center"
+              placeholder="#"
+              value={statblock.ev}
+            />
           </div>
         </div>
       </div>
 
-      <div className="space-y-2 px-2">
+      <div className="space-y-4 px-2">
         <div className="flex flex-wrap justify-between gap-1.5">
           {[
             { label: "Size", value: statblock.size },
@@ -111,62 +92,48 @@ export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
               className="flex min-w-16 flex-1 flex-col items-center gap-0.5"
               key={item.label}
             >
-              <Input>
-                <FreeWheelInput
-                  className="w-12 text-center"
-                  value={item.value.toString()}
-                  onUpdate={() => {}}
-                />
-              </Input>
+              <Input
+                className="w-12 text-center"
+                value={item.value.toString()}
+              />
+
               <div className="font-bold text-nowrap">{item.label}</div>
             </div>
           ))}
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-1">
           <div className="flex items-center gap-1">
             <div className="font-bold">{"Immunity "}</div>
-            <Input>
-              <FreeWheelInput
-                className="grow"
-                value={
-                  statblock.immunities ? statblock.immunities.join(", ") : ""
-                }
-                onUpdate={() => {}}
-              />
-            </Input>
+            <Input
+              className="grow"
+              value={
+                statblock.immunities ? statblock.immunities.join(", ") : ""
+              }
+            />
           </div>
           <div className="flex items-center gap-1">
             <div className="font-bold">{"Weakness "}</div>
-            <Input>
-              <FreeWheelInput
-                className="grow"
-                value={
-                  statblock.weaknesses ? statblock.weaknesses.join(", ") : ""
-                }
-                onUpdate={() => {}}
-              />
-            </Input>
+            <Input
+              className="grow"
+              value={
+                statblock.weaknesses ? statblock.weaknesses.join(", ") : ""
+              }
+            />
           </div>
           <div className="flex items-center gap-1">
             <div className="font-bold">{"Movement "}</div>
-            <Input>
-              <FreeWheelInput
-                className="grow"
-                value={statblock.movement ? statblock.movement : ""}
-                onUpdate={() => {}}
-              />
-            </Input>
+            <Input
+              className="grow"
+              value={statblock.movement ? statblock.movement : ""}
+            />
           </div>
           <div className="flex items-center gap-1">
             <div className="font-bold">{"With Captain "}</div>
-            <Input>
-              <FreeWheelInput
-                className="grow"
-                value={statblock.with_captain ? statblock.with_captain : ""}
-                onUpdate={() => {}}
-              />
-            </Input>
+            <Input
+              className="grow"
+              value={statblock.with_captain ? statblock.with_captain : ""}
+            />
           </div>
         </div>
       </div>
@@ -179,7 +146,7 @@ export function StatBlock({ statblock }: { statblock: DrawSteelStatblock }) {
 
       <div className="mb-0">
         {statblock.features?.map((feature) => (
-          <div key={feature.name} className="border-b border-zinc-950 p-2 pl-0">
+          <div key={feature.name} className="border-b border-zinc-950 p-4 pl-0">
             <Feature blockName={statblock.name} feature={feature} />
           </div>
         ))}
