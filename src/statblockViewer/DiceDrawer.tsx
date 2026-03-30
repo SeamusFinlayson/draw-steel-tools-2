@@ -5,7 +5,7 @@ import { useDiceRoller } from "../helpers/useDiceRoller.ts";
 import * as DiceProtocol from "../diceProtocol.ts";
 import { defaultSettings } from "../helpers/settingsHelpers.ts";
 import type { Roll } from "../types/diceRollerTypes.ts";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import {
   RollAttributesContext,
   SetRollAttributesContext,
