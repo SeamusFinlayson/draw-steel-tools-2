@@ -102,7 +102,7 @@ export default function TokenEditor() {
           detailed,
       })}
     >
-      {definedSettings.nameTagsEnabled && (
+      {(definedSettings.nameTagsEnabled || detailed) && (
         <NameInput
           value={token.name}
           placeHolder={token.item.name}

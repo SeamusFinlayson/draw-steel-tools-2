@@ -6,7 +6,6 @@ import {
   Settings2Icon,
 } from "lucide-react";
 import parseNumber from "../../helpers/parseNumber";
-import { cn } from "../../helpers/utils";
 import type { Token } from "../../types/contextMenuToken";
 import type { DefinedCharacterTokenData } from "../../types/tokenDataZod";
 import BarTrackerInput from "../trackerInputs/BarTrackerInput";
@@ -235,7 +234,7 @@ export default function StatEditor({
                   const themeMode = (await OBR.theme.getTheme()).mode;
                   OBR.popover.open({
                     id: getPluginId("hero-popover"),
-                    height: 600,
+                    height: 700,
                     width: 400,
                     anchorOrigin: { horizontal: "CENTER", vertical: "CENTER" },
                     transformOrigin: {
@@ -254,6 +253,7 @@ export default function StatEditor({
           </>
         )}
       </div>
+
       {token.type === "HERO" && detailed && heroicResourceSettingsOpen && (
         <div className="flex flex-col gap-2">
           <div>
@@ -267,24 +267,29 @@ export default function StatEditor({
               />
             </Input>
           </div>
+
           <div>
             <Label name="Heroic Resource at Start of Turn" />
             <ToggleGroup
               type="single"
               className="w-full"
               value={token.heroicResourceButton}
-              onValueChange={(value) =>
+              onValueChange={(value) => {
+                if (!["D3", "D3+1", "+2", "+3"].includes(value)) return;
+                console.log(value);
                 updateToken({
                   heroicResourceButton: value as "D3" | "D3+1" | "+2" | "+3",
-                })
-              }
+                });
+              }}
             >
               <ToggleGroupItem value="D3">
                 <Dice3Icon />
               </ToggleGroupItem>
-              <ToggleGroupItem className="flex scale-90" value="D3+1">
-                <Dice3Icon />
-                <div>+1</div>
+              <ToggleGroupItem value="D3+1">
+                <div className="flex scale-90">
+                  <Dice3Icon />
+                  <div>+1</div>
+                </div>
               </ToggleGroupItem>
               <ToggleGroupItem value="+2">+2</ToggleGroupItem>
               <ToggleGroupItem value="+3">+3</ToggleGroupItem>
