@@ -76,7 +76,7 @@ function ActionMenu() {
     },
     [playerName, definedSettings, rollAttributes],
   );
-  const diceRoller = useDiceRoller({ onRollResult: handleRollResult });
+  const diceRoller = useDiceRoller({ onPowerRollResult: handleRollResult });
 
   const setActionHeight = useCallback(
     (height: number) => OBR.action.setHeight(height),

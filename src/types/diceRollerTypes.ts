@@ -34,10 +34,16 @@ export type DiceRoller = {
 } & (
   | {
       config: DiceProtocol.DiceRollerConfig;
-      requestRoll: (rollRequest: DiceProtocol.PowerRollRequest) => void;
+      requestRoll: (
+        rollRequest: Omit<DiceProtocol.RollRequest, "replyChannel">,
+      ) => void;
+      requestPowerRoll: (
+        rollRequest: Omit<DiceProtocol.PowerRollRequest, "replyChannel">,
+      ) => void;
     }
   | {
       config: undefined;
       requestRoll: undefined;
+      requestPowerRoll: undefined;
     }
 );

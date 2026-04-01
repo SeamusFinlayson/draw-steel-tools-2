@@ -5,7 +5,7 @@ import { useDiceRoller } from "../helpers/useDiceRoller.ts";
 import * as DiceProtocol from "../diceProtocol.ts";
 import { defaultSettings } from "../helpers/settingsHelpers.ts";
 import type { Roll } from "../types/diceRollerTypes.ts";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import {
   RollAttributesContext,
   SetRollAttributesContext,
@@ -41,35 +41,32 @@ export function DiceDrawer() {
   const [diceResultViewerOpen, setDiceResultViewerOpen] = useState(false);
 
   // External dice roller
-  const handleRollResult = useCallback(
-    (data: DiceProtocol.PowerRollResult) => {
-      const rolls = data.result.map((val) => val.result);
-      for (let i = 0; i < rolls.length; i++) {
-        if (rolls[i] === 0) rolls[i] = 10;
-      }
+  const handleRollResult = (data: DiceProtocol.PowerRollResult) => {
+    const rolls = data.result.map((val) => val.result);
+    for (let i = 0; i < rolls.length; i++) {
+      if (rolls[i] === 0) rolls[i] = 10;
+    }
 
-      setDiceDrawer((prev) => ({
-        ...prev,
-        rollStatus: "DONE",
-        result: powerRoll({
-          bonus: data.rollProperties.bonus,
-          hasSkill: data.rollProperties.hasSkill,
-          netEdges: data.rollProperties.netEdges,
-          rollMethod: "givenValues",
-          dieValues: rolls,
-          selectionStrategy:
-            data.rollProperties.dice === "3d10kl2" ? "lowest" : "highest",
-        }),
-      }));
-      setRollAttributes({
-        ...getResetRollAttributes(rollAttributes, definedSettings),
-        style: rollAttributes.style,
-      });
-    },
-    [rollAttributes, rollAttributes, definedSettings],
-  );
+    setDiceDrawer((prev) => ({
+      ...prev,
+      rollStatus: "DONE",
+      result: powerRoll({
+        bonus: data.rollProperties.bonus,
+        hasSkill: data.rollProperties.hasSkill,
+        netEdges: data.rollProperties.netEdges,
+        rollMethod: "givenValues",
+        dieValues: rolls,
+        selectionStrategy:
+          data.rollProperties.dice === "3d10kl2" ? "lowest" : "highest",
+      }),
+    }));
+    setRollAttributes({
+      ...getResetRollAttributes(rollAttributes, definedSettings),
+      style: rollAttributes.style,
+    });
+  };
   const diceRoller = useDiceRoller({
-    onRollResult: handleRollResult,
+    onPowerRollResult: handleRollResult,
     channel: "statblockViewer",
   });
 
