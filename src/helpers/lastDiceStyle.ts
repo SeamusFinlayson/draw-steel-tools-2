@@ -1,4 +1,4 @@
-import * as DiceProtocol from "../diceProtocol";
+import { DiceProtocol } from "../diceProtocolExport";
 
 export function getLastDieStyle(): DiceProtocol.DieStyle | undefined {
   const styleId = localStorage.getItem("lastDiceStyleId");

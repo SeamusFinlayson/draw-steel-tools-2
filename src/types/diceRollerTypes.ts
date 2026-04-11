@@ -1,4 +1,4 @@
-import * as DiceProtocol from "../diceProtocol";
+import { DiceProtocol } from "../diceProtocolExport.ts";
 
 export type DiceOptions = "2d10" | "3d10kh2" | "3d10kl2";
 export type RollVisibility = "shared" | "self";
