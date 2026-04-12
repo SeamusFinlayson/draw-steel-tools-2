@@ -1,4 +1,4 @@
-import * as DiceProtocol from "../diceProtocol";
+import { DiceProtocol } from "../diceProtocolExport";
 
 export function createRollRequestMessage(args: {
   gmOnly: boolean;
