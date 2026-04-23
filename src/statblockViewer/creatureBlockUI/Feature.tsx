@@ -32,6 +32,9 @@ import { insertTextStyling } from "./insertTextStyling";
 import { replaceWithJsx } from "./replaceWithJsx";
 import { abilityKeywordsRegex, distancesRegex } from "./regex";
 import { DefinitionDialog } from "./definitionDialog";
+import BurstIcon from "../../components/icons/BurstIcon";
+import SpecialIcon from "../../components/icons/SpecialIcon";
+import VersatileIcon from "../../components/icons/VersatileIcon";
 
 export function Feature({
   blockName,
@@ -83,6 +86,9 @@ export function Feature({
                       if (feature.icon === "🗡") return <SwordIcon />;
                       if (feature.icon === "🏹") return <BowArrowIcon />;
                       if (feature.icon === "⭐️") return <StarIcon />;
+                      if (feature.icon === "❇️") return <BurstIcon />;
+                      if (feature.icon === "🌀") return <SpecialIcon />;
+                      if (feature.icon === "⚔️") return <VersatileIcon />;
                       return <UserIcon />;
                     })()}
                   </div>
@@ -164,20 +170,20 @@ export function Feature({
                     <div>
                       {feature.distance
                         ? replaceWithJsx(
-                            [feature.distance],
-                            distancesRegex,
-                            (text) => (
-                              <DefinitionDialog
-                                key={text}
-                                text={text}
-                                tags={["area", "distance"]}
-                              >
-                                <button className="hover:underline">
-                                  {text}
-                                </button>
-                              </DefinitionDialog>
-                            ),
-                          )
+                          [feature.distance],
+                          distancesRegex,
+                          (text) => (
+                            <DefinitionDialog
+                              key={text}
+                              text={text}
+                              tags={["area", "distance"]}
+                            >
+                              <button className="hover:underline">
+                                {text}
+                              </button>
+                            </DefinitionDialog>
+                          ),
+                        )
                         : "-"}
                     </div>
                   </div>

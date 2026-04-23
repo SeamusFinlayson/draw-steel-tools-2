@@ -16,7 +16,6 @@ const buildDefinitionsRegex = (tags: string[]) => {
       else definition.match.forEach((val) => (regex += val + "|"));
     });
   regex = regex.substring(0, regex.length - 1);
-  console.log(regex);
   return new RegExp(`(${regex})`, "gi");
 };
 
