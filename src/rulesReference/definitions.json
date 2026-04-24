@@ -27,7 +27,7 @@
   {
     "title": "Grabbed",
     "tags": ["condition"],
-    "match": ["escape grab", "grabbed", "grab"],
+    "match": ["escape grab", "grabbed", "grabs", "grab"],
     "body": [
       "A creature who is grabbed has speed 0, can’t be force moved except by a creature, object, or effect that has them grabbed, can’t use the Knockback maneuver (see Maneuvers in Chapter 10: Combat), and takes a bane on abilities that don’t target the creature, object, or effect that has them grabbed. If a creature is grabbed by another creature and that creature moves, they bring the grabbed creature with them. If a creature’s size is equal to or less than the size of a creature they have grabbed, their speed is halved while they have that creature grabbed.",
       "A creature who has another creature grabbed can use a maneuver to move the grabbed creature into an unoccupied space adjacent to them.",
@@ -168,7 +168,7 @@
   {
     "title": "Forced Movement",
     "tags": ["combat"],
-    "regex": "slid(?:e)?(?:es)?(?:ing)?|push(?:ed)?(?:es)?(?:ing)?|pull(?:ed)?(?:s)?(?:ing)?",
+    "regex": "slid(?:es)?(?:e)?(?:ing)?|push(?:ed)?(?:es)?(?:ing)?|pull(?:ed)?(?:s)?(?:ing)?",
     "match": [
       "sliding",
       "slides",
