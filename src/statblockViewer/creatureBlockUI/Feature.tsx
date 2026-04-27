@@ -72,7 +72,7 @@ export function Feature({
 
   return (
     <FeatureIdContext value={featureId}>
-      <div className="ml-5 flex">
+      <div className="ml-6 flex">
         <div className="w-full">
           <div className="w-full space-y-2">
             <div>
@@ -170,20 +170,20 @@ export function Feature({
                     <div>
                       {feature.distance
                         ? replaceWithJsx(
-                          [feature.distance],
-                          distancesRegex,
-                          (text) => (
-                            <DefinitionDialog
-                              key={text}
-                              text={text}
-                              tags={["area", "distance"]}
-                            >
-                              <button className="hover:underline">
-                                {text}
-                              </button>
-                            </DefinitionDialog>
-                          ),
-                        )
+                            [feature.distance],
+                            distancesRegex,
+                            (text) => (
+                              <DefinitionDialog
+                                key={text}
+                                text={text}
+                                tags={["area", "distance"]}
+                              >
+                                <button className="hover:underline">
+                                  {text}
+                                </button>
+                              </DefinitionDialog>
+                            ),
+                          )
                         : "-"}
                     </div>
                   </div>
