@@ -285,7 +285,7 @@
   {
     "title": "Aura",
     "tags": ["area"],
-    "match": ["aura"],
+    "regex": "\\d+ aura",
     "body": [
       "When an ability creates an aura, that area is expressed as “X aura.” The number X is the radius of the aura, which always originates from you and moves with you for the duration of the ability that created it. A creature or object must be within X squares of you to be targeted by an aura ability."
     ]
@@ -293,7 +293,7 @@
   {
     "title": "Burst",
     "tags": ["area"],
-    "match": ["burst"],
+    "regex": "\\d+ burst",
     "body": [
       "When an ability creates a burst area, that area is expressed as “X burst. The number X is the radius of the burst, which always originates from you and lasts only for as long as it takes to affect its targets. A creature or object must be within X squares of you to be targeted by a burst ability."
     ]
@@ -301,7 +301,7 @@
   {
     "title": "Cube",
     "tags": ["area"],
-    "match": ["cube"],
+    "regex": "\\d+ cube",
     "body": [
       "When an ability affects a cubic area, that area is expressed as “X cube. The number X is the length of each of the area’s sides. A creature or object must be within the area to be targeted by a cube ability. "
     ]
@@ -309,7 +309,7 @@
   {
     "title": "Line",
     "tags": ["area"],
-    "regex": "line(?! of effect)|straight line",
+    "regex": "straight line|\\d+ x \\d+ line|line(?! of effect)",
     "match": ["line", "straight line"],
     "append": ["Straight Lines"],
     "body": [
@@ -319,7 +319,7 @@
   {
     "title": "Wall",
     "tags": ["area"],
-    "match": ["wall"],
+    "regex": "\\d+ wall",
     "body": [
       "When an ability creates a wall, that area is expressed as “X wall.” The number X is how many squares are used to make the wall. When you place a wall, you can build it one square at a time, but each square must share at least one side (not just a corner) with another square of the wall. A creature or object must be within the area to be targeted by a wall ability.",
       "You can stack squares on top of each other to make the wall higher. Unless otherwise stated, a wall can’t be placed in occupied squares, and a wall blocks line of effect."
@@ -403,7 +403,7 @@
   {
     "title": "Melee (Distance)",
     "tags": ["distance"],
-    "match": ["melee"],
+    "regex": "melee \\d+",
     "body": [
       "Melee abilities have a distance of “Melee X” and require you to make contact with a creature or object with your body, a weapon, or an implement. The number X is the maximum distance in squares at which you can physically make contact with another creature or object targeted by the ability. For instance, a distance of “Melee 2” can be used to target creatures or objects within 2 squares of you, while “Melee 1” limits you to adjacent targets (those within 1 square)."
     ]
@@ -411,7 +411,7 @@
   {
     "title": "Ranged (Distance)",
     "tags": ["distance"],
-    "match": ["ranged"],
+    "regex": "ranged \\d+",
     "body": [
       "Ranged abilities have a distance of “Ranged X” and can be used to target creatures or objects too far away for you to make contact with. The number X is the maximum distance in squares at which a creature or object can be targeted by the ability. For instance, a distance of “Ranged 5” can be used to target creatures or objects within 5 squares of you.",
       "If you make a ranged strike while any enemy is adjacent to you (within 1 square), you have a bane on the strike’s power roll. (See Edges and Banes in Chapter 1: The Basics.)"

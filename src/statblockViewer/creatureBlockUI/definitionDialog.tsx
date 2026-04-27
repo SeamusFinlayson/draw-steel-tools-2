@@ -7,6 +7,14 @@ import {
 import { Feature } from "./Feature";
 import { insertTextStyling } from "./insertTextStyling";
 import definitions from "../../rulesReference/definitions.json";
+import { titleRegexList } from "./regex";
+
+const ErrorText = ({ text }: { text: string }) => (
+  <span>
+    <span>{text}</span>
+    <span className="text-red-600"> definition missing</span>
+  </span>
+);
 
 export function DefinitionDialog({
   children,
@@ -17,16 +25,13 @@ export function DefinitionDialog({
   text: string;
   tags: string[];
 }) {
-  const definition = definitions
-    .filter((definition) => definition.tags.some((val) => tags.includes(val)))
-    .find((val) => val.match.includes(text.toLowerCase()));
-  if (!definition)
-    return (
-      <span>
-        <span>{text}</span>
-        <span className="text-red-600"> definition missing</span>
-      </span>
-    );
+  const title = titleRegexList
+    .filter((definition) => definition.tags.some((tag) => tags.includes(tag)))
+    .find((val) => val.regex.test(text))?.title;
+  if (!title) return <ErrorText text={text} />;
+
+  const definition = definitions.find((val) => title === val.title);
+  if (!definition) return <ErrorText text={text} />;
 
   let key = 0;
 

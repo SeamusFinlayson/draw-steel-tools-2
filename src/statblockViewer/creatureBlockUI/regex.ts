@@ -13,7 +13,9 @@ const buildDefinitionsRegex = (tags: string[]) => {
     .filter((definition) => definition.tags.some((val) => tags.includes(val)))
     .forEach((definition) => {
       if (definition.regex) regex += definition.regex + "|";
-      else definition.match.forEach((val) => (regex += val + "|"));
+      else if (definition.match)
+        definition.match.forEach((val) => (regex += val + "|"));
+      else throw new Error("Could not generate regex");
     });
   regex = regex.substring(0, regex.length - 1);
   return new RegExp(`(${regex})`, "gi");
@@ -26,3 +28,22 @@ export const generalDefinitionsRegex = buildDefinitionsRegex([
 ]);
 export const abilityKeywordsRegex = buildDefinitionsRegex(["ability_keywords"]);
 export const distancesRegex = buildDefinitionsRegex(["area", "distance"]);
+
+export const titleRegexList = definitions
+  .filter(
+    (definition) =>
+      (definition.match && definition.match.length > 0) || definition.regex,
+  )
+  .map((definition) => {
+    let regex = "";
+    if (definition.regex) regex = definition.regex + "|";
+    else if (definition.match)
+      definition.match.forEach((val) => (regex += val + "|"));
+    else throw new Error("Could not generate regex");
+    regex = regex.substring(0, regex.length - 1);
+    return {
+      title: definition.title,
+      tags: definition.tags,
+      regex: new RegExp(`(${regex})`, "i"),
+    };
+  });
