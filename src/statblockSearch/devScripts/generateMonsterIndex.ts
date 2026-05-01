@@ -2,8 +2,8 @@ import { DrawSteelStatblockZod } from "../../types/DrawSteelZod";
 import { githubTreeZod } from "../../types/githubZod";
 import {
   IndexBundleZod,
-  type IndexBundle,
-  type PathBundle,
+  type MonsterIndexBundle,
+  type MonsterPathBundle,
 } from "../../types/monsterDataBundlesZod";
 import getGitTreeUrl from "../helpers/getGitTreeUrl";
 import getStatblockUrl from "../helpers/getStatblockUrl";
@@ -25,9 +25,9 @@ export async function generateIndex() {
   );
 
   // In the order of the subdirectories create bundles of monster statblocks and relevant features
-  const pathBundles: PathBundle[] = [];
+  const pathBundles: MonsterPathBundle[] = [];
   for (let i = 0; i < groups.length; i++) {
-    const malice = rootTree
+    const features = rootTree
       .filter(
         (val) =>
           val.path.startsWith(groups[i].path) &&
@@ -46,13 +46,13 @@ export async function generateIndex() {
         )
         .map((val) => ({
           statblock: val.path,
-          features: malice,
+          features: features,
         })),
     );
   }
 
   // Add data from each monster statblock to index
-  const indexBundles: IndexBundle[] = await Promise.all(
+  const indexBundles: MonsterIndexBundle[] = await Promise.all(
     pathBundles.map(async (pathBundle) => {
       // Get
       const response = await fetch(getStatblockUrl(pathBundle.statblock));
@@ -75,7 +75,7 @@ export async function generateIndex() {
         roles: rolesString ? rolesString.split(" ") : [],
         ancestry: json.ancestry,
         level: json.level,
-      } satisfies IndexBundle;
+      } satisfies MonsterIndexBundle;
 
       // Special handling for dragons
       if (pathBundle.statblock.startsWith("Monsters/Dragons/Statblocks/")) {

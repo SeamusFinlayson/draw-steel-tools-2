@@ -1,4 +1,7 @@
-import type { MonsterDataBundle, IndexBundle } from "./monsterDataBundlesZod";
+import type {
+  MonsterDataBundle,
+  MonsterIndexBundle,
+} from "./monsterDataBundlesZod";
 
 export type SetupOptions =
   | {
@@ -15,7 +18,7 @@ export type SetupOptions =
 export type AppState = {
   monsterViewerOpen: boolean;
   monsterViewerData: MonsterDataBundle | undefined;
-  selectedIndexBundle: IndexBundle | "NONE" | undefined;
+  selectedIndexBundle: MonsterIndexBundle | "NONE" | undefined;
   setupOptions: SetupOptions | undefined;
 };
 

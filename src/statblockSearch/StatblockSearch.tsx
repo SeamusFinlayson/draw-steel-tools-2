@@ -26,7 +26,7 @@ import { MinionGroupZod, type MinionGroup } from "../types/minionGroup";
 import { MONSTER_GROUPS_METADATA_KEY } from "../helpers/monsterGroupHelpers";
 import z from "zod";
 import { generateGroupId } from "../helpers/generateGroupId";
-import type { IndexBundle } from "../types/monsterDataBundlesZod";
+import type { MonsterIndexBundle } from "../types/monsterDataBundlesZod";
 import usePlayerRole from "../helpers/usePlayerRole";
 
 const params = new URLSearchParams(document.location.search);
@@ -35,7 +35,7 @@ let groupId = params.get("groupId");
 export default function StatblockSearch({
   monsterIndex,
 }: {
-  monsterIndex: IndexBundle[];
+  monsterIndex: MonsterIndexBundle[];
 }) {
   const [appState, setAppState] = useState<AppState>(defaultAppState);
   const playerRole = usePlayerRole();

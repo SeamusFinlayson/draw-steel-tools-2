@@ -1,0 +1,43 @@
+import { DrawSteelFeatureBlockZod } from "../../types/DrawSteelZod";
+import type { MonsterPathBundle } from "../../types/monsterDataBundlesZod";
+import fetchTypedData from "../helpers/getTypedData";
+import getStatblockUrl from "../helpers/getStatblockUrl";
+
+export async function validateDynamicTerrain(
+  pathBundles: MonsterPathBundle[],
+  handleBadStatblocks?: (urls: string[]) => void,
+) {
+  const badStatblocks: {
+    file: string;
+    errors: unknown;
+  }[] = [];
+  await Promise.all(
+    pathBundles
+      .map((val) => val.features)
+      .map(async (features) => {
+        const maliceUrls = features.map((item) => getStatblockUrl(item));
+        await Promise.all(
+          maliceUrls.map(async (url) => {
+            await fetchTypedData(url, (value) => {
+              const result = DrawSteelFeatureBlockZod.safeParse(value);
+              if (!result.success) {
+                badStatblocks.push({
+                  file: url,
+                  errors: result.error,
+                });
+              }
+            });
+          }),
+        );
+      }),
+  );
+
+  const noRepeats = [...new Set(badStatblocks)];
+  if (noRepeats.length > 0) console.error(noRepeats);
+  else console.log("All malice pass validation");
+  if (handleBadStatblocks) {
+    handleBadStatblocks([...noRepeats].map((val) => val.file));
+  }
+
+  alert("Check console for audit details");
+}

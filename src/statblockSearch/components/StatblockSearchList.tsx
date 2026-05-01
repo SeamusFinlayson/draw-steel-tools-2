@@ -1,6 +1,6 @@
 import fuzzysort from "fuzzysort";
 import type { SearchData } from "../../types/statblockSearchData";
-import type { IndexBundle } from "../../types/monsterDataBundlesZod";
+import type { MonsterIndexBundle } from "../../types/monsterDataBundlesZod";
 import { MonsterPreviewCard } from "./MonsterPreviewCard";
 import { getMonsterDataBundle } from "../helpers/getMonsterDataBundle";
 import type { AppState } from "../../types/statblockLookupAppState";
@@ -15,7 +15,7 @@ export function StatblockSearchList({
 }: {
   search: SearchData;
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;
-  monsterIndex: IndexBundle[];
+  monsterIndex: MonsterIndexBundle[];
   playerRole: "PLAYER" | "GM";
 }) {
   const sortedMonsterIndex =

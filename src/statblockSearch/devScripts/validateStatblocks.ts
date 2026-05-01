@@ -1,8 +1,8 @@
 import { DrawSteelStatblockZod } from "../../types/DrawSteelZod";
-import type { PathBundle } from "../../types/monsterDataBundlesZod";
+import type { MonsterPathBundle } from "../../types/monsterDataBundlesZod";
 import getStatblockUrl from "../helpers/getStatblockUrl";
 
-export async function validateStatblocks(pathBundles: PathBundle[]) {
+export async function validateStatblocks(pathBundles: MonsterPathBundle[]) {
   const badStatblocks: { file: string; errors: unknown }[] = [];
   await Promise.all(
     pathBundles.map(async (bundle) => {

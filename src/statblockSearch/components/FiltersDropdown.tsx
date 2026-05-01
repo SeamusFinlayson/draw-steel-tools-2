@@ -6,7 +6,7 @@ import {
 } from "../../components/ui/collapsible";
 import type { SearchData } from "../../types/statblockSearchData";
 import { Slider } from "../../components/ui/slider";
-import type { IndexBundle } from "../../types/monsterDataBundlesZod";
+import type { MonsterIndexBundle } from "../../types/monsterDataBundlesZod";
 import Label from "../../components/ui/Label";
 
 export function FiltersDropdown({
@@ -16,7 +16,7 @@ export function FiltersDropdown({
 }: {
   search: SearchData;
   setSearch: (searchData: SearchData) => void;
-  monsterIndex: IndexBundle[];
+  monsterIndex: MonsterIndexBundle[];
 }) {
   const keywords = useMemo(
     () =>

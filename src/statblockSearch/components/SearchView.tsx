@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { IndexBundle } from "../../types/monsterDataBundlesZod";
+import type { MonsterIndexBundle } from "../../types/monsterDataBundlesZod";
 import { BrushCleaningIcon, ListFilterIcon, SearchIcon } from "lucide-react";
 import Button from "../../components/ui/Button";
 import Toggle from "../../components/ui/Toggle";
@@ -18,7 +18,7 @@ export default function SearchView({
   setAppState,
   playerRole,
 }: {
-  monsterIndex: IndexBundle[];
+  monsterIndex: MonsterIndexBundle[];
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;
   playerRole: "PLAYER" | "GM";
 }) {

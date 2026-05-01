@@ -1,10 +1,10 @@
 import { DrawSteelFeatureBlockZod } from "../../types/DrawSteelZod";
-import type { PathBundle } from "../../types/monsterDataBundlesZod";
+import type { MonsterPathBundle } from "../../types/monsterDataBundlesZod";
 import fetchTypedData from "../helpers/getTypedData";
 import getStatblockUrl from "../helpers/getStatblockUrl";
 
 export async function validateMalice(
-  pathBundles: PathBundle[],
+  pathBundles: MonsterPathBundle[],
   handleBadStatblocks?: (urls: string[]) => void,
 ) {
   const badStatblocks: {

@@ -3,14 +3,14 @@ import {
   DrawSteelFeatureBlockZod,
 } from "../../types/DrawSteelZod";
 import type {
-  IndexBundle,
+  MonsterIndexBundle,
   MonsterDataBundle,
 } from "../../types/monsterDataBundlesZod";
 import fetchTypedData from "./getTypedData";
 import getStatblockUrl from "./getStatblockUrl";
 
 export async function getMonsterDataBundle(
-  indexBundle: IndexBundle,
+  indexBundle: MonsterIndexBundle,
 ): Promise<MonsterDataBundle> {
   const statblockUrl = getStatblockUrl(indexBundle.statblock);
   const featureBLockUrls = indexBundle.features.map((item) =>

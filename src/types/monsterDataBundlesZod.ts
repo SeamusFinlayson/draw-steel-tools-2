@@ -22,6 +22,6 @@ export const MonsterDataBundleZod = z.strictObject({
   statblock: DrawSteelStatblockZod,
   featuresBlocks: z.array(DrawSteelFeatureBlockZod),
 });
-export type IndexBundle = z.infer<typeof IndexBundleZod>;
-export type PathBundle = z.infer<typeof PathBundleZod>;
+export type MonsterIndexBundle = z.infer<typeof IndexBundleZod>;
+export type MonsterPathBundle = z.infer<typeof PathBundleZod>;
 export type MonsterDataBundle = z.infer<typeof MonsterDataBundleZod>;

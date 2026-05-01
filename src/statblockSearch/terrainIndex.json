@@ -1,0 +1,212 @@
+[
+  {
+    "dynamicTerrain": "Dynamic Terrain/Environmental Hazards/Angry Beehive.json",
+    "name": "Angry Beehive",
+    "ev": "2",
+    "level": 2
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Environmental Hazards/Brambles.json",
+    "name": "Brambles",
+    "ev": "1 per 10 x 10 thicket",
+    "level": 1
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Environmental Hazards/Corrosive Pool.json",
+    "name": "Corrosive Pool",
+    "ev": "3 per 10 x 10 pool",
+    "level": 2
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Environmental Hazards/Frozen Pond.json",
+    "name": "Frozen Pond",
+    "ev": "1 per 10 x 10 pond",
+    "level": 1
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Environmental Hazards/Lava.json",
+    "name": "Lava",
+    "ev": "4 per 10 x 10 patch",
+    "level": 3
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Environmental Hazards/Quicksand.json",
+    "name": "Quicksand",
+    "ev": "3 per 10 x 10 patch",
+    "level": 3
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Environmental Hazards/Toxic Plants.json",
+    "name": "Toxic Plants",
+    "ev": "2 per 10 x 10 field",
+    "level": 2
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Fieldworks/Archers Stakes.json",
+    "name": "Archer's Stakes",
+    "ev": "2",
+    "level": 1
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Fieldworks/Bear Trap.json",
+    "name": "Bear Trap",
+    "ev": "2",
+    "level": 1
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Fieldworks/Flammable Oil.json",
+    "name": "Flammable Oil",
+    "ev": "2 per 10 x 10 patch",
+    "level": 1
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Fieldworks/Hidey Hole.json",
+    "name": "Hidey-Hole",
+    "ev": "1",
+    "level": 1
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Fieldworks/Pavise Shield.json",
+    "name": "Pavise Shield",
+    "ev": "1",
+    "level": 1
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Fieldworks/Snare Trap.json",
+    "name": "Snare Trap",
+    "ev": "1",
+    "level": 1
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Fieldworks/Spike Trap.json",
+    "name": "Spike Trap",
+    "ev": "3",
+    "level": 2
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Mechanisms/Column of Blades.json",
+    "name": "Column of Blades",
+    "ev": "3",
+    "level": 3
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Mechanisms/Dart Trap.json",
+    "name": "Dart Trap",
+    "ev": "1",
+    "level": 1
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Mechanisms/Pillar.json",
+    "name": "Pillar",
+    "ev": "3",
+    "level": 2
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Mechanisms/Portcullis.json",
+    "name": "Portcullis",
+    "ev": "4",
+    "level": 3
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Mechanisms/Pressure Plate.json",
+    "name": "Pressure Plate",
+    "ev": "2",
+    "level": 1
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Mechanisms/Pulley.json",
+    "name": "Pulley",
+    "ev": "1",
+    "level": 1
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Mechanisms/Ram.json",
+    "name": "Ram",
+    "ev": "3",
+    "level": 2
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Mechanisms/Switch.json",
+    "name": "Switch",
+    "ev": "1",
+    "level": 1
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Power Fixtures/Holy Idol.json",
+    "name": "Holy Idol",
+    "ev": "7",
+    "level": 5
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Power Fixtures/Psionic Shard.json",
+    "name": "Psionic Shard",
+    "ev": "7",
+    "level": 5
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Power Fixtures/Tree of Might.json",
+    "name": "Tree of Might",
+    "ev": "14",
+    "level": 5
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Siege Engines/Arrow Launcher.json",
+    "name": "Arrow Launcher",
+    "ev": "8",
+    "level": 2
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Siege Engines/Boiling Oil Cauldron.json",
+    "name": "Boiling Oil Cauldron",
+    "ev": "10",
+    "level": 3
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Siege Engines/Catapult.json",
+    "name": "Catapult",
+    "ev": "10",
+    "level": 3
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Siege Engines/Exploding Mill Wheel.json",
+    "name": "Exploding Mill Wheel",
+    "ev": "10",
+    "level": 3
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Siege Engines/Field Ballista.json",
+    "name": "Field Ballista",
+    "ev": "8",
+    "level": 2
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Siege Engines/Iron Dragon.json",
+    "name": "Iron Dragon",
+    "ev": "12",
+    "level": 4
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Siege Engines/Watchtower.json",
+    "name": "Watchtower",
+    "ev": "8",
+    "level": 2
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Supernatural Objects/The Black Obelisk.json",
+    "name": "The Black Obelisk",
+    "ev": "20",
+    "level": 3
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Supernatural Objects/The Chronal Hypercube.json",
+    "name": "The Chronal Hypercube",
+    "ev": "20",
+    "level": 3
+  },
+  {
+    "dynamicTerrain": "Dynamic Terrain/Supernatural Objects/The Throne of A An.json",
+    "name": "The Throne of A'An",
+    "ev": "24",
+    "level": 4
+  }
+]

@@ -1,5 +1,5 @@
 import { CheckIcon } from "lucide-react";
-import type { IndexBundle } from "../../types/monsterDataBundlesZod";
+import type { MonsterIndexBundle } from "../../types/monsterDataBundlesZod";
 import type React from "react";
 
 export function MonsterPreviewCard({
@@ -8,7 +8,7 @@ export function MonsterPreviewCard({
   onActionClick,
   icon = <CheckIcon />,
 }: {
-  indexBundle: IndexBundle;
+  indexBundle: MonsterIndexBundle;
   onCardClick?: () => void;
   onActionClick?: () => void;
   icon?: React.ReactNode;
