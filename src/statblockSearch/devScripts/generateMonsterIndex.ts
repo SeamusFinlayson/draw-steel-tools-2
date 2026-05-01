@@ -6,7 +6,7 @@ import {
   type MonsterPathBundle,
 } from "../../types/monsterDataBundlesZod";
 import getGitTreeUrl from "../helpers/getGitTreeUrl";
-import getStatblockUrl from "../helpers/getStatblockUrl";
+import getBestiaryUrl from "../helpers/getBestiaryUrl";
 
 export async function generateIndex() {
   // Get File structure
@@ -55,7 +55,7 @@ export async function generateIndex() {
   const indexBundles: MonsterIndexBundle[] = await Promise.all(
     pathBundles.map(async (pathBundle) => {
       // Get
-      const response = await fetch(getStatblockUrl(pathBundle.statblock));
+      const response = await fetch(getBestiaryUrl(pathBundle.statblock));
       const unvalidatedJson = await response.json();
       const parseResult = DrawSteelStatblockZod.safeParse(unvalidatedJson); // (await response.json()) as DrawSteelStatblock;
 

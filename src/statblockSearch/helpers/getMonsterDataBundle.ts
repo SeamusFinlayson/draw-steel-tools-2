@@ -7,14 +7,14 @@ import type {
   MonsterDataBundle,
 } from "../../types/monsterDataBundlesZod";
 import fetchTypedData from "./getTypedData";
-import getStatblockUrl from "./getStatblockUrl";
+import getBestiaryUrl from "./getBestiaryUrl";
 
 export async function getMonsterDataBundle(
   indexBundle: MonsterIndexBundle,
 ): Promise<MonsterDataBundle> {
-  const statblockUrl = getStatblockUrl(indexBundle.statblock);
+  const statblockUrl = getBestiaryUrl(indexBundle.statblock);
   const featureBLockUrls = indexBundle.features.map((item) =>
-    getStatblockUrl(item),
+    getBestiaryUrl(item),
   );
 
   const statblock = await fetchTypedData(

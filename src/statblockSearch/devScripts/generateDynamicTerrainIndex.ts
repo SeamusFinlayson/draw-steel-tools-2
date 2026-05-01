@@ -1,8 +1,8 @@
-import z from "zod";
 import { DrawSteelDynamicTerrainZod } from "../../types/DrawSteelZod";
 import { githubTreeZod } from "../../types/githubZod";
 import getGitTreeUrl from "../helpers/getGitTreeUrl";
-import getStatblockUrl from "../helpers/getStatblockUrl";
+import getBestiaryUrl from "../helpers/getBestiaryUrl";
+import { DynamicTerrainIndexBundleZod } from "../../types/monsterDataBundlesZod";
 
 export async function generateDynamicTerrainIndex() {
   // Get File structure
@@ -42,7 +42,7 @@ export async function generateDynamicTerrainIndex() {
   const indexBundles = await Promise.all(
     pathBundles.map(async (pathBundle) => {
       // Get
-      const response = await fetch(getStatblockUrl(pathBundle.dynamicTerrain));
+      const response = await fetch(getBestiaryUrl(pathBundle.dynamicTerrain));
       const unvalidatedJson = await response.json();
       const parseResult = DrawSteelDynamicTerrainZod.safeParse(unvalidatedJson); // (await response.json()) as DrawSteelStatblock;
 
@@ -63,14 +63,7 @@ export async function generateDynamicTerrainIndex() {
       };
 
       // Validate
-      return z
-        .strictObject({
-          dynamicTerrain: z.string(),
-          name: z.string(),
-          ev: z.string(),
-          level: z.number(),
-        })
-        .parse(indexBundle);
+      return DynamicTerrainIndexBundleZod.parse(indexBundle);
     }),
   );
 

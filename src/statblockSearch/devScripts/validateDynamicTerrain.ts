@@ -1,7 +1,7 @@
 import { DrawSteelFeatureBlockZod } from "../../types/DrawSteelZod";
 import type { MonsterPathBundle } from "../../types/monsterDataBundlesZod";
 import fetchTypedData from "../helpers/getTypedData";
-import getStatblockUrl from "../helpers/getStatblockUrl";
+import getBestiaryUrl from "../helpers/getBestiaryUrl";
 
 export async function validateDynamicTerrain(
   pathBundles: MonsterPathBundle[],
@@ -15,7 +15,7 @@ export async function validateDynamicTerrain(
     pathBundles
       .map((val) => val.features)
       .map(async (features) => {
-        const maliceUrls = features.map((item) => getStatblockUrl(item));
+        const maliceUrls = features.map((item) => getBestiaryUrl(item));
         await Promise.all(
           maliceUrls.map(async (url) => {
             await fetchTypedData(url, (value) => {

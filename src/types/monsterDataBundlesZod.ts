@@ -22,6 +22,17 @@ export const MonsterDataBundleZod = z.strictObject({
   statblock: DrawSteelStatblockZod,
   featuresBlocks: z.array(DrawSteelFeatureBlockZod),
 });
+
+export const DynamicTerrainIndexBundleZod = z.strictObject({
+  dynamicTerrain: z.string(),
+  name: z.string(),
+  ev: z.string(),
+  level: z.number(),
+});
+
 export type MonsterIndexBundle = z.infer<typeof IndexBundleZod>;
 export type MonsterPathBundle = z.infer<typeof PathBundleZod>;
 export type MonsterDataBundle = z.infer<typeof MonsterDataBundleZod>;
+export type DynamicTerrainIndexBundle = z.infer<
+  typeof DynamicTerrainIndexBundleZod
+>;

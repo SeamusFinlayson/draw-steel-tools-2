@@ -1,13 +1,13 @@
 import { DrawSteelStatblockZod } from "../../types/DrawSteelZod";
 import type { MonsterPathBundle } from "../../types/monsterDataBundlesZod";
-import getStatblockUrl from "../helpers/getStatblockUrl";
+import getBestiaryUrl from "../helpers/getBestiaryUrl";
 
 export async function validateStatblocks(pathBundles: MonsterPathBundle[]) {
   const badStatblocks: { file: string; errors: unknown }[] = [];
   await Promise.all(
     pathBundles.map(async (bundle) => {
       // Get
-      const response = await fetch(getStatblockUrl(bundle.statblock));
+      const response = await fetch(getBestiaryUrl(bundle.statblock));
       const json = await response.json();
 
       // Validate

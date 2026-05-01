@@ -1,5 +1,5 @@
 import monsterIndex from "../statblockSearch/monsterIndex.json";
-import { getMonsterDataBundle } from "../statblockSearch/helpers/getMonsterDataBundle.tsx";
+import { getMonsterDataBundle } from "../statblockSearch/helpers/getMonsterDataBundle";
 
 export const monsterDataFromStatblockName = async (monsterId: string) => {
   const indexBundle = monsterIndex.find((val) => val.name === monsterId);
