@@ -3,19 +3,25 @@ import {
   DrawSteelFeatureBlockZod,
 } from "../../types/DrawSteelZod";
 import type {
-  IndexBundle,
   MonsterDataBundle,
+  StatblockIndexBundle,
 } from "../../types/monsterDataBundlesZod";
 import fetchTypedData from "./getTypedData";
-import getStatblockUrl from "./getStatblockUrl";
+import getBestiaryUrl from "./getBestiaryUrl";
+import { monsterIndex } from "../monsterIndex";
 
 export async function getMonsterDataBundle(
-  indexBundle: IndexBundle,
+  indexBundle: StatblockIndexBundle,
 ): Promise<MonsterDataBundle> {
-  const statblockUrl = getStatblockUrl(indexBundle.statblock);
-  const featureBLockUrls = indexBundle.features.map((item) =>
-    getStatblockUrl(item),
-  );
+  const statblockUrl = getBestiaryUrl(indexBundle.path);
+  const featureBLockUrls = indexBundle.features
+    .map((id) => {
+      const item = monsterIndex.find((item) => item.id === id);
+      if (!item) console.error("Id not found:", id);
+      return item?.path;
+    })
+    .filter((path) => path !== undefined)
+    .map((path) => getBestiaryUrl(path));
 
   const statblock = await fetchTypedData(
     statblockUrl,

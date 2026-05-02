@@ -36,7 +36,7 @@ export default function SearchView({
         <DebounceInput
           autoFocus
           className="h-full w-full outline-none"
-          placeholder="Search Statblocks"
+          placeholder="Search "
           duration={300}
           value={search.value}
           onChange={(e) => updateSearchValue(e)}
@@ -87,14 +87,15 @@ export default function SearchView({
               setSearch={(search) =>
                 setAppState((prev) => ({ ...prev, search }))
               }
-              monsterIndex={monsterIndex}
             />
 
             <StatblockSearchList
               playerRole={playerRole}
               search={search}
               setAppState={setAppState}
-              monsterIndex={monsterIndex}
+              monsterIndex={monsterIndex.filter(
+                (item) => item.type === "statblock" || item.type === "terrain",
+              )}
             />
           </>
         </div>

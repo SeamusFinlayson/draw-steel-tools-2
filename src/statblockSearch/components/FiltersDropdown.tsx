@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Checkbox } from "../../components/ui/checkbox";
 import {
   Collapsible,
@@ -6,26 +6,16 @@ import {
 } from "../../components/ui/collapsible";
 import type { SearchData } from "../../types/statblockSearchData";
 import { Slider } from "../../components/ui/slider";
-import type { IndexBundle } from "../../types/monsterDataBundlesZod";
 import Label from "../../components/ui/Label";
+import { statblockKeywords } from "../monsterIndex";
 
 export function FiltersDropdown({
   search,
   setSearch,
-  monsterIndex,
 }: {
   search: SearchData;
   setSearch: (searchData: SearchData) => void;
-  monsterIndex: IndexBundle[];
 }) {
-  const keywords = useMemo(
-    () =>
-      [...new Set(monsterIndex.flatMap((val) => val.ancestry))].sort((a, b) =>
-        a.localeCompare(b),
-      ),
-    [monsterIndex],
-  );
-
   return (
     <Collapsible open={search.filtersOpen}>
       <CollapsibleContent>
@@ -123,7 +113,7 @@ export function FiltersDropdown({
             </div>
             <div className="mt-4 mb-2 font-bold">Keywords</div>
             <div className="grid grid-cols-2 @min-[480px]:grid-cols-3 @min-[640px]:grid-cols-4 @min-[800px]:grid-cols-5 @min-[960px]:grid-cols-6">
-              {keywords.map((val) => (
+              {statblockKeywords.map((val) => (
                 <div key={val} className="flex items-center">
                   <Checkbox
                     id={val}

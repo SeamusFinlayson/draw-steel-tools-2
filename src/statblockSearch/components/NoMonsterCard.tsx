@@ -1,4 +1,4 @@
-import { CheckIcon } from "lucide-react";
+import { CheckIcon, LandPlotIcon, UserIcon, UsersIcon } from "lucide-react";
 
 export function NoMonsterCard({
   onActionClick,
@@ -6,7 +6,7 @@ export function NoMonsterCard({
   icon = <CheckIcon />,
 }: {
   onActionClick?: () => void;
-  variant: "BASIC" | "MINION";
+  variant: "BASIC" | "MINION" | "TERRAIN";
   icon?: React.ReactNode;
 }) {
   let text = "Monster";
@@ -16,6 +16,15 @@ export function NoMonsterCard({
     text = "Minion";
     description = "Configure a minion group without attaching a statblock";
   }
+
+  const typeIcon =
+    variant === "TERRAIN" ? (
+      <LandPlotIcon className="text-foreground size-5" />
+    ) : variant === "MINION" ? (
+      <UsersIcon className="text-foreground size-5" />
+    ) : (
+      <UserIcon className="text-foreground size-5" />
+    );
 
   return (
     <div className="flex w-full gap-1 overflow-clip rounded-2xl">

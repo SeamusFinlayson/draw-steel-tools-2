@@ -1,12 +1,36 @@
-import { DrawSteelStatblockZod } from "../../types/DrawSteelZod";
+import z from "zod";
 import { githubTreeZod } from "../../types/githubZod";
+import getGitTreeUrl from "../helpers/getGitTreeUrl";
+import getBestiaryUrl from "../helpers/getBestiaryUrl";
+import {
+  DrawSteelDynamicTerrainZod,
+  DrawSteelFeatureBlockZod,
+  DrawSteelStatblockZod,
+} from "../../types/DrawSteelZod";
 import {
   IndexBundleZod,
+  type FeatureIndexBundle,
   type IndexBundle,
   type PathBundle,
+  type StatblockIndexBundle,
+  type TerrainIndexBundle,
 } from "../../types/monsterDataBundlesZod";
-import getGitTreeUrl from "../helpers/getGitTreeUrl";
-import getStatblockUrl from "../helpers/getStatblockUrl";
+
+function generateId(
+  type: "feature" | "statblock" | "terrain",
+  name: string,
+  discriminator = "",
+) {
+  const cleanName = name.replaceAll(/[^a-zA-Z0-9]/g, "");
+  switch (type) {
+    case "feature":
+      return `cf-${cleanName}` + discriminator;
+    case "statblock":
+      return `cs-${cleanName}` + discriminator;
+    case "terrain":
+      return `ct-${cleanName}` + discriminator;
+  }
+}
 
 export async function generateIndex() {
   // Get File structure
@@ -17,6 +41,44 @@ export async function generateIndex() {
     return tree;
   };
   const rootTree = await getGithubTree(getGitTreeUrl());
+
+  const featurePaths = rootTree
+    .filter(
+      (val) => val.path.includes("Features/") && val.path.endsWith(".json"),
+    )
+    .map((val) => val.path);
+
+  const indexBundles: IndexBundle[] = await Promise.all(
+    featurePaths.map(async (path) => {
+      const response = await fetch(getBestiaryUrl(path));
+      const unvalidatedJson = await response.json();
+      const parseResult = DrawSteelFeatureBlockZod.safeParse(unvalidatedJson);
+
+      if (!parseResult.success) {
+        console.error(parseResult.error, "Retrieved data", unvalidatedJson);
+        throw new Error("Parsing error. See above for details.");
+      }
+
+      const data = parseResult.data;
+
+      const bundle = {
+        id: generateId(
+          "feature",
+          data.name,
+          data.level
+            ? data.level.toString()
+            : data.featureblock_type === "Ajax Feature"
+              ? "Ajax"
+              : "",
+        ),
+        path,
+        name: data.name,
+        type: "feature",
+      } satisfies FeatureIndexBundle;
+
+      return bundle;
+    }),
+  );
 
   // Get immediate subdirectories of the monster folder
   const groups = rootTree.filter(
@@ -52,74 +114,135 @@ export async function generateIndex() {
   }
 
   // Add data from each monster statblock to index
-  const indexBundles: IndexBundle[] = await Promise.all(
-    pathBundles.map(async (pathBundle) => {
-      // Get
-      const response = await fetch(getStatblockUrl(pathBundle.statblock));
-      const unvalidatedJson = await response.json();
-      const parseResult = DrawSteelStatblockZod.safeParse(unvalidatedJson); // (await response.json()) as DrawSteelStatblock;
+  indexBundles.push(
+    ...(await Promise.all(
+      pathBundles.map(async (pathBundle) => {
+        // Get
+        const response = await fetch(getBestiaryUrl(pathBundle.statblock));
+        const unvalidatedJson = await response.json();
+        const parseResult = DrawSteelStatblockZod.safeParse(unvalidatedJson); // (await response.json()) as DrawSteelStatblock;
 
-      if (!parseResult.success) {
-        console.error(parseResult.error, "Retrieved data", unvalidatedJson);
-        throw new Error("Parsing error. See above for details.");
-      }
+        if (!parseResult.success) {
+          console.error(parseResult.error, "Retrieved data", unvalidatedJson);
+          throw new Error("Parsing error. See above for details.");
+        }
 
-      const json = parseResult.data;
+        const data = parseResult.data;
 
-      // Format
-      const rolesString = json.roles.at(0);
-      const indexBundle = {
-        ...pathBundle,
-        name: json.name,
-        ev: json.ev,
-        roles: rolesString ? rolesString.split(" ") : [],
-        ancestry: json.ancestry,
-        level: json.level,
-      } satisfies IndexBundle;
+        // Format
+        const rolesString = data.roles.at(0);
+        const indexBundle = {
+          id: generateId("statblock", data.name),
+          path: pathBundle.statblock,
+          name: data.name,
+          type: "statblock",
+          level: data.level,
+          ev: data.ev,
+          roles: rolesString ? rolesString.split(" ") : [],
+          ancestry: data.ancestry,
+          features: pathBundle.features.map((path) => {
+            const featureId = indexBundles.find((val) => val.path === path)?.id;
+            if (!featureId)
+              throw new Error("Could not find feature with path: " + path);
+            return featureId;
+          }),
+        } satisfies StatblockIndexBundle;
 
-      // Special handling for dragons
-      if (pathBundle.statblock.startsWith("Monsters/Dragons/Statblocks/")) {
-        indexBundle.features = indexBundle.features.filter((feature) =>
-          feature.includes(indexBundle.name),
-        );
-      }
+        if (indexBundle.name.includes("Rival")) {
+          indexBundle.id =
+            `cs-${data.name.replaceAll(/[^a-zA-Z0-9]/g, "")}` + data.level;
+        }
 
-      // Special handling for hobgoblins and bugbears
-      if (
-        pathBundle.statblock.startsWith("Monsters/Hobgoblins/Statblocks/") ||
-        pathBundle.statblock.startsWith("Monsters/Bugbears/Statblocks/")
-      ) {
-        indexBundle.features = [
-          ...indexBundle.features,
-          "Monsters/Goblins/Features/Goblin Malice.json",
-        ];
-      }
+        // Special handling for dragons
+        if (pathBundle.statblock.startsWith("Monsters/Dragons/Statblocks/")) {
+          indexBundle.features = indexBundle.features.filter((feature) =>
+            feature.includes(indexBundle.name),
+          );
+        }
 
-      // Special handling for tiered malice
-      if (
-        pathBundle.statblock.startsWith("Monsters/Demons/Statblocks/") ||
-        pathBundle.statblock.startsWith("Monsters/Undead/Statblocks/") ||
-        pathBundle.statblock.startsWith("Monsters/War Dogs/Statblocks/")
-      ) {
-        const firstNumber = (str: string) => {
-          return parseFloat(str.substring(str.search(/\d/)));
-        };
-        indexBundle.features = [...indexBundle.features]
-          .filter((path) => firstNumber(path) <= indexBundle.level)
-          .sort((a, b) => firstNumber(a) - firstNumber(b));
-      }
+        // Special handling for hobgoblins and bugbears
+        if (
+          pathBundle.statblock.startsWith("Monsters/Hobgoblins/Statblocks/") ||
+          pathBundle.statblock.startsWith("Monsters/Bugbears/Statblocks/")
+        ) {
+          indexBundle.features = [
+            ...indexBundle.features,
+            "Monsters/Goblins/Features/Goblin Malice.json",
+          ];
+        }
 
-      // Special handling for rivals
-      if (
-        pathBundle.statblock.startsWith("Monsters/Rivals") &&
-        pathBundle.statblock.includes("/Statblocks/")
-      ) {
-        indexBundle.name = `Level ${indexBundle.level} ${indexBundle.name}`;
-      }
+        // Special handling for tiered malice
+        if (
+          pathBundle.statblock.startsWith("Monsters/Demons/Statblocks/") ||
+          pathBundle.statblock.startsWith("Monsters/Undead/Statblocks/") ||
+          pathBundle.statblock.startsWith("Monsters/War Dogs/Statblocks/")
+        ) {
+          const firstNumber = (str: string) => {
+            return parseFloat(str.substring(str.search(/\d/)));
+          };
+          indexBundle.features = [...indexBundle.features]
+            .filter((path) => firstNumber(path) <= indexBundle.level)
+            .sort((a, b) => firstNumber(a) - firstNumber(b));
+        }
 
-      // Validate
-      return IndexBundleZod.parse(indexBundle);
-    }),
+        // Special handling for rivals
+        if (
+          pathBundle.statblock.startsWith("Monsters/Rivals") &&
+          pathBundle.statblock.includes("/Statblocks/")
+        ) {
+          indexBundle.name = `Level ${indexBundle.level} ${indexBundle.name}`;
+        }
+
+        // Validate
+        return IndexBundleZod.parse(indexBundle);
+      }),
+    )),
+  );
+
+  const terrainPaths = rootTree
+    .filter(
+      (val) =>
+        val.path.includes("Dynamic Terrain/") && val.path.endsWith(".json"),
+    )
+    .map((val) => val.path);
+
+  indexBundles.push(
+    ...(await Promise.all(
+      terrainPaths.map(async (path) => {
+        const response = await fetch(getBestiaryUrl(path));
+        const unvalidatedJson = await response.json();
+        const parseResult =
+          DrawSteelDynamicTerrainZod.safeParse(unvalidatedJson);
+
+        if (!parseResult.success) {
+          console.error(parseResult.error, "Retrieved data", unvalidatedJson);
+          throw new Error("Parsing error. See above for details.");
+        }
+
+        const data = parseResult.data;
+
+        const bundle = {
+          id: generateId("terrain", data.name),
+          path,
+          name: data.name,
+          type: "terrain",
+          level: data.level,
+          ev: data.ev,
+          roles: data.featureblock_type
+            ? data.featureblock_type.split(" ")
+            : [],
+        } satisfies TerrainIndexBundle;
+
+        return bundle;
+      }),
+    )),
+  );
+
+  console.log(z.array(IndexBundleZod).parse(indexBundles));
+
+  console.log(
+    "No duplicate IDs:",
+    indexBundles.length === new Set(indexBundles.map((val) => val.id)).size,
   );
 
   // Convert the JSON data to a string

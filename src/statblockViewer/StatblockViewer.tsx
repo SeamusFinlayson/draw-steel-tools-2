@@ -7,7 +7,7 @@ import type { MonsterDataBundle } from "../types/monsterDataBundlesZod.ts";
 import { Maximize2Icon, Minimize2Icon } from "lucide-react";
 import { StatBlockSwitcher } from "./StatblockSwitcher.tsx";
 import { useEffect, useState } from "react";
-import { monsterDataFromStatblockName } from "../helpers/monsterDataFromStatblockName.ts";
+import { dataFromBestiaryIndexId } from "../helpers/monsterDataFromStatblockName.ts";
 import { cn } from "../helpers/utils.ts";
 import Toggle from "../components/ui/Toggle.tsx";
 import { OpenInNewTab } from "./OpenInNewTabButton.tsx";
@@ -17,6 +17,9 @@ import { DiceDrawer } from "./DiceDrawer.tsx";
 
 const statblockName = new URLSearchParams(document.location.search).get(
   "statblockName",
+);
+const resourceId = new URLSearchParams(document.location.search).get(
+  "resourceId",
 );
 
 export function StatblockViewer() {
@@ -29,10 +32,12 @@ export function StatblockViewer() {
       setMonsterData(null);
       return;
     }
-    monsterDataFromStatblockName(statblockName).then((monsterData) => {
-      document.title = monsterData.statblock.name;
-      setMonsterData(monsterData);
-    });
+    dataFromBestiaryIndexId(statblockName, true)
+      .then((monsterData) => {
+        document.title = monsterData.statblock.name;
+        setMonsterData(monsterData);
+      })
+      .catch(() => setMonsterData(null));
   }, []);
 
   return (
@@ -42,7 +47,9 @@ export function StatblockViewer() {
       ) : monsterData === undefined ? (
         <div className="text-foreground-secondary grow p-4">Loading...</div>
       ) : monsterData === null ? (
-        <div className="text-foreground-secondary grow p-4"></div>
+        <div className="text-foreground-secondary grow p-4">
+          Failed to Load.
+        </div>
       ) : (
         <MonsterView monsterData={monsterData} />
       )}

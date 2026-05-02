@@ -1,6 +1,9 @@
 import fuzzysort from "fuzzysort";
 import type { SearchData } from "../../types/statblockSearchData";
-import type { IndexBundle } from "../../types/monsterDataBundlesZod";
+import type {
+  StatblockIndexBundle,
+  TerrainIndexBundle,
+} from "../../types/monsterDataBundlesZod";
 import { MonsterPreviewCard } from "./MonsterPreviewCard";
 import { getMonsterDataBundle } from "../helpers/getMonsterDataBundle";
 import type { AppState } from "../../types/statblockLookupAppState";
@@ -15,7 +18,7 @@ export function StatblockSearchList({
 }: {
   search: SearchData;
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;
-  monsterIndex: IndexBundle[];
+  monsterIndex: (StatblockIndexBundle | TerrainIndexBundle)[];
   playerRole: "PLAYER" | "GM";
 }) {
   const sortedMonsterIndex =
@@ -52,6 +55,7 @@ export function StatblockSearchList({
                 return false;
               })
               .filter((item) => {
+                if (item.type === "terrain") return true;
                 if (search.keywords.length <= 0) return true;
                 for (const str of item.ancestry) {
                   if (search.keywords.includes(str)) return true;
@@ -61,7 +65,8 @@ export function StatblockSearchList({
             {
               keys: [
                 "name",
-                (obj) => obj.ancestry.join(" "),
+                (obj) =>
+                  obj.type === "statblock" ? obj.ancestry.join(" ") : "",
                 (obj) => obj.roles.join(" "),
               ],
               all: true,
@@ -71,10 +76,10 @@ export function StatblockSearchList({
           .map((val) => val.obj);
 
   if (sortedMonsterIndex.length <= 0 && search.value !== "")
-    return <div className="w-full items-center p-4 sm:p-6">No Results</div>;
+    return <div className="w-full items-center p-4">No Results</div>;
 
   return (
-    <div className="grid h-full gap-3 p-4 sm:p-6 lg:grid-cols-2">
+    <div className="grid h-full gap-3 p-4 md:grid-cols-2">
       {search.value === "" && (
         <NoMonsterCard
           variant="BASIC"
@@ -113,7 +118,7 @@ export function StatblockSearchList({
       )}
       {sortedMonsterIndex.map((indexBundle) => (
         <MonsterPreviewCard
-          key={indexBundle.statblock}
+          key={indexBundle.id}
           indexBundle={indexBundle}
           onCardClick={async () => {
             setAppState((prev) => ({

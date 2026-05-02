@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { parseTokenData } from "../helpers/tokenHelpers";
 import Button from "../components/ui/Button";
 import type { MonsterDataBundle } from "../types/monsterDataBundlesZod";
-import { monsterDataFromStatblockName } from "../helpers/monsterDataFromStatblockName";
+import { dataFromBestiaryIndexId } from "../helpers/monsterDataFromStatblockName";
 import {
   Popover,
   PopoverContent,
@@ -48,7 +48,7 @@ export function StatBlockSwitcher({
         if (!("statblockName" in data)) return;
         const statblockName = data.statblockName;
         if (!(typeof statblockName === "string")) return;
-        monsterDataFromStatblockName(statblockName).then((monsterData) => {
+        dataFromBestiaryIndexId(statblockName).then((monsterData) => {
           document.title = monsterData.statblock.name;
           setMonsterData(monsterData);
         });
@@ -119,7 +119,7 @@ export function StatBlockSwitcher({
                 variant={"ghost"}
                 className="hover:bg-mirage-100/70 w-full justify-between rounded-[8px] px-2"
                 onClick={async () =>
-                  setMonsterData(await monsterDataFromStatblockName(value))
+                  setMonsterData(await dataFromBestiaryIndexId(value))
                 }
               >
                 <div className="truncate">{value}</div>
@@ -138,7 +138,7 @@ export function StatBlockSwitcher({
                 variant={"ghost"}
                 className="hover:bg-mirage-100/70 w-full justify-between rounded-[8px] px-2"
                 onClick={async () =>
-                  setMonsterData(await monsterDataFromStatblockName(value))
+                  setMonsterData(await dataFromBestiaryIndexId(value))
                 }
               >
                 <div className="truncate">{value}</div>
