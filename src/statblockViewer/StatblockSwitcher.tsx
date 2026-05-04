@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { parseTokenData } from "../helpers/tokenHelpers";
 import Button from "../components/ui/Button";
-import type { MonsterDataBundle } from "../types/monsterDataBundlesZod";
+import type { DrawSteelResourceBundle } from "../types/monsterDataBundlesZod";
 import { dataFromBestiaryIndexId } from "../helpers/monsterDataFromStatblockName";
 import {
   Popover,
@@ -27,8 +27,8 @@ export function StatBlockSwitcher({
   setMonsterData,
   setCollapsed,
 }: {
-  monsterData: MonsterDataBundle | null;
-  setMonsterData: React.Dispatch<MonsterDataBundle>;
+  monsterData: DrawSteelResourceBundle | null;
+  setMonsterData: React.Dispatch<DrawSteelResourceBundle>;
   setCollapsed: (collapsed: boolean) => void;
 }) {
   const playerRole = usePlayerRole();
@@ -49,7 +49,7 @@ export function StatBlockSwitcher({
         const statblockName = data.statblockName;
         if (!(typeof statblockName === "string")) return;
         dataFromBestiaryIndexId(statblockName).then((monsterData) => {
-          document.title = monsterData.statblock.name;
+          document.title = monsterData.resource.name;
           setMonsterData(monsterData);
         });
       }),
@@ -94,7 +94,7 @@ export function StatBlockSwitcher({
           className="h-10 w-full justify-between px-2 sm:px-4"
         >
           <div className="truncate text-start font-bold">
-            {monsterData ? monsterData.statblock.name : "Select Stat Block"}
+            {monsterData ? monsterData.resource.name : "Select Stat Block"}
           </div>
           <ChevronUpIcon className="transition-transform duration-200 ease-out group-data-[state=open]:-rotate-180" />
         </Button>
@@ -123,7 +123,7 @@ export function StatBlockSwitcher({
                 }
               >
                 <div className="truncate">{value}</div>
-                {monsterData && monsterData.statblock.name === value && (
+                {monsterData && monsterData.resource.name === value && (
                   <CheckIcon />
                 )}
               </Button>
@@ -142,7 +142,7 @@ export function StatBlockSwitcher({
                 }
               >
                 <div className="truncate">{value}</div>
-                {monsterData && monsterData.statblock.name === value && (
+                {monsterData && monsterData.resource.name === value && (
                   <CheckIcon />
                 )}
               </Button>

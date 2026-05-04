@@ -1,5 +1,6 @@
 import z from "zod";
 import {
+  DrawSteelDynamicTerrainZod,
   DrawSteelFeatureBlockZod,
   DrawSteelStatblockZod,
 } from "./DrawSteelZod";
@@ -44,10 +45,16 @@ export const IndexBundleZod = z.union([
   TerrainIndexBundleZod,
 ]);
 
-export const MonsterDataBundleZod = z.strictObject({
+export const DrawSteelResourceZod = z.union([
+  DrawSteelStatblockZod,
+  DrawSteelDynamicTerrainZod,
+  DrawSteelFeatureBlockZod,
+]);
+
+export const DrawSteelResourceBundleZod = z.strictObject({
   key: z.string(),
-  statblock: DrawSteelStatblockZod,
-  featuresBlocks: z.array(DrawSteelFeatureBlockZod),
+  resource: DrawSteelResourceZod,
+  append: z.array(DrawSteelResourceZod).optional(),
 });
 
 export type PathBundle = z.infer<typeof PathBundleZod>;
@@ -55,4 +62,7 @@ export type FeatureIndexBundle = z.infer<typeof FeatureIndexBundleZod>;
 export type StatblockIndexBundle = z.infer<typeof StatblockIndexBundleZod>;
 export type TerrainIndexBundle = z.infer<typeof TerrainIndexBundleZod>;
 export type IndexBundle = z.infer<typeof IndexBundleZod>;
-export type MonsterDataBundle = z.infer<typeof MonsterDataBundleZod>;
+export type DrawSteelResource = z.infer<typeof DrawSteelResourceZod>;
+export type DrawSteelResourceBundle = z.infer<
+  typeof DrawSteelResourceBundleZod
+>;

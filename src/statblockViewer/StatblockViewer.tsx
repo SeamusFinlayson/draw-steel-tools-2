@@ -3,7 +3,7 @@ import MonsterView from "./creatureBlockUI/MonsterView.tsx";
 import Button from "../components/ui/Button.tsx";
 import OBR from "@owlbear-rodeo/sdk";
 import { getPluginId } from "../helpers/getPluginId.ts";
-import type { MonsterDataBundle } from "../types/monsterDataBundlesZod.ts";
+import type { DrawSteelResourceBundle } from "../types/monsterDataBundlesZod.ts";
 import { Maximize2Icon, Minimize2Icon } from "lucide-react";
 import { StatBlockSwitcher } from "./StatblockSwitcher.tsx";
 import { useEffect, useState } from "react";
@@ -24,20 +24,22 @@ const resourceId = new URLSearchParams(document.location.search).get(
 
 export function StatblockViewer() {
   const [collapsed, setCollapsed] = useState(false);
-  const [monsterData, setMonsterData] = useState<MonsterDataBundle | null>();
+  const [monsterData, setMonsterData] =
+    useState<DrawSteelResourceBundle | null>();
   const [height, setHeight] = useState(57);
 
   useEffect(() => {
-    if (!statblockName) {
-      setMonsterData(null);
-      return;
-    }
-    dataFromBestiaryIndexId(statblockName, true)
+    const id = resourceId ? resourceId : statblockName;
+    if (!id) return setMonsterData(null);
+    dataFromBestiaryIndexId(id)
       .then((monsterData) => {
-        document.title = monsterData.statblock.name;
+        document.title = monsterData.resource.name;
         setMonsterData(monsterData);
       })
-      .catch(() => setMonsterData(null));
+      .catch((reason) => {
+        console.error(reason);
+        setMonsterData(null);
+      });
   }, []);
 
   return (
@@ -51,7 +53,7 @@ export function StatblockViewer() {
           Failed to Load.
         </div>
       ) : (
-        <MonsterView monsterData={monsterData} />
+        <MonsterView bundle={monsterData} />
       )}
 
       <PluginReadyGate>
@@ -85,7 +87,7 @@ export function StatblockViewer() {
                 )}
               >
                 {!collapsed && (
-                  <OpenInNewTab statblockName={monsterData?.statblock.name} />
+                  <OpenInNewTab statblockName={monsterData?.resource.name} />
                 )}
                 <Toggle
                   variant={"default"}

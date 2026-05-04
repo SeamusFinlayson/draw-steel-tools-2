@@ -132,12 +132,16 @@ export function StatblockSearchList({
               ...prev,
               selectedIndexBundle: indexBundle,
             }));
-            const monsterData = await getMonsterDataBundle(indexBundle);
-            const stamina = parseNumber(monsterData.statblock.stamina, {
+            const resource = (await getMonsterDataBundle(indexBundle)).resource;
+            if (resource.type === "dynamicterrain")
+              throw new Error("Dynamic terrain not implemented.");
+            if (resource.type === "featureblock")
+              throw new Error("Feature block not implemented.");
+            const stamina = parseNumber(resource.stamina, {
               truncate: true,
             });
-            const monsterName = monsterData.statblock.name;
-            const isMinion = monsterData.statblock.roles
+            const monsterName = resource.name;
+            const isMinion = resource.roles
               .join()
               .toLowerCase()
               .includes("minion");
