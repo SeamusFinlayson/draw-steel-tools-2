@@ -86,9 +86,7 @@ export function StatblockViewer() {
                   },
                 )}
               >
-                {!collapsed && (
-                  <OpenInNewTab statblockName={monsterData?.resource.name} />
-                )}
+                {!collapsed && <OpenInNewTab resourceId={monsterData?.key} />}
                 <Toggle
                   variant={"default"}
                   size={"icon"}

@@ -8,16 +8,21 @@ import { cn } from "../../helpers/utils";
 export default function StatblockControls({
   label = "Statblock",
   statblockName,
-  setStatblockName,
+  resourceId,
+  removeStatblock,
   groupId,
   playerRole,
 }: {
   label?: string;
   statblockName: string;
-  setStatblockName: (statblockName: string) => void;
+  resourceId: string;
+  removeStatblock: () => void;
   groupId?: string;
   playerRole: "PLAYER" | "GM";
 }) {
+  const useNameAsId = resourceId === "" && statblockName !== "";
+  if (useNameAsId) resourceId = statblockName;
+
   return (
     <div className="text-foreground col-span-2 w-full">
       <div
@@ -37,7 +42,7 @@ export default function StatblockControls({
                 onClick={async () => {
                   OBR.broadcast.sendMessage(
                     getPluginId("set-viewer-statblock"),
-                    { statblockName },
+                    { resourceId },
                     { destination: "LOCAL" },
                   );
                   OBR.popover.open({
@@ -47,7 +52,7 @@ export default function StatblockControls({
                         "/statblockViewer",
                         window.location.origin,
                       );
-                      url.searchParams.set("statblockName", statblockName);
+                      url.searchParams.set("resourceId", resourceId);
                       return url.toString();
                     })(),
                     height: 2000,
@@ -75,7 +80,7 @@ export default function StatblockControls({
               <Button
                 variant={"secondary"}
                 className="bg-mirage-400/30 dark:bg-mirage-500/30 hover:bg-mirage-400/30 hover:dark:bg-mirage-500/30 group aspect-square shrink-0 overflow-clip p-0 focus-visible:ring-0"
-                onClick={() => setStatblockName("")}
+                onClick={removeStatblock}
               >
                 <div className="group-hover:bg-foreground/7 flex size-full items-center-safe justify-center text-sm duration-150">
                   <XIcon />

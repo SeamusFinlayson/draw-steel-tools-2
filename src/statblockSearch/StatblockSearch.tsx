@@ -182,13 +182,15 @@ export default function StatblockSearch({
                                       staminaMaximum: staminaOptions.value,
                                     }
                                   : {}),
-                                statblockName:
-                                  typeof appState.selectedIndexBundle ===
-                                  "object"
-                                    ? appState.selectedIndexBundle.name
-                                    : appState.selectedIndexBundle === "NONE"
-                                      ? undefined
-                                      : "",
+                                ...(typeof appState.selectedIndexBundle ===
+                                "object"
+                                  ? {
+                                      statblockName:
+                                        appState.selectedIndexBundle.name,
+                                      resourceId:
+                                        appState.selectedIndexBundle.id,
+                                    }
+                                  : {}),
                               } satisfies TerrainTokenData);
                             if (nameOptions.enabled) {
                               item.name = nameOptions.value;
@@ -196,8 +198,7 @@ export default function StatblockSearch({
                           });
                         },
                       );
-                    }
-                    if (tokenOptions.type === "BASIC") {
+                    } else if (tokenOptions.type === "BASIC") {
                       let targetItems = selectedItems;
                       if (groupId !== null) {
                         targetItems = await OBR.scene.items.getItems(
@@ -236,13 +237,15 @@ export default function StatblockSearch({
                                       staminaMaximum: staminaOptions.value,
                                     }
                                   : {}),
-                                statblockName:
-                                  typeof appState.selectedIndexBundle ===
-                                  "object"
-                                    ? appState.selectedIndexBundle.name
-                                    : appState.selectedIndexBundle === "NONE"
-                                      ? undefined
-                                      : "",
+                                ...(typeof appState.selectedIndexBundle ===
+                                "object"
+                                  ? {
+                                      statblockName:
+                                        appState.selectedIndexBundle.name,
+                                      resourceId:
+                                        appState.selectedIndexBundle.id,
+                                    }
+                                  : {}),
                               } satisfies MonsterTokenData);
                             if (nameOptions.enabled) {
                               item.name = nameOptions.value;
@@ -250,8 +253,7 @@ export default function StatblockSearch({
                           });
                         },
                       );
-                    }
-                    if (tokenOptions.type === "MINION") {
+                    } else if (tokenOptions.type === "MINION") {
                       let groupSize: number | null = null;
                       if (groupId === "" || groupId === null) {
                         groupId = generateGroupId();
@@ -313,12 +315,14 @@ export default function StatblockSearch({
                               id: groupId,
                               individualStamina: tokenOptions.stamina.value,
                               name: tokenOptions.groupName.value,
-                              statblock:
-                                typeof appState.selectedIndexBundle === "object"
-                                  ? appState.selectedIndexBundle.name
-                                  : appState.selectedIndexBundle === "NONE"
-                                    ? undefined
-                                    : "",
+                              ...(typeof appState.selectedIndexBundle ===
+                              "object"
+                                ? {
+                                    statblock:
+                                      appState.selectedIndexBundle.name,
+                                    resourceId: appState.selectedIndexBundle.id,
+                                  }
+                                : {}),
                               currentStamina:
                                 tokenOptions.stamina.value * groupSize,
                               nameTagsEnabled: tokenOptions.groupName.nameTags,

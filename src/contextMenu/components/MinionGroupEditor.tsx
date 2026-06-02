@@ -162,9 +162,14 @@ export default function MinionGroupEditor({
       </Button>
 
       <StatblockControls
-        statblockName={!minionGroup.statblock ? "" : minionGroup.statblock}
-        setStatblockName={(statblockName) =>
-          setMinionGroup({ ...minionGroup, statblock: statblockName })
+        statblockName={minionGroup.statblock ? minionGroup.statblock : ""}
+        resourceId={minionGroup.resourceId ? minionGroup.resourceId : ""}
+        removeStatblock={() =>
+          setMinionGroup({
+            ...minionGroup,
+            statblock: "",
+            resourceId: "",
+          })
         }
         groupId={minionGroup.id}
         playerRole={playerRole}

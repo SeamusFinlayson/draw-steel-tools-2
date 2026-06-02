@@ -20,6 +20,7 @@ export const defaultMonsterTokenData: DefinedMonsterTokenData = {
   staminaMaximum: 0,
   temporaryStamina: 0,
   statblockName: "",
+  resourceId: "",
 };
 
 export const defaultHeroTokenData: DefinedHeroTokenData = {
@@ -49,6 +50,7 @@ export const defaultTerrainTokenData: DefinedTerrainTokenData = {
   stamina: 0,
   staminaMaximum: 0,
   statblockName: "",
+  resourceId: "",
 };
 
 export function parseTokenData(metadata: Metadata): DefinedCharacterTokenData {

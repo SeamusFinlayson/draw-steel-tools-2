@@ -113,7 +113,10 @@ export default function TokenEditor() {
       {(token.type === "MONSTER" || token.type === "TERRAIN") && (
         <StatblockControls
           statblockName={token.statblockName}
-          setStatblockName={() => updateToken({ statblockName: "" })}
+          resourceId={token.resourceId}
+          removeStatblock={() =>
+            updateToken({ statblockName: "", resourceId: "" })
+          }
           playerRole={playerRole}
         />
       )}

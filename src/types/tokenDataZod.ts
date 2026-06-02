@@ -44,6 +44,7 @@ export const MonsterTokenDataZod = z.object({
   staminaMaximum: z.number().optional(),
   temporaryStamina: z.number().optional(),
   statblockName: z.string().optional(),
+  resourceId: z.string().optional(),
 });
 export const DefinedMonsterTokenDataZod = z.object({
   type: z.literal("MONSTER"),
@@ -53,6 +54,7 @@ export const DefinedMonsterTokenDataZod = z.object({
   staminaMaximum: z.number(),
   temporaryStamina: z.number(),
   statblockName: z.string(),
+  resourceId: z.string(),
 });
 
 // Don't add anything that can/will change after initialization
@@ -69,6 +71,7 @@ export const TerrainTokenDataZod = z.object({
   stamina: z.number().optional(),
   staminaMaximum: z.number().optional(),
   statblockName: z.string().optional(),
+  resourceId: z.string().optional(),
 });
 export const DefinedTerrainTokenDataZod = z.object({
   type: z.literal("TERRAIN"),
@@ -77,6 +80,7 @@ export const DefinedTerrainTokenDataZod = z.object({
   stamina: z.number(),
   staminaMaximum: z.number(),
   statblockName: z.string(),
+  resourceId: z.string(),
 });
 
 export const CharacterTokenDataZod = z
