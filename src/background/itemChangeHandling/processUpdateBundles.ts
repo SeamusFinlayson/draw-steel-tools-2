@@ -64,7 +64,6 @@ export function processUpdateBundles(
   updateBundles
     .filter((bundle) => bundle.type === "REMOVE")
     .forEach((bundle) => {
-      console.log("here");
       const ids = obrState.attachmentLogs[bundle.item.id]?.attachmentIds;
       if (ids) deleteItemsArray.push(...ids);
     });
