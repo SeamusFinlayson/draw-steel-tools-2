@@ -39,7 +39,7 @@ function getItemStatus(item: Item, prev: Item | undefined) {
     return "ADD";
   }
 
-  if (hasMetadata) return "REMOVE";
+  if (!hasMetadata) return "REMOVE";
   return "NEEDS_CHECKS";
 }
 
@@ -54,7 +54,6 @@ function bundleCatagory(
   if (cat === "ADD") return { item, type: cat, data };
   if (!prev)
     throw new Error(`Previous data was not provided for bundle type ${cat}`);
-  if (cat === "UNCHANGED") return { item, type: cat, prev };
   return { item, type: cat, data, prev };
 }
 
@@ -91,6 +90,6 @@ export function getUpdateBundles(
     if (checkMetadataChanges(data, prev.data))
       return bundleCatagory("UPDATE", item, data, prev);
 
-    return bundleCatagory("UNCHANGED", item, undefined, prev);
+    return bundleCatagory("UNCHANGED", item, data, prev);
   });
 }

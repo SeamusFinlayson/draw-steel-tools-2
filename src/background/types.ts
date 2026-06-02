@@ -51,6 +51,7 @@ export type UpdateBundle =
   | {
       type: "UNCHANGED";
       item: Item;
+      data: DefinedCharacterTokenData;
       prev: PreviousItemData;
     }
   | {
