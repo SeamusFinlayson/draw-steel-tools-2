@@ -54,12 +54,20 @@ export function processUpdateBundles(
       if (leftoverIds) deleteItemsArray.push(...leftoverIds);
     });
 
-  const unchanged = updateBundles.filter(
-    (bundle) => bundle.type === "UNCHANGED",
-  );
-  unchanged.forEach((bundle) => {
-    newAttachmentLogs[bundle.item.id] = obrState.attachmentLogs[bundle.item.id];
-  });
+  updateBundles
+    .filter((bundle) => bundle.type === "UNCHANGED")
+    .forEach((bundle) => {
+      newAttachmentLogs[bundle.item.id] =
+        obrState.attachmentLogs[bundle.item.id];
+    });
+
+  updateBundles
+    .filter((bundle) => bundle.type === "REMOVE")
+    .forEach((bundle) => {
+      console.log("here");
+      const ids = obrState.attachmentLogs[bundle.item.id]?.attachmentIds;
+      if (ids) deleteItemsArray.push(...ids);
+    });
 
   return { addItemsArray, deleteItemsArray, newAttachmentLogs };
 }

@@ -29,17 +29,15 @@ function checkIsTrackedItemType(item: Item) {
 
 function getItemStatus(item: Item, prev: Item | undefined) {
   const hasMetadata = TOKEN_METADATA_KEY in item.metadata;
+  if (!hasMetadata) return prev ? "REMOVE" : "UNTRACKED";
+
   const isOnTrackedLayer = checkIsOnTrackedLayer(item.layer);
+  if (!isOnTrackedLayer) return prev ? "REMOVE" : "UNTRACKED";
+
   const isTrackedItemType = checkIsTrackedItemType(item);
+  if (!isTrackedItemType) return prev ? "REMOVE" : "UNTRACKED";
 
-  if (!prev) {
-    if (!hasMetadata) return "UNTRACKED";
-    if (!isOnTrackedLayer) return "UNTRACKED";
-    if (!isTrackedItemType) return "UNTRACKED";
-    return "ADD";
-  }
-
-  if (!hasMetadata) return "REMOVE";
+  if (!prev) return "ADD";
   return "NEEDS_CHECKS";
 }
 
