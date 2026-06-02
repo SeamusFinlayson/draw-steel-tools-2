@@ -1,12 +1,4 @@
-import {
-  CheckIcon,
-  LandPlotIcon,
-  User2Icon,
-  UserIcon,
-  Users2Icon,
-  UsersIcon,
-  VenetianMaskIcon,
-} from "lucide-react";
+import { CheckIcon, LandPlotIcon, UserIcon, UsersIcon } from "lucide-react";
 import type { IndexBundle } from "../../types/monsterDataBundlesZod";
 import type React from "react";
 

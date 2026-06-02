@@ -32,7 +32,13 @@ export function OptionsView({
         <h1 className="mb-1">Selected Statblock</h1>
         {selectedIndexBundle === "NONE" ? (
           <NoMonsterCard
-            variant={setupOptions?.type === "MINION" ? "MINION" : "BASIC"}
+            variant={
+              setupOptions?.type === "MINION"
+                ? "MINION"
+                : setupOptions?.type === "TERRAIN"
+                  ? "TERRAIN"
+                  : "BASIC"
+            }
             onActionClick={() =>
               setAppState({
                 ...appState,

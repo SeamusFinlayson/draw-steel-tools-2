@@ -120,6 +120,22 @@ export function StatblockSearchList({
           }
         />
       )}
+      {search.value === "" && (
+        <NoMonsterCard
+          variant="TERRAIN"
+          onActionClick={() =>
+            setAppState((prev) => ({
+              ...prev,
+              selectedIndexBundle: "NONE",
+              setupOptions: {
+                type: "TERRAIN",
+                name: { enabled: false, value: "Terrain", nameTag: false },
+                stamina: { enabled: false, value: 0 },
+              },
+            }))
+          }
+        />
+      )}
       {sortedMonsterIndex.map((indexBundle) => (
         <MonsterPreviewCard
           key={indexBundle.id}
