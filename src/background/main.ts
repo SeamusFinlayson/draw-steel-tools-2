@@ -126,13 +126,13 @@ OBR.onReady(async () => {
         obrState.minionTokenCounts,
       );
       obrState.minionTokenCounts = minionTokenCounts.counts;
+
       createContextMenuItems(
         obrState.settings,
         obrState.themeMode,
         obrState.minionGroups,
       );
-
-      refreshAttachments({ minions: minionTokenCounts.changed });
+      refreshAttachments({ minions: true });
     });
 
     OBR.scene.items.onChange((items) => {
