@@ -1,6 +1,7 @@
 import type { Item } from "@owlbear-rodeo/sdk";
 import { getPluginId } from "./getPluginId";
 import type { MinionGroup } from "../types/minionGroup";
+import { extensionItemFilter } from "./extensionItemFilter";
 
 export type TokenCounts = {
   [groupId: string]: number;
@@ -14,6 +15,7 @@ export function getMinionTokenCounts(
   const counts: { [groupId: string]: number } = {};
   minionGroups.forEach((group) => {
     counts[group.id] = items
+      .filter(extensionItemFilter)
       .filter((item) => ["CHARACTER", "MOUNT"].includes(item.layer))
       .map(
         (item) =>

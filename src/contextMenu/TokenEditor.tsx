@@ -110,7 +110,7 @@ export default function TokenEditor() {
         />
       )}
       <StatEditor token={token} updateToken={updateToken} />
-      {token.type === "MONSTER" && (
+      {(token.type === "MONSTER" || token.type === "TERRAIN") && (
         <StatblockControls
           statblockName={token.statblockName}
           setStatblockName={() => updateToken({ statblockName: "" })}

@@ -37,7 +37,11 @@ export default function StatEditor({
   const [heroicResourceSettingsOpen, setHeroicResourceSettingsOpen] =
     useState(false);
 
-  if (token.type !== "HERO" && token.type !== "MONSTER")
+  if (
+    token.type !== "HERO" &&
+    token.type !== "MONSTER" &&
+    token.type !== "TERRAIN"
+  )
     throw new Error("Expected hero or monster token type");
 
   return (
@@ -75,35 +79,37 @@ export default function StatEditor({
           </div>
         </div>
 
-        <div className="col-span-2">
-          <ValueButtonTrackerInput
-            label={"Temporary Stamina"}
-            color="GREEN"
-            parentValue={token.temporaryStamina}
-            updateHandler={(target) =>
-              updateToken({
-                temporaryStamina: parseNumber(target.value, {
-                  min: -999,
-                  max: 999,
-                  truncate: true,
-                  inlineMath: { previousValue: token.temporaryStamina },
-                }),
-              })
-            }
-            buttonProps={{
-              title: "Apply to Stamina",
-              children: <HeartCrackIcon />,
-              className: token.temporaryStamina < 0 ? "" : "hidden",
-              onClick: () => {
-                if (token.temporaryStamina >= 0) return;
+        {(token.type === "HERO" || token.type === "MONSTER") && (
+          <div className="col-span-2">
+            <ValueButtonTrackerInput
+              label={"Temporary Stamina"}
+              color="GREEN"
+              parentValue={token.temporaryStamina}
+              updateHandler={(target) =>
                 updateToken({
-                  stamina: token.stamina + token.temporaryStamina,
-                  temporaryStamina: 0,
-                });
-              },
-            }}
-          />
-        </div>
+                  temporaryStamina: parseNumber(target.value, {
+                    min: -999,
+                    max: 999,
+                    truncate: true,
+                    inlineMath: { previousValue: token.temporaryStamina },
+                  }),
+                })
+              }
+              buttonProps={{
+                title: "Apply to Stamina",
+                children: <HeartCrackIcon />,
+                className: token.temporaryStamina < 0 ? "" : "hidden",
+                onClick: () => {
+                  if (token.temporaryStamina >= 0) return;
+                  updateToken({
+                    stamina: token.stamina + token.temporaryStamina,
+                    temporaryStamina: 0,
+                  });
+                },
+              }}
+            />
+          </div>
+        )}
         {token.type === "HERO" && (
           <>
             <div className="col-span-2">

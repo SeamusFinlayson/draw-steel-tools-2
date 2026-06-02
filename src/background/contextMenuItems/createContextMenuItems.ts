@@ -1,15 +1,15 @@
 import OBR, { type ContextMenuIcon, type KeyFilter } from "@owlbear-rodeo/sdk";
-import { getPluginId } from "../helpers/getPluginId";
+import { getPluginId } from "../../helpers/getPluginId";
 import knightHelmetIcon from "./icons/knightHelmetIcon";
 import dragonHeadIcon from "./icons/dragonHeadIcon";
-import type { DefinedSettings } from "../types/settingsZod";
-import { getSelectedItems } from "../helpers/getSelectedItem";
-import { TOKEN_METADATA_KEY } from "../helpers/tokenHelpers";
-import { removeCreatureData } from "../helpers/removeCreatureData";
-import type { ThemeMode } from "../types/themeMode";
-import type { MinionGroup } from "../types/minionGroup";
+import type { DefinedSettings } from "../../types/settingsZod";
+import { getSelectedItems } from "../../helpers/getSelectedItem";
+import { TOKEN_METADATA_KEY } from "../../helpers/tokenHelpers";
+import { removeCreatureData } from "../../helpers/removeCreatureData";
+import type { ThemeMode } from "../../types/themeMode";
+import type { MinionGroup } from "../../types/minionGroup";
 import { getGmOnlyRestrictions } from "./getGmOnlyRestrictions";
-import { getContextMenuUrl } from "../helpers/getContextMenuUrl";
+import { getContextMenuUrl } from "../../helpers/getContextMenuUrl";
 
 const VERTICAL_PADDING = 16;
 const NAME_HEIGHT = 36 + 18 + 8;
@@ -201,6 +201,11 @@ function createGmMenu(
               value: "MINION",
               operator: "!=",
             },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY, "type"],
+              value: "TERRAIN",
+              operator: "!=",
+            },
           ],
           roles: ["GM"],
           max: 1,
@@ -236,6 +241,26 @@ function createGmMenu(
             {
               key: ["metadata", TOKEN_METADATA_KEY, "type"],
               value: "MONSTER",
+              operator: "==",
+            },
+          ],
+          roles: ["GM"],
+          max: 1,
+        },
+      },
+      {
+        icon: dragonHeadIcon,
+        label: "Edit Terrain",
+        filter: {
+          every: [
+            {
+              key: ["metadata", TOKEN_METADATA_KEY],
+              value: undefined,
+              operator: "!=",
+            },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY, "type"],
+              value: "TERRAIN",
               operator: "==",
             },
           ],
@@ -417,6 +442,43 @@ function createAddStats() {
       });
     },
   });
+
+  OBR.contextMenu.create({
+    id: getPluginId("add-terrain"),
+    icons: [
+      {
+        icon: dragonHeadIcon,
+        label: "Add Terrain",
+        filter: {
+          max: 1,
+          every: [
+            { key: "type", value: "SHAPE", coordinator: "||" },
+            { key: "type", value: "IMAGE" },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY],
+              value: undefined,
+              operator: "==",
+            },
+          ],
+        },
+      },
+    ],
+    onClick: async () => {
+      const selectedItems = await getSelectedItems();
+      const playerRole = await OBR.player.getRole();
+      OBR.scene.items.updateItems(
+        selectedItems.map((item) => item.id),
+        (items) => {
+          items.forEach((item) => {
+            item.metadata[TOKEN_METADATA_KEY] = {
+              type: "TERRAIN",
+              gmOnly: playerRole === "GM" ? true : false,
+            };
+          });
+        },
+      );
+    },
+  });
 }
 
 function createRemoveStats(minionGroups: MinionGroup[]) {
@@ -430,9 +492,6 @@ function createRemoveStats(minionGroups: MinionGroup[]) {
         label: "Remove Character",
         filter: {
           some: [
-            { key: "layer", value: "CHARACTER", coordinator: "||" },
-            { key: "layer", value: "MOUNT" },
-            { key: "type", value: "IMAGE" },
             {
               key: ["metadata", TOKEN_METADATA_KEY],
               value: undefined,
@@ -448,9 +507,6 @@ function createRemoveStats(minionGroups: MinionGroup[]) {
         label: "Remove Characters",
         filter: {
           some: [
-            { key: "layer", value: "CHARACTER", coordinator: "||" },
-            { key: "layer", value: "MOUNT" },
-            { key: "type", value: "IMAGE" },
             {
               key: ["metadata", TOKEN_METADATA_KEY],
               value: undefined,

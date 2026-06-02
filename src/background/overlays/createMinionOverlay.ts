@@ -1,4 +1,4 @@
-import type { Image, Item } from "@owlbear-rodeo/sdk";
+import type { Item } from "@owlbear-rodeo/sdk";
 import type { DefinedMinionTokenData } from "../../types/tokenDataZod";
 
 import type { DefinedSettings } from "../../types/settingsZod";
@@ -6,7 +6,7 @@ import { createTokenOverlay } from "./createTokenOverlay";
 import type { MinionGroup } from "../../types/minionGroup";
 
 export function createMinionOverlay(
-  image: Image,
+  item: Item,
   token: DefinedMinionTokenData,
   minionGroups: MinionGroup[],
   role: "PLAYER" | "GM",
@@ -54,7 +54,7 @@ export function createMinionOverlay(
         },
       ],
     },
-    image,
+    item,
     dpi,
     settings,
   );

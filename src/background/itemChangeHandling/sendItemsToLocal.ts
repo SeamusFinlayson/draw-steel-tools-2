@@ -1,6 +1,6 @@
 import OBR, { type Item } from "@owlbear-rodeo/sdk";
 
-export function sendItemsToScene(
+export function sendItemsToLocal(
   addItemsArray: Item[],
   deleteItemsArray: string[],
 ) {

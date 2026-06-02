@@ -7,6 +7,7 @@ import {
   type DefinedHeroTokenData,
   type DefinedMinionTokenData,
   type DefinedMonsterTokenData,
+  type DefinedTerrainTokenData,
 } from "../types/tokenDataZod";
 
 export const TOKEN_METADATA_KEY = getPluginId("metadata");
@@ -41,6 +42,15 @@ export const defaultMinionTokenData: DefinedMinionTokenData = {
   groupId: "",
 };
 
+export const defaultTerrainTokenData: DefinedTerrainTokenData = {
+  type: "TERRAIN",
+  name: "",
+  gmOnly: true,
+  stamina: 0,
+  staminaMaximum: 0,
+  statblockName: "",
+};
+
 export function parseTokenData(metadata: Metadata): DefinedCharacterTokenData {
   const characterData = parseMetadata(
     metadata,
@@ -52,6 +62,9 @@ export function parseTokenData(metadata: Metadata): DefinedCharacterTokenData {
   }
   if (characterData?.type === "MINION") {
     return { ...defaultMinionTokenData, ...characterData };
+  }
+  if (characterData?.type === "TERRAIN") {
+    return { ...defaultTerrainTokenData, ...characterData };
   }
   if (characterData?.type === "HERO" || characterData?.type === undefined) {
     return {

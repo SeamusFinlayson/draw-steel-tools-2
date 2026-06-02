@@ -11,6 +11,11 @@ export type SetupOptions =
       type: "MINION";
       stamina: { value: number };
       groupName: { value: string; nameTags: boolean };
+    }
+  | {
+      type: "TERRAIN";
+      stamina: { enabled: boolean; value: number };
+      name: { enabled: boolean; value: string; nameTag: boolean };
     };
 
 export type AppState = {

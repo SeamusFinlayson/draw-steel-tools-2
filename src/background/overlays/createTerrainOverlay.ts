@@ -1,12 +1,12 @@
 import type { Item } from "@owlbear-rodeo/sdk";
-import type { DefinedHeroTokenData } from "../../types/tokenDataZod";
+import type { DefinedTerrainTokenData } from "../../types/tokenDataZod";
 
 import type { DefinedSettings } from "../../types/settingsZod";
 import { createTokenOverlay } from "./createTokenOverlay";
 
-export function createHeroOverlay(
+export function createTerrainOverlay(
   item: Item,
-  token: DefinedHeroTokenData,
+  token: DefinedTerrainTokenData,
   role: "PLAYER" | "GM",
   dpi: number,
   settings: DefinedSettings,
@@ -29,25 +29,6 @@ export function createHeroOverlay(
             role === "PLAYER" && token.gmOnly && settings.showHealthBars
               ? "short"
               : "full",
-        },
-      ],
-      bubbles: [
-        {
-          color: "darkgoldenrod",
-          value: token.surges,
-          display: (role === "GM" || !token.gmOnly) && token.surges > 0,
-        },
-        {
-          color: "cornflowerblue",
-          value: token.heroicResource,
-          display:
-            (role === "GM" || !token.gmOnly) && token.heroicResource !== 0,
-        },
-        {
-          color: "olivedrab",
-          value: token.temporaryStamina,
-          display:
-            (role === "GM" || !token.gmOnly) && token.temporaryStamina > 0,
         },
       ],
       nameTags: [

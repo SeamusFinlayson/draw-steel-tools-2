@@ -19,8 +19,10 @@ import { TOKEN_METADATA_KEY } from "../helpers/tokenHelpers";
 import {
   MinionTokenDataZod,
   MonsterTokenDataZod,
+  TerrainTokenDataZod,
   type MinionTokenData,
   type MonsterTokenData,
+  type TerrainTokenData,
 } from "../types/tokenDataZod";
 import { MinionGroupZod, type MinionGroup } from "../types/minionGroup";
 import { MONSTER_GROUPS_METADATA_KEY } from "../helpers/monsterGroupHelpers";
@@ -141,6 +143,60 @@ export default function StatblockSearch({
                     if (!tokenOptions) throw new Error("Invalid token options");
                     const selectedItems = await getSelectedItems();
 
+                    if (tokenOptions.type === "TERRAIN") {
+                      let targetItems = selectedItems;
+                      if (groupId !== null) {
+                        targetItems = await OBR.scene.items.getItems(
+                          (item) =>
+                            isImage(item) &&
+                            (
+                              item.metadata?.[
+                                TOKEN_METADATA_KEY
+                              ] as MinionTokenData
+                            )?.groupId === groupId,
+                        );
+                      }
+                      const nameOptions = tokenOptions.name;
+                      const staminaOptions = tokenOptions.stamina;
+                      OBR.scene.items.updateItems(
+                        targetItems.map((item) => item.id),
+                        (items) => {
+                          items.forEach((item) => {
+                            const existingDataValidation =
+                              TerrainTokenDataZod.safeParse(
+                                items[0].metadata[TOKEN_METADATA_KEY],
+                              );
+                            item.metadata[TOKEN_METADATA_KEY] =
+                              TerrainTokenDataZod.parse({
+                                ...(existingDataValidation.success
+                                  ? existingDataValidation.data
+                                  : undefined),
+                                type: "TERRAIN",
+                                gmOnly: playerRole === "GM" ? true : false,
+                                ...(nameOptions.enabled && nameOptions.nameTag
+                                  ? { name: nameOptions.value }
+                                  : {}),
+                                ...(staminaOptions.enabled
+                                  ? {
+                                      stamina: staminaOptions.value,
+                                      staminaMaximum: staminaOptions.value,
+                                    }
+                                  : {}),
+                                statblockName:
+                                  typeof appState.selectedIndexBundle ===
+                                  "object"
+                                    ? appState.selectedIndexBundle.name
+                                    : appState.selectedIndexBundle === "NONE"
+                                      ? undefined
+                                      : "",
+                              } satisfies TerrainTokenData);
+                            if (nameOptions.enabled) {
+                              item.name = nameOptions.value;
+                            }
+                          });
+                        },
+                      );
+                    }
                     if (tokenOptions.type === "BASIC") {
                       let targetItems = selectedItems;
                       if (groupId !== null) {

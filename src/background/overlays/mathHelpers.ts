@@ -1,5 +1,16 @@
-import { type Vector2, type Image, Math2 } from "@owlbear-rodeo/sdk";
-import type { DefinedSettings } from "../types/settingsZod";
+import {
+  type Vector2,
+  type Image,
+  Math2,
+  type Shape,
+  isImage,
+  isShape,
+  type Curve,
+  isCurve,
+  type Item,
+  type BoundingBox,
+} from "@owlbear-rodeo/sdk";
+import type { DefinedSettings } from "../../types/settingsZod";
 
 /**
  * Calculate the fill of a bar tracker to display.
@@ -214,22 +225,38 @@ function drawArc(
   return pointsArray;
 }
 
+type Bounds = {
+  width: number;
+  height: number;
+};
 export function getOriginAndBounds(
   settings: DefinedSettings,
-  image: Image,
+  item: Item,
   dpi: number,
-) {
-  // Determine bounds
-  const bounds = getImageDimensions(image, dpi);
-  bounds.width = Math.abs(bounds.width);
-  bounds.height = Math.abs(bounds.height);
+): {
+  origin: Vector2;
+  bounds: Bounds;
+} {
+  let center: Vector2;
+  let unsafeBounds: Bounds;
 
-  // Determine coordinate origin for drawing stats
-  const position = getImageCenter(image, dpi);
+  if (isShape(item)) {
+    const boundingBox = getBoundingBox(item);
+    center = Math2.add(boundingBox.center, item.position);
+    unsafeBounds = { width: boundingBox.width, height: boundingBox.height };
+  } else if (isImage(item)) {
+    unsafeBounds = getImageDimensions(item, dpi);
+    center = getImageCenter(item, dpi);
+  } else throw new Error("Unsupported Item Type");
+
+  const bounds: Bounds = {
+    width: Math.max(unsafeBounds.width, dpi),
+    height: Math.max(unsafeBounds.height, dpi),
+  };
   const origin = {
-    x: position.x,
+    x: center.x,
     y:
-      position.y +
+      center.y +
       ((settings.justifyHealthBarsTop ? -1 : 1) * bounds.height) / 2 -
       settings.verticalOffset +
       (settings.justifyHealthBarsTop ? 1 : 0),
@@ -239,12 +266,12 @@ export function getOriginAndBounds(
 
 function getImageDimensions(item: Image, dpi: number) {
   const dpiScale = dpi / item.grid.dpi;
-  const width = item.image.width * dpiScale * item.scale.x;
-  const height = item.image.height * dpiScale * item.scale.y;
+  const width = Math.abs(item.image.width * dpiScale * item.scale.x);
+  const height = Math.abs(item.image.height * dpiScale * item.scale.y);
   return { width, height };
 }
 
-export function getImageCenter(image: Image, sceneDpi: number) {
+function getImageCenter(image: Image, sceneDpi: number) {
   // Image center with respect to image center
   let imageCenter = { x: 0, y: 0 };
 
@@ -270,4 +297,51 @@ export function getImageCenter(image: Image, sceneDpi: number) {
   imageCenter = Math2.add(imageCenter, image.position);
 
   return imageCenter;
+}
+
+function getBoundingBox(item: Shape | Curve): BoundingBox {
+  let points: Vector2[] = [];
+  if (isCurve(item)) points = item.points;
+  else if (item.shapeType === "RECTANGLE")
+    points = [
+      { x: 0, y: 0 },
+      { x: item.width, y: 0 },
+      { x: item.width, y: item.height },
+      { x: 0, y: item.height },
+    ];
+  else if (item.shapeType === "TRIANGLE")
+    points = [
+      { x: 0, y: 0 },
+      { x: 0.5 * item.width, y: item.height },
+      { x: -0.5 * item.width, y: item.height },
+    ];
+  else if (item.shapeType === "HEXAGON") {
+    const minDimension = Math.min(item.height, item.width);
+    return {
+      center: { x: 0, y: 0 },
+      width: minDimension,
+      height: minDimension,
+      min: { x: minDimension / 2, y: minDimension / 2 },
+      max: { x: minDimension / 2, y: minDimension / 2 },
+    };
+  } else if (item.shapeType === "CIRCLE") {
+    const sqrt1_4 = 0.29 * Math.SQRT2;
+    points = [
+      { x: 0, y: -0.5 * item.height },
+      { x: sqrt1_4 * item.width, y: -sqrt1_4 * item.height },
+      { x: 0, y: 0.5 * item.height },
+      { x: sqrt1_4 * item.width, y: sqrt1_4 * item.height },
+      { x: 0.5 * item.width, y: 0 },
+      { x: -sqrt1_4 * item.width, y: sqrt1_4 * item.height },
+      { x: -0.5 * item.width, y: 0 },
+      { x: -sqrt1_4 * item.width, y: -sqrt1_4 * item.height },
+    ];
+  } else throw new Error("Unsupported Shape Type");
+
+  const angle = item.rotation;
+  const origin = { x: 0, y: 0 };
+  const rotated = points.map((point) => Math2.rotate(point, origin, angle));
+
+  const boundingBox = Math2.boundingBox(rotated);
+  return boundingBox;
 }

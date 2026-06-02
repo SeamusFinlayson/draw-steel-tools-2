@@ -66,7 +66,11 @@ export function StatblockSearchList({
               keys: [
                 "name",
                 (obj) =>
-                  obj.type === "statblock" ? obj.ancestry.join(" ") : "",
+                  obj.type === "statblock"
+                    ? obj.ancestry.join(" ")
+                    : obj.type === "terrain"
+                      ? "dynamic terrain"
+                      : "",
                 (obj) => obj.roles.join(" "),
               ],
               all: true,
@@ -133,18 +137,15 @@ export function StatblockSearchList({
               selectedIndexBundle: indexBundle,
             }));
             const resource = (await getMonsterDataBundle(indexBundle)).resource;
-            if (resource.type === "dynamicterrain")
-              throw new Error("Dynamic terrain not implemented.");
             if (resource.type === "featureblock")
               throw new Error("Feature block not implemented.");
             const stamina = parseNumber(resource.stamina, {
               truncate: true,
             });
             const monsterName = resource.name;
-            const isMinion = resource.roles
-              .join()
-              .toLowerCase()
-              .includes("minion");
+            const isMinion =
+              resource.type === "statblock" &&
+              resource.roles.join().toLowerCase().includes("minion");
             setAppState((prev) => ({
               ...prev,
               previewIndexBundle: indexBundle,
@@ -153,13 +154,13 @@ export function StatblockSearchList({
                 ? {
                     type: "MINION",
                     groupName: {
-                      value: `${monsterName}`,
+                      value: monsterName,
                       nameTags: false,
                     },
                     stamina: { value: stamina },
                   }
                 : {
-                    type: "BASIC",
+                    type: resource.type === "statblock" ? "BASIC" : "TERRAIN",
                     name: {
                       enabled: true,
                       value: monsterName,

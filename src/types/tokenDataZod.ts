@@ -21,7 +21,6 @@ export const HeroTokenDataZod = z.object({
   heroicResourceName: z.string().optional(),
   notes: z.string().optional(),
 });
-
 export const DefinedHeroTokenDataZod = z.object({
   type: z.literal("HERO"),
   name: z.string(),
@@ -46,7 +45,6 @@ export const MonsterTokenDataZod = z.object({
   temporaryStamina: z.number().optional(),
   statblockName: z.string().optional(),
 });
-
 export const DefinedMonsterTokenDataZod = z.object({
   type: z.literal("MONSTER"),
   name: z.string(),
@@ -57,19 +55,22 @@ export const DefinedMonsterTokenDataZod = z.object({
   statblockName: z.string(),
 });
 
-// Don't add anything that can will change after initialization
+// Don't add anything that can/will change after initialization
 export const MinionTokenDataZod = z.object({
   type: z.literal("MINION"),
   groupId: z.string(),
 });
-
 export const DefinedMinionTokenDataZod = MinionTokenDataZod;
 
-export const CharacterTokenDataZod = z
-  .union([HeroTokenDataZod, MonsterTokenDataZod, MinionTokenDataZod])
-  .optional();
-
 export const TerrainTokenDataZod = z.object({
+  type: z.literal("TERRAIN"),
+  name: z.string().optional(),
+  gmOnly: z.boolean().optional(),
+  stamina: z.number().optional(),
+  staminaMaximum: z.number().optional(),
+  statblockName: z.string().optional(),
+});
+export const DefinedTerrainTokenDataZod = z.object({
   type: z.literal("TERRAIN"),
   name: z.string(),
   gmOnly: z.boolean(),
@@ -78,10 +79,19 @@ export const TerrainTokenDataZod = z.object({
   statblockName: z.string(),
 });
 
+export const CharacterTokenDataZod = z
+  .union([
+    HeroTokenDataZod,
+    MonsterTokenDataZod,
+    MinionTokenDataZod,
+    TerrainTokenDataZod,
+  ])
+  .optional();
 export const DefinedCharacterTokenDataZod = z.union([
   DefinedHeroTokenDataZod,
   DefinedMonsterTokenDataZod,
   DefinedMinionTokenDataZod,
+  DefinedTerrainTokenDataZod,
 ]);
 
 export type HeroTokenData = z.infer<typeof HeroTokenDataZod>;
@@ -95,4 +105,8 @@ export type DefinedMonsterTokenData = z.infer<
 export type DefinedMinionTokenData = z.infer<typeof DefinedMinionTokenDataZod>;
 export type DefinedCharacterTokenData = z.infer<
   typeof DefinedCharacterTokenDataZod
+>;
+export type TerrainTokenData = z.infer<typeof TerrainTokenDataZod>;
+export type DefinedTerrainTokenData = z.infer<
+  typeof DefinedTerrainTokenDataZod
 >;
