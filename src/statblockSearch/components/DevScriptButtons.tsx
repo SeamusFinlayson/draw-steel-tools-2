@@ -1,8 +1,7 @@
 import { useState } from "react";
 import type { IndexBundle } from "../../types/monsterDataBundlesZod";
 import { generateIndex } from "../devScripts/generateMonsterIndex";
-import { validateMalice } from "../devScripts/validatemalice";
-import { validateStatblocks } from "../devScripts/validateStatblocks";
+import { validateResources } from "../devScripts/validateResources";
 import Button from "../../components/ui/Button";
 
 export function DevActionButtons({
@@ -29,17 +28,17 @@ export function DevActionButtons({
           </Button>
         )}
 
-        <Button onClick={() => validateStatblocks(monsterIndex)}>
+        <Button onClick={() => validateResources(monsterIndex)}>
           Validate Statblocks
-        </Button>
-
-        <Button onClick={() => validateMalice(monsterIndex)}>
-          Validate Malice
         </Button>
 
         <Button
           onClick={() => {
-            const set = new Set(monsterIndex.flatMap((val) => val.ancestry));
+            const set = new Set(
+              monsterIndex
+                .filter((val) => val.type === "statblock")
+                .flatMap((val) => val.ancestry),
+            );
             console.log([...set].sort((a, b) => a.localeCompare(b)));
           }}
         >
@@ -51,6 +50,7 @@ export function DevActionButtons({
             console.log(
               Math.max(
                 ...monsterIndex
+                  .filter((val) => val.type === "statblock")
                   .map((val) => {
                     if (Number.isNaN(parseFloat(val.ev))) console.log(val.name);
                     return parseFloat(val.ev);

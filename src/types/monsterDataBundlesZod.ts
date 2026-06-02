@@ -5,11 +5,6 @@ import {
   DrawSteelStatblockZod,
 } from "./DrawSteelZod";
 
-export const PathBundleZod = z.strictObject({
-  statblock: z.string(),
-  features: z.array(z.string()),
-});
-
 export const FeatureIndexBundleZod = z.strictObject({
   id: z.string(),
   path: z.string(),
@@ -57,7 +52,6 @@ export const DrawSteelResourceBundleZod = z.strictObject({
   append: z.array(DrawSteelResourceZod).optional(),
 });
 
-export type PathBundle = z.infer<typeof PathBundleZod>;
 export type FeatureIndexBundle = z.infer<typeof FeatureIndexBundleZod>;
 export type StatblockIndexBundle = z.infer<typeof StatblockIndexBundleZod>;
 export type TerrainIndexBundle = z.infer<typeof TerrainIndexBundleZod>;

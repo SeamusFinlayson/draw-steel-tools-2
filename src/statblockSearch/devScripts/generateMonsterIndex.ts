@@ -11,7 +11,6 @@ import {
   IndexBundleZod,
   type FeatureIndexBundle,
   type IndexBundle,
-  type PathBundle,
   type StatblockIndexBundle,
   type TerrainIndexBundle,
 } from "../../types/monsterDataBundlesZod";
@@ -87,7 +86,10 @@ export async function generateIndex() {
   );
 
   // In the order of the subdirectories create bundles of monster statblocks and relevant features
-  const pathBundles: PathBundle[] = [];
+  const pathBundles: {
+    statblock: string;
+    features: string[];
+  }[] = [];
   for (let i = 0; i < groups.length; i++) {
     const malice = rootTree
       .filter(
