@@ -57,6 +57,7 @@ export function StatBlockSwitcher({
   );
 
   let monsterStatblocks: string[] = [];
+  let terrainStatblocks: string[] = [];
   items.forEach((item) => {
     const token = parseTokenData(item.metadata);
     if (
@@ -65,9 +66,18 @@ export function StatBlockSwitcher({
       (playerRole === "GM" || !token.gmOnly)
     ) {
       monsterStatblocks.push(token.statblockName);
+    } else if (
+      token.type === "TERRAIN" &&
+      token.statblockName !== "" &&
+      (playerRole === "GM" || !token.gmOnly)
+    ) {
+      terrainStatblocks.push(token.statblockName);
     }
   });
   monsterStatblocks = [...new Set(monsterStatblocks)].sort((a, b) =>
+    a.localeCompare(b),
+  );
+  terrainStatblocks = [...new Set(terrainStatblocks)].sort((a, b) =>
     a.localeCompare(b),
   );
 
@@ -133,6 +143,25 @@ export function StatBlockSwitcher({
             <div className="text-sm font-bold">Minions</div>
           )}
           {minionStatblocks.map((value) => (
+            <PopoverClose key={value} asChild>
+              <Button
+                variant={"ghost"}
+                className="hover:bg-mirage-100/70 w-full justify-between rounded-[8px] px-2"
+                onClick={async () =>
+                  setMonsterData(await dataFromBestiaryIndexId(value))
+                }
+              >
+                <div className="truncate">{value}</div>
+                {monsterData && monsterData.resource.name === value && (
+                  <CheckIcon />
+                )}
+              </Button>
+            </PopoverClose>
+          ))}
+          {terrainStatblocks.length > 0 && (
+            <div className="text-sm font-bold">Terrain</div>
+          )}
+          {terrainStatblocks.map((value) => (
             <PopoverClose key={value} asChild>
               <Button
                 variant={"ghost"}
