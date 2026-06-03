@@ -1,4 +1,10 @@
-import { CheckIcon, LandPlotIcon, UserIcon, UsersIcon } from "lucide-react";
+import {
+  CheckIcon,
+  CrownIcon,
+  LandPlotIcon,
+  UserIcon,
+  UsersIcon,
+} from "lucide-react";
 import type { IndexBundle } from "../../types/monsterDataBundlesZod";
 import type React from "react";
 
@@ -20,6 +26,9 @@ export function MonsterPreviewCard({
       <></>
     ) : indexBundle.roles.includes("Minion") ? (
       <UsersIcon className="text-foreground size-5" />
+    ) : indexBundle.roles.includes("Leader") ||
+      indexBundle.roles.includes("Solo") ? (
+      <CrownIcon className="text-foreground size-5" />
     ) : (
       <UserIcon className="text-foreground size-5" />
     );
