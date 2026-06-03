@@ -14,6 +14,7 @@ import {
   MONSTER_STATS_HEIGHT,
   MINION_STATS_HEIGHT,
 } from "./constants";
+import landPlotIcon from "./icons/landPlotIcon";
 
 export function createGmMenu(
   themeMode: ThemeMode,
@@ -21,7 +22,7 @@ export function createGmMenu(
   minionGroups: MinionGroup[],
 ) {
   OBR.contextMenu.create({
-    id: getPluginId("gm-menu"),
+    id: getPluginId("gm-menu-hero"),
     icons: [
       {
         icon: knightHelmetIcon,
@@ -78,34 +79,10 @@ export function createGmMenu(
             { key: "layer", value: "CHARACTER", coordinator: "||" },
             { key: "layer", value: "MOUNT" },
             { key: "type", value: "IMAGE" },
-            {
-              key: ["metadata", TOKEN_METADATA_KEY],
-              value: undefined,
-              operator: "!=",
-            },
+
             {
               key: ["metadata", TOKEN_METADATA_KEY, "type"],
               value: "MONSTER",
-              operator: "==",
-            },
-          ],
-          roles: ["GM"],
-          max: 1,
-        },
-      },
-      {
-        icon: dragonHeadIcon,
-        label: "Edit Terrain",
-        filter: {
-          every: [
-            {
-              key: ["metadata", TOKEN_METADATA_KEY],
-              value: undefined,
-              operator: "!=",
-            },
-            {
-              key: ["metadata", TOKEN_METADATA_KEY, "type"],
-              value: "TERRAIN",
               operator: "==",
             },
           ],
@@ -147,11 +124,7 @@ export function createGmMenu(
             { key: "layer", value: "CHARACTER", coordinator: "||" },
             { key: "layer", value: "MOUNT" },
             { key: "type", value: "IMAGE" },
-            {
-              key: ["metadata", TOKEN_METADATA_KEY],
-              value: undefined,
-              operator: "!=",
-            },
+
             {
               key: ["metadata", TOKEN_METADATA_KEY, "type"],
               value: "MINION",
@@ -172,6 +145,57 @@ export function createGmMenu(
       height:
         NAME_HEIGHT +
         MINION_STATS_HEIGHT +
+        VERTICAL_PADDING +
+        ACCESS_TOGGLE_HEIGHT,
+    },
+  });
+
+  OBR.contextMenu.create({
+    id: getPluginId("gm-menu-terrain"),
+    icons: [
+      {
+        icon: landPlotIcon,
+        label: "Edit Terrain",
+        filter: {
+          every: [
+            { key: "layer", value: "CHARACTER", coordinator: "||" },
+            { key: "layer", value: "MOUNT" },
+            { key: "type", value: "IMAGE" },
+
+            {
+              key: ["metadata", TOKEN_METADATA_KEY, "type"],
+              value: "TERRAIN",
+              operator: "==",
+            },
+          ],
+          roles: ["GM"],
+          max: 1,
+        },
+      },
+      {
+        icon: landPlotIcon,
+        label: "Edit Terrain",
+        filter: {
+          every: [
+            { key: "layer", value: "DRAWING" },
+            { key: "type", value: "SHAPE" },
+
+            {
+              key: ["metadata", TOKEN_METADATA_KEY, "type"],
+              value: "TERRAIN",
+              operator: "==",
+            },
+          ],
+          roles: ["GM"],
+          max: 1,
+        },
+      },
+    ],
+    embed: {
+      url: getContextMenuUrl(themeMode),
+      height:
+        (nameTagsEnabled ? NAME_HEIGHT : 0) +
+        MONSTER_STATS_HEIGHT +
         VERTICAL_PADDING +
         ACCESS_TOGGLE_HEIGHT,
     },

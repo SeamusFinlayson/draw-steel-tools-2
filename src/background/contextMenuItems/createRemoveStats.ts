@@ -15,7 +15,7 @@ export function createRemoveStats(minionGroups: MinionGroup[]) {
     icons: [
       {
         icon: dragonHeadIcon,
-        label: "Remove Character",
+        label: "Remove Stats",
         filter: {
           some: [
             {
@@ -24,33 +24,14 @@ export function createRemoveStats(minionGroups: MinionGroup[]) {
               operator: "!=",
             },
           ],
-          max: 1,
           roles: ["GM"],
         },
       },
       {
         icon: dragonHeadIcon,
-        label: "Remove Characters",
+        label: "Remove Stats",
         filter: {
           some: [
-            {
-              key: ["metadata", TOKEN_METADATA_KEY],
-              value: undefined,
-              operator: "!=",
-            },
-          ],
-          min: 2,
-          roles: ["GM"],
-        },
-      },
-      {
-        icon: dragonHeadIcon,
-        label: "Remove Character",
-        filter: {
-          some: [
-            { key: "layer", value: "CHARACTER", coordinator: "||" },
-            { key: "layer", value: "MOUNT" },
-            { key: "type", value: "IMAGE" },
             {
               key: ["metadata", TOKEN_METADATA_KEY],
               value: undefined,
@@ -65,33 +46,7 @@ export function createRemoveStats(minionGroups: MinionGroup[]) {
             },
             ...gmOnlyRestrictions,
           ],
-          max: 1,
-          roles: ["PLAYER"],
-        },
-      },
-      {
-        icon: dragonHeadIcon,
-        label: "Remove Characters",
-        filter: {
-          some: [
-            { key: "layer", value: "CHARACTER", coordinator: "||" },
-            { key: "layer", value: "MOUNT" },
-            { key: "type", value: "IMAGE" },
-            {
-              key: ["metadata", TOKEN_METADATA_KEY],
-              value: undefined,
-              operator: "!=",
-            },
-          ],
-          every: [
-            {
-              key: ["metadata", TOKEN_METADATA_KEY, "gmOnly"],
-              value: true,
-              operator: "!=",
-            },
-            ...gmOnlyRestrictions,
-          ],
-          min: 2,
+          permissions: ["UPDATE"],
           roles: ["PLAYER"],
         },
       },

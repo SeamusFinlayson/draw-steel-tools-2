@@ -14,6 +14,7 @@ import {
 import { getGmOnlyRestrictions } from "./getGmOnlyRestrictions";
 import dragonHeadIcon from "./icons/dragonHeadIcon";
 import knightHelmetIcon from "./icons/knightHelmetIcon";
+import landPlotIcon from "./icons/landPlotIcon";
 
 export function createPlayerMenu(
   themeMode: ThemeMode,
@@ -21,7 +22,7 @@ export function createPlayerMenu(
   minionGroups: MinionGroup[],
 ) {
   OBR.contextMenu.create({
-    id: getPluginId("player-menu"),
+    id: getPluginId("player-menu-hero"),
     icons: [
       {
         icon: knightHelmetIcon,
@@ -44,6 +45,11 @@ export function createPlayerMenu(
             {
               key: ["metadata", TOKEN_METADATA_KEY, "type"],
               value: "MINION",
+              operator: "!=",
+            },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY, "type"],
+              value: "TERRAIN",
               operator: "!=",
             },
             {
@@ -88,11 +94,6 @@ export function createPlayerMenu(
               value: "MONSTER",
               operator: "==",
             },
-            {
-              key: ["metadata", TOKEN_METADATA_KEY],
-              value: undefined,
-              operator: "!=",
-            },
           ],
           permissions: ["UPDATE"],
           roles: ["PLAYER"],
@@ -134,17 +135,14 @@ export function createPlayerMenu(
             { key: "layer", value: "CHARACTER", coordinator: "||" },
             { key: "layer", value: "MOUNT" },
             { key: "type", value: "IMAGE" },
-            {
-              key: ["metadata", TOKEN_METADATA_KEY],
-              value: undefined,
-              operator: "!=",
-            },
+
             {
               key: ["metadata", TOKEN_METADATA_KEY, "type"],
               value: "MINION",
               operator: "==",
             },
           ],
+          permissions: ["UPDATE"],
           roles: ["PLAYER"],
         },
       } satisfies ContextMenuIcon;
@@ -152,6 +150,66 @@ export function createPlayerMenu(
     embed: {
       url: `${getContextMenuUrl(themeMode)}&minionEditor=true`,
       height: NAME_HEIGHT + MINION_STATS_HEIGHT + VERTICAL_PADDING,
+    },
+  });
+
+  OBR.contextMenu.create({
+    id: getPluginId("player-menu-terrain"),
+    icons: [
+      {
+        icon: landPlotIcon,
+        label: "Edit Terrain",
+        filter: {
+          every: [
+            { key: "layer", value: "CHARACTER", coordinator: "||" },
+            { key: "layer", value: "MOUNT" },
+            { key: "type", value: "IMAGE" },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY, "gmOnly"],
+              value: true,
+              operator: "!=",
+            },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY, "type"],
+              value: "TERRAIN",
+              operator: "==",
+            },
+          ],
+          permissions: ["UPDATE"],
+          roles: ["PLAYER"],
+          max: 1,
+        },
+      },
+      {
+        icon: landPlotIcon,
+        label: "Edit Terrain",
+        filter: {
+          every: [
+            { key: "layer", value: "DRAWING" },
+            { key: "type", value: "SHAPE" },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY, "gmOnly"],
+              value: true,
+              operator: "!=",
+            },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY, "type"],
+              value: "TERRAIN",
+              operator: "==",
+            },
+          ],
+          permissions: ["UPDATE"],
+          roles: ["PLAYER"],
+          max: 1,
+        },
+      },
+    ],
+    embed: {
+      url: getContextMenuUrl(themeMode),
+      height:
+        (nameTagsEnabled ? NAME_HEIGHT : 0) +
+        MONSTER_STATS_HEIGHT +
+        VERTICAL_PADDING,
     },
   });
 }

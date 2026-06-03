@@ -24,6 +24,7 @@ export function createAddStats() {
               operator: "==",
             },
           ],
+          permissions: ["UPDATE"],
           max: 1,
         },
       },
@@ -48,7 +49,6 @@ export function createAddStats() {
         icon: dragonHeadIcon,
         label: "Add Monster",
         filter: {
-          max: 1,
           every: [
             { key: "layer", value: "CHARACTER", coordinator: "||" },
             { key: "layer", value: "MOUNT" },
@@ -59,6 +59,8 @@ export function createAddStats() {
               operator: "==",
             },
           ],
+          permissions: ["UPDATE"],
+          max: 1,
         },
       },
     ],
@@ -80,13 +82,12 @@ export function createAddStats() {
   });
 
   OBR.contextMenu.create({
-    id: getPluginId("add-monsters"),
+    id: getPluginId("add-creatures-or-terrain"),
     icons: [
       {
         icon: dragonHeadIcon,
-        label: "Add Monsters",
+        label: "Add Creatures or Terrain",
         filter: {
-          min: 2,
           every: [
             { key: "layer", value: "CHARACTER", coordinator: "||" },
             { key: "layer", value: "MOUNT" },
@@ -97,6 +98,8 @@ export function createAddStats() {
               operator: "==",
             },
           ],
+          permissions: ["UPDATE"],
+          min: 2,
         },
       },
     ],
@@ -132,8 +135,8 @@ export function createAddStats() {
               operator: "==",
             },
           ],
+          permissions: ["UPDATE"],
           max: 1,
-          roles: ["GM"],
         },
       },
     ],
@@ -151,6 +154,43 @@ export function createAddStats() {
           });
         },
       );
+    },
+  });
+
+  OBR.contextMenu.create({
+    id: getPluginId("add-terrains"),
+    icons: [
+      {
+        icon: landPlotIcon,
+        label: "Add Terrain",
+        filter: {
+          every: [
+            { key: "layer", value: "DRAWING" },
+            { key: "type", value: "SHAPE" },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY],
+              value: undefined,
+              operator: "==",
+            },
+          ],
+          permissions: ["UPDATE"],
+          min: 2,
+        },
+      },
+    ],
+    onClick: async () => {
+      const themeMode = (await OBR.theme.getTheme()).mode;
+      OBR.popover.open({
+        id: getPluginId("statblockSearch"),
+        url: `/statblockSearch?themeMode=${themeMode}`,
+        height: 1000,
+        width: 800,
+        anchorOrigin: { horizontal: "CENTER", vertical: "CENTER" },
+        transformOrigin: {
+          horizontal: "CENTER",
+          vertical: "CENTER",
+        },
+      });
     },
   });
 }
