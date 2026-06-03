@@ -40,6 +40,7 @@ export function MonsterPreviewCard({
           {indexBundle.type === "statblock" && (
             <div>{indexBundle.ancestry.join(", ")}</div>
           )}
+          {indexBundle.type === "terrain" && <div>Terrain</div>}
           {(indexBundle.type === "statblock" ||
             indexBundle.type === "terrain") && (
             <>
