@@ -9,4 +9,6 @@ export const statblockKeywords = [
       .filter((val) => val.type === "statblock")
       .flatMap((val) => val.ancestry),
   ),
-].sort((a, b) => a.localeCompare(b));
+]
+  .filter((val) => val !== "Human or Animal")
+  .sort((a, b) => a.localeCompare(b));

@@ -180,9 +180,10 @@ export function createAddStats() {
     ],
     onClick: async () => {
       const themeMode = (await OBR.theme.getTheme()).mode;
+      console.log("here");
       OBR.popover.open({
         id: getPluginId("statblockSearch"),
-        url: `/statblockSearch?themeMode=${themeMode}`,
+        url: `/statblockSearch?themeMode=${themeMode}&organization=Terrain`,
         height: 1000,
         width: 800,
         anchorOrigin: { horizontal: "CENTER", vertical: "CENTER" },

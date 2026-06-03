@@ -47,33 +47,39 @@ export function FiltersDropdown({
             </div>
             <div className="mt-4 mb-2 font-bold">Organization</div>
             <div className="grid grid-cols-2 @min-[480px]:grid-cols-3 @min-[640px]:grid-cols-4 @min-[800px]:grid-cols-5 @min-[960px]:grid-cols-6">
-              {["Minion", "Horde", "Platoon", "Elite", "Leader", "Solo"].map(
-                (val) => (
-                  <div key={val} className="flex items-center">
-                    <Checkbox
-                      id={val}
-                      checked={search.organizations.includes(val)}
-                      onCheckedChange={(checked) => {
-                        if (checked)
-                          setSearch({
-                            ...search,
-                            organizations: [...search.organizations, val],
-                          });
-                        else
-                          setSearch({
-                            ...search,
-                            organizations: [
-                              ...search.organizations.filter(
-                                (item) => item !== val,
-                              ),
-                            ],
-                          });
-                      }}
-                    />
-                    <Label htmlFor={val}>{val}</Label>
-                  </div>
-                ),
-              )}
+              {[
+                "Terrain",
+                "Minion",
+                "Horde",
+                "Platoon",
+                "Elite",
+                "Leader",
+                "Solo",
+              ].map((val) => (
+                <div key={val} className="flex items-center">
+                  <Checkbox
+                    id={val}
+                    checked={search.organizations.includes(val)}
+                    onCheckedChange={(checked) => {
+                      if (checked)
+                        setSearch({
+                          ...search,
+                          organizations: [...search.organizations, val],
+                        });
+                      else
+                        setSearch({
+                          ...search,
+                          organizations: [
+                            ...search.organizations.filter(
+                              (item) => item !== val,
+                            ),
+                          ],
+                        });
+                    }}
+                  />
+                  <Label htmlFor={val}>{val}</Label>
+                </div>
+              ))}
             </div>
             <div className="mt-4 mb-2 font-bold">Role</div>
             <div className="grid grid-cols-2 @min-[480px]:grid-cols-3 @min-[640px]:grid-cols-4 @min-[800px]:grid-cols-5 @min-[960px]:grid-cols-6">

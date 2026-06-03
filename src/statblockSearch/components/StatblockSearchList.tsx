@@ -42,6 +42,11 @@ export function StatblockSearchList({
               })
               .filter((item) => {
                 if (search.organizations.length <= 0) return true;
+                if (
+                  item.type === "terrain" &&
+                  search.organizations.includes("Terrain")
+                )
+                  return true;
                 for (const str of item.roles) {
                   if (search.organizations.includes(str)) return true;
                 }
@@ -55,8 +60,8 @@ export function StatblockSearchList({
                 return false;
               })
               .filter((item) => {
-                if (item.type === "terrain") return true;
                 if (search.keywords.length <= 0) return true;
+                if (item.type === "terrain") return false;
                 for (const str of item.ancestry) {
                   if (search.keywords.includes(str)) return true;
                 }
@@ -84,58 +89,69 @@ export function StatblockSearchList({
 
   return (
     <div className="grid h-full gap-3 p-4 md:grid-cols-2">
-      {search.value === "" && (
-        <NoMonsterCard
-          variant="BASIC"
-          onActionClick={() =>
-            setAppState((prev) => ({
-              ...prev,
-              selectedIndexBundle: "NONE",
-              setupOptions: {
-                type: "BASIC",
-                name: {
-                  enabled: false,
-                  value: "Monster",
-                  nameTag: false,
+      {search.value === "" &&
+        (search.organizations.length > 0
+          ? search.organizations.some((val) =>
+              ["Horde", "Platoon", "Elite", "Leader", "Solo"].includes(val),
+            )
+          : true) && (
+          <NoMonsterCard
+            variant="BASIC"
+            onActionClick={() =>
+              setAppState((prev) => ({
+                ...prev,
+                selectedIndexBundle: "NONE",
+                setupOptions: {
+                  type: "BASIC",
+                  name: {
+                    enabled: false,
+                    value: "Monster",
+                    nameTag: false,
+                  },
+                  stamina: { enabled: false, value: 0 },
                 },
-                stamina: { enabled: false, value: 0 },
-              },
-            }))
-          }
-        />
-      )}
-      {search.value === "" && (
-        <NoMonsterCard
-          variant="MINION"
-          onActionClick={() =>
-            setAppState((prev) => ({
-              ...prev,
-              selectedIndexBundle: "NONE",
-              setupOptions: {
-                type: "MINION",
-                groupName: { value: "Minion", nameTags: false },
-                stamina: { value: 1 },
-              },
-            }))
-          }
-        />
-      )}
-      {search.value === "" && (
-        <NoMonsterCard
-          variant="TERRAIN"
-          onActionClick={() =>
-            setAppState((prev) => ({
-              ...prev,
-              selectedIndexBundle: "NONE",
-              setupOptions: {
-                type: "TERRAIN",
-                name: { enabled: false, value: "Terrain", nameTag: false },
-                stamina: { enabled: false, value: 0 },
-              },
-            }))
-          }
-        />
-      )}
+              }))
+            }
+          />
+        )}
+      {search.value === "" &&
+        (search.organizations.length > 0
+          ? search.organizations.includes("Minion")
+          : true) && (
+          <NoMonsterCard
+            variant="MINION"
+            onActionClick={() =>
+              setAppState((prev) => ({
+                ...prev,
+                selectedIndexBundle: "NONE",
+                setupOptions: {
+                  type: "MINION",
+                  groupName: { value: "Minion", nameTags: false },
+                  stamina: { value: 1 },
+                },
+              }))
+            }
+          />
+        )}
+      {search.value === "" &&
+        (search.organizations.length > 0
+          ? search.organizations.includes("Terrain")
+          : true) && (
+          <NoMonsterCard
+            variant="TERRAIN"
+            onActionClick={() =>
+              setAppState((prev) => ({
+                ...prev,
+                selectedIndexBundle: "NONE",
+                setupOptions: {
+                  type: "TERRAIN",
+                  name: { enabled: false, value: "Terrain", nameTag: false },
+                  stamina: { enabled: false, value: 0 },
+                },
+              }))
+            }
+          />
+        )}
       {sortedMonsterIndex.map((indexBundle) => (
         <MonsterPreviewCard
           key={indexBundle.id}

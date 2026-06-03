@@ -30,16 +30,25 @@ import z from "zod";
 import { generateGroupId } from "../helpers/generateGroupId";
 import type { IndexBundle } from "../types/monsterDataBundlesZod";
 import usePlayerRole from "../helpers/usePlayerRole";
+import { defaultSearchData } from "../types/statblockSearchData";
 
 const params = new URLSearchParams(document.location.search);
 let groupId = params.get("groupId");
+const orgaization = params.get("organization");
+console.log(orgaization);
 
 export default function StatblockSearch({
   monsterIndex,
 }: {
   monsterIndex: IndexBundle[];
 }) {
-  const [appState, setAppState] = useState<AppState>(defaultAppState);
+  const [appState, setAppState] = useState<AppState>({
+    ...defaultAppState,
+    search: {
+      ...defaultSearchData,
+      organizations: orgaization ? [orgaization] : [],
+    },
+  });
   const playerRole = usePlayerRole();
 
   return (
