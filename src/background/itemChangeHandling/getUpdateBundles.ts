@@ -1,5 +1,5 @@
-import { isImage, isShape, type Item, type Layer } from "@owlbear-rodeo/sdk";
-import { parseTokenData, TOKEN_METADATA_KEY } from "../../helpers/tokenHelpers";
+import { type Item } from "@owlbear-rodeo/sdk";
+import { parseTokenData } from "../../helpers/tokenHelpers";
 import type {
   Catagory,
   ObrState,
@@ -13,33 +13,8 @@ import {
   checkItemChanges,
   checkMetadataChanges,
 } from "./checkChanges";
-
-function checkIsOnTrackedLayer(layer: Layer) {
-  if (layer === "MOUNT") return true;
-  if (layer === "CHARACTER") return true;
-  if (layer === "DRAWING") return true;
-  return false;
-}
-
-function checkIsTrackedItemType(item: Item) {
-  if (isImage(item)) return true;
-  if (isShape(item)) return true;
-  return false;
-}
-
-function getItemStatus(item: Item, prev: Item | undefined) {
-  const hasMetadata = TOKEN_METADATA_KEY in item.metadata;
-  if (!hasMetadata) return prev ? "REMOVE" : "UNTRACKED";
-
-  const isOnTrackedLayer = checkIsOnTrackedLayer(item.layer);
-  if (!isOnTrackedLayer) return prev ? "REMOVE" : "UNTRACKED";
-
-  const isTrackedItemType = checkIsTrackedItemType(item);
-  if (!isTrackedItemType) return prev ? "REMOVE" : "UNTRACKED";
-
-  if (!prev) return "ADD";
-  return "NEEDS_CHECKS";
-}
+import { getValidPluginTypes } from "../../helpers/pluginTargetChecking";
+import { checkHasPluginData } from "../../helpers/checkHasPluginData";
 
 function bundleCatagory(
   cat: Catagory,
@@ -66,14 +41,23 @@ export function getUpdateBundles(
     const prev: PreviousItemData | undefined = log
       ? { item: log.item, data: log.data }
       : undefined;
-    const status = getItemStatus(item, prev?.item);
 
-    if (status === "REMOVE") return bundleCatagory(status, item);
-    if (status === "UNTRACKED") return bundleCatagory(status, item);
+    const hasMetadata = checkHasPluginData(item);
+    if (!hasMetadata)
+      return bundleCatagory(prev ? "REMOVE" : "UNTRACKED", item);
+
+    const validPluginItemTypes = getValidPluginTypes(item);
+
+    if (validPluginItemTypes.length === 0)
+      return bundleCatagory(prev ? "REMOVE" : "UNTRACKED", item);
 
     const data = parseTokenData(item.metadata);
 
-    if (!prev) return bundleCatagory(status as "ADD", item, data);
+    // Mismatch between metadata and valid target types
+    if (!validPluginItemTypes.includes(data.type))
+      return bundleCatagory(prev ? "REMOVE" : "UNTRACKED", item);
+
+    if (!prev) return bundleCatagory("ADD", item, data);
 
     if (changed.settings) return bundleCatagory("UPDATE", item, data, prev);
     if (changed.role) return bundleCatagory("UPDATE", item, data, prev);
@@ -84,7 +68,6 @@ export function getUpdateBundles(
       return bundleCatagory("REFRESH", item, data, prev);
     if (checkItemChanges(item, prev.item))
       return bundleCatagory("UPDATE", item, data, prev);
-
     if (checkMetadataChanges(data, prev.data))
       return bundleCatagory("UPDATE", item, data, prev);
 

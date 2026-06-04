@@ -59,20 +59,18 @@ export function parseTokenData(metadata: Metadata): DefinedCharacterTokenData {
     TOKEN_METADATA_KEY,
     CharacterTokenDataZod.parse,
   );
-  if (characterData?.type === "MONSTER") {
+  if (characterData === undefined)
+    throw new Error("Could not parse token data.");
+  if (characterData.type === "MONSTER")
     return { ...defaultMonsterTokenData, ...characterData };
-  }
-  if (characterData?.type === "MINION") {
+  if (characterData.type === "MINION")
     return { ...defaultMinionTokenData, ...characterData };
-  }
-  if (characterData?.type === "TERRAIN") {
+  if (characterData.type === "TERRAIN")
     return { ...defaultTerrainTokenData, ...characterData };
-  }
-  if (characterData?.type === "HERO" || characterData?.type === undefined) {
+  if (characterData.type === "HERO" || characterData.type === undefined)
     return {
       ...defaultHeroTokenData,
       ...characterData,
     } as DefinedCharacterTokenData;
-  }
   throw new Error("Unhandled character data type.");
 }

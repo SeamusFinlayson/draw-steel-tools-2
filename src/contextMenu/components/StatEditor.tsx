@@ -282,7 +282,6 @@ export default function StatEditor({
               value={token.heroicResourceButton}
               onValueChange={(value) => {
                 if (!["D3", "D3+1", "+2", "+3"].includes(value)) return;
-                console.log(value);
                 updateToken({
                   heroicResourceButton: value as "D3" | "D3+1" | "+2" | "+3",
                 });

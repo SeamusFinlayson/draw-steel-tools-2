@@ -19,6 +19,8 @@ import OBR from "@owlbear-rodeo/sdk";
 import { getPluginId } from "../helpers/getPluginId";
 import usePlayerRole from "../helpers/usePlayerRole";
 import { getMinionTokenCounts } from "../helpers/getMinionTokenCounts";
+import { checkHasPluginData } from "../helpers/checkHasPluginData";
+import { getValidPluginTypes } from "../helpers/pluginTargetChecking";
 
 const parseMinionGroups = z.array(MinionGroupZod).parse;
 
@@ -59,28 +61,31 @@ export function StatBlockSwitcher({
 
   let monsterStatblocks: { name: string; id: string }[] = [];
   let terrainStatblocks: { name: string; id: string }[] = [];
-  items.forEach((item) => {
-    const token = parseTokenData(item.metadata);
-    if (
-      token.type === "MONSTER" &&
-      token.statblockName !== "" &&
-      (playerRole === "GM" || !token.gmOnly)
-    ) {
-      monsterStatblocks.push({
-        name: token.statblockName,
-        id: token.resourceId ? token.resourceId : token.statblockName,
-      });
-    } else if (
-      token.type === "TERRAIN" &&
-      token.statblockName !== "" &&
-      (playerRole === "GM" || !token.gmOnly)
-    ) {
-      terrainStatblocks.push({
-        name: token.statblockName,
-        id: token.resourceId ? token.resourceId : token.statblockName,
-      });
-    }
-  });
+  items
+    .filter(checkHasPluginData)
+    .filter((item) => getValidPluginTypes(item).length > 0)
+    .forEach((item) => {
+      const token = parseTokenData(item.metadata);
+      if (
+        token.type === "MONSTER" &&
+        token.statblockName !== "" &&
+        (playerRole === "GM" || !token.gmOnly)
+      ) {
+        monsterStatblocks.push({
+          name: token.statblockName,
+          id: token.resourceId ? token.resourceId : token.statblockName,
+        });
+      } else if (
+        token.type === "TERRAIN" &&
+        token.statblockName !== "" &&
+        (playerRole === "GM" || !token.gmOnly)
+      ) {
+        terrainStatblocks.push({
+          name: token.statblockName,
+          id: token.resourceId ? token.resourceId : token.statblockName,
+        });
+      }
+    });
   monsterStatblocks = [
     ...new Map(monsterStatblocks.map((item) => [item.id, item.name])),
   ]

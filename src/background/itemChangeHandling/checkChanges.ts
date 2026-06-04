@@ -56,5 +56,9 @@ export function checkMetadataChanges(
     if (item.stamina !== prev.stamina) return true;
     if (item.staminaMaximum !== prev.staminaMaximum) return true;
   }
+  if (item.type === "MINION" && prev.type === "MINION") {
+    if (item.groupId !== prev.groupId) return true;
+  }
+
   return false;
 }

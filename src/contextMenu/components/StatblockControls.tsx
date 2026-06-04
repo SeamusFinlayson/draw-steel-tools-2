@@ -1,9 +1,9 @@
 import OBR from "@owlbear-rodeo/sdk";
 import { XIcon, PlusIcon } from "lucide-react";
-import Button from "../../components/ui/Button";
 import { getPluginId } from "../../helpers/getPluginId";
 import { Label } from "../trackerInputs/Label";
 import { cn } from "../../helpers/utils";
+import { ContextMenuButton } from "./ContextMenuButton";
 
 export default function StatblockControls({
   label = "Statblock",
@@ -36,9 +36,8 @@ export default function StatblockControls({
         {statblockName !== "" ? (
           <>
             <div className="grow">
-              <Button
-                variant={"secondary"}
-                className="bg-mirage-400/30 dark:bg-mirage-500/30 hover:bg-mirage-400/30 hover:dark:bg-mirage-500/30 group w-full basis-40 overflow-clip p-0 focus-visible:ring-0"
+              <ContextMenuButton
+                className="w-full"
                 onClick={async () => {
                   OBR.broadcast.sendMessage(
                     getPluginId("set-viewer-statblock"),
@@ -71,28 +70,22 @@ export default function StatblockControls({
                   if (selection) OBR.player.select(selection, true);
                 }}
               >
-                <div className="group-hover:bg-foreground/7 flex size-full grow items-center-safe justify-center text-sm duration-150">
-                  {statblockName}
-                </div>
-              </Button>
+                {statblockName}
+              </ContextMenuButton>
             </div>
             {playerRole === "GM" && (
-              <Button
-                variant={"secondary"}
-                className="bg-mirage-400/30 dark:bg-mirage-500/30 hover:bg-mirage-400/30 hover:dark:bg-mirage-500/30 group aspect-square shrink-0 overflow-clip p-0 focus-visible:ring-0"
+              <ContextMenuButton
+                className="aspect-square shrink-0"
                 onClick={removeStatblock}
               >
-                <div className="group-hover:bg-foreground/7 flex size-full items-center-safe justify-center text-sm duration-150">
-                  <XIcon />
-                </div>
-              </Button>
+                <XIcon />
+              </ContextMenuButton>
             )}
           </>
         ) : (
-          <Button
+          <ContextMenuButton
             disabled={playerRole === "PLAYER"}
-            variant={"secondary"}
-            className="bg-mirage-400/30 dark:bg-mirage-500/30 hover:bg-mirage-400/30 hover:dark:bg-mirage-500/30 group w-full overflow-clip p-0 focus-visible:ring-0"
+            className="w-full"
             onClick={async () => {
               const themeMode = (await OBR.theme.getTheme()).mode;
               OBR.popover.open({
@@ -110,10 +103,8 @@ export default function StatblockControls({
               });
             }}
           >
-            <div className="group-hover:bg-foreground/7 flex size-full items-center-safe justify-center text-sm duration-150">
-              <PlusIcon />
-            </div>
-          </Button>
+            <PlusIcon />
+          </ContextMenuButton>
         )}
       </div>
     </div>

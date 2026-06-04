@@ -1,11 +1,11 @@
 import OBR from "@owlbear-rodeo/sdk";
-import { getPluginId } from "../../helpers/getPluginId";
-import { getSelectedItems } from "../../helpers/getSelectedItem";
-import { removeCreatureData } from "../../helpers/removeCreatureData";
-import { TOKEN_METADATA_KEY } from "../../helpers/tokenHelpers";
-import type { MinionGroup } from "../../types/minionGroup";
+import { getPluginId } from "../../../helpers/getPluginId";
+import { getSelectedItems } from "../../../helpers/getSelectedItem";
+import { removeCreatureData } from "../../../helpers/removeCreatureData";
+import { TOKEN_METADATA_KEY } from "../../../helpers/tokenHelpers";
+import type { MinionGroup } from "../../../types/minionGroup";
 import { getGmOnlyRestrictions } from "./getGmOnlyRestrictions";
-import dragonHeadIcon from "./icons/dragonHeadIcon";
+import dragonHeadIcon from "../icons/dragonHeadIcon";
 
 export function createRemoveStats(minionGroups: MinionGroup[]) {
   const gmOnlyRestrictions = getGmOnlyRestrictions(minionGroups);
