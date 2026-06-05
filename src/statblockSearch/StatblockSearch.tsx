@@ -7,35 +7,17 @@ import {
 } from "../components/ui/dialog";
 import { useState } from "react";
 import Button from "../components/ui/Button";
-import OBR, { isImage } from "@owlbear-rodeo/sdk";
-import { getPluginId } from "../helpers/getPluginId";
 import { OptionsView } from "./components/OptionsView";
 import {
   defaultAppState,
   type AppState,
 } from "../types/statblockLookupAppState";
-import { getSelectedItems } from "../helpers/getSelectedItem";
-import { TOKEN_METADATA_KEY } from "../helpers/tokenHelpers";
-import {
-  MinionTokenDataZod,
-  MonsterTokenDataZod,
-  TerrainTokenDataZod,
-  type MinionTokenData,
-  type MonsterTokenData,
-  type TerrainTokenData,
-} from "../types/tokenDataZod";
-import { MinionGroupZod, type MinionGroup } from "../types/minionGroup";
-import { MONSTER_GROUPS_METADATA_KEY } from "../helpers/monsterGroupHelpers";
-import z from "zod";
-import { generateGroupId } from "../helpers/generateGroupId";
 import type { IndexBundle } from "../types/monsterDataBundlesZod";
 import usePlayerRole from "../helpers/usePlayerRole";
 import { defaultSearchData } from "../types/statblockSearchData";
 
 const params = new URLSearchParams(document.location.search);
-let groupId = params.get("groupId");
 const orgaization = params.get("organization");
-console.log(orgaization);
 
 export default function StatblockSearch({
   monsterIndex,
@@ -115,240 +97,12 @@ export default function StatblockSearch({
             playerRole={playerRole}
           />
         ) : (
-          <OptionsView appState={appState} setAppState={setAppState} />
+          <OptionsView
+            appState={appState}
+            setAppState={setAppState}
+            playerRole={playerRole}
+          />
         )}
-
-        <footer className="w-full">
-          <div className="border-mirage-300 dark:border-mirage-700 flex gap-4 border-t px-4 py-2 sm:px-6 sm:py-3">
-            {!appState.setupOptions ? (
-              <Button
-                variant={"accentOutline"}
-                className="grow"
-                onClick={() =>
-                  OBR.popover.close(getPluginId("statblockSearch"))
-                }
-              >
-                Close
-              </Button>
-            ) : (
-              <>
-                <Button
-                  variant={"accentOutline"}
-                  className="grow"
-                  onClick={() =>
-                    setAppState((prev) => ({
-                      ...prev,
-                      selectedIndexBundle: undefined,
-                      setupOptions: undefined,
-                    }))
-                  }
-                >
-                  Back
-                </Button>
-                <Button
-                  className="grow"
-                  onClick={async () => {
-                    const tokenOptions = appState.setupOptions;
-                    if (!tokenOptions) throw new Error("Invalid token options");
-                    const selectedItems = await getSelectedItems();
-
-                    if (tokenOptions.type === "TERRAIN") {
-                      let targetItems = selectedItems;
-                      if (groupId !== null) {
-                        targetItems = await OBR.scene.items.getItems(
-                          (item) =>
-                            isImage(item) &&
-                            (
-                              item.metadata?.[
-                                TOKEN_METADATA_KEY
-                              ] as MinionTokenData
-                            )?.groupId === groupId,
-                        );
-                      }
-                      const nameOptions = tokenOptions.name;
-                      const staminaOptions = tokenOptions.stamina;
-                      OBR.scene.items.updateItems(
-                        targetItems.map((item) => item.id),
-                        (items) => {
-                          items.forEach((item) => {
-                            const existingDataValidation =
-                              TerrainTokenDataZod.safeParse(
-                                items[0].metadata[TOKEN_METADATA_KEY],
-                              );
-                            item.metadata[TOKEN_METADATA_KEY] =
-                              TerrainTokenDataZod.parse({
-                                ...(existingDataValidation.success
-                                  ? existingDataValidation.data
-                                  : undefined),
-                                type: "TERRAIN",
-                                gmOnly: playerRole === "GM" ? true : false,
-                                ...(nameOptions.enabled && nameOptions.nameTag
-                                  ? { name: nameOptions.value }
-                                  : {}),
-                                ...(staminaOptions.enabled
-                                  ? {
-                                      stamina: staminaOptions.value,
-                                      staminaMaximum: staminaOptions.value,
-                                    }
-                                  : {}),
-                                ...(typeof appState.selectedIndexBundle ===
-                                "object"
-                                  ? {
-                                      statblockName:
-                                        appState.selectedIndexBundle.name,
-                                      resourceId:
-                                        appState.selectedIndexBundle.id,
-                                    }
-                                  : {}),
-                              } satisfies TerrainTokenData);
-                            if (nameOptions.enabled) {
-                              item.name = nameOptions.value;
-                            }
-                          });
-                        },
-                      );
-                    } else if (tokenOptions.type === "BASIC") {
-                      let targetItems = selectedItems;
-                      if (groupId !== null) {
-                        targetItems = await OBR.scene.items.getItems(
-                          (item) =>
-                            isImage(item) &&
-                            (
-                              item.metadata?.[
-                                TOKEN_METADATA_KEY
-                              ] as MinionTokenData
-                            )?.groupId === groupId,
-                        );
-                      }
-                      const nameOptions = tokenOptions.name;
-                      const staminaOptions = tokenOptions.stamina;
-                      OBR.scene.items.updateItems(
-                        targetItems.map((item) => item.id),
-                        (items) => {
-                          items.forEach((item) => {
-                            const existingDataValidation =
-                              MonsterTokenDataZod.safeParse(
-                                items[0].metadata[TOKEN_METADATA_KEY],
-                              );
-                            item.metadata[TOKEN_METADATA_KEY] =
-                              MonsterTokenDataZod.parse({
-                                ...(existingDataValidation.success
-                                  ? existingDataValidation.data
-                                  : undefined),
-                                type: "MONSTER",
-                                gmOnly: playerRole === "GM" ? true : false,
-                                ...(nameOptions.enabled && nameOptions.nameTag
-                                  ? { name: nameOptions.value }
-                                  : {}),
-                                ...(staminaOptions.enabled
-                                  ? {
-                                      stamina: staminaOptions.value,
-                                      staminaMaximum: staminaOptions.value,
-                                    }
-                                  : {}),
-                                ...(typeof appState.selectedIndexBundle ===
-                                "object"
-                                  ? {
-                                      statblockName:
-                                        appState.selectedIndexBundle.name,
-                                      resourceId:
-                                        appState.selectedIndexBundle.id,
-                                    }
-                                  : {}),
-                              } satisfies MonsterTokenData);
-                            if (nameOptions.enabled) {
-                              item.name = nameOptions.value;
-                            }
-                          });
-                        },
-                      );
-                    } else if (tokenOptions.type === "MINION") {
-                      let groupSize: number | null = null;
-                      if (groupId === "" || groupId === null) {
-                        groupId = generateGroupId();
-                        groupSize = (
-                          (await OBR.player.getSelection()) as string[]
-                        ).length;
-                        OBR.scene.items.updateItems(
-                          selectedItems.map((item) => item.id),
-                          (items) => {
-                            items.forEach(async (item) => {
-                              const existingDataValidation =
-                                MinionTokenDataZod.safeParse(
-                                  items[0].metadata[TOKEN_METADATA_KEY],
-                                );
-                              item.metadata[TOKEN_METADATA_KEY] =
-                                MinionTokenDataZod.parse({
-                                  ...(existingDataValidation.success
-                                    ? existingDataValidation.data
-                                    : undefined),
-                                  type: "MINION",
-                                  groupId: groupId as string,
-                                } satisfies MinionTokenData);
-                              item.name = tokenOptions.groupName.value;
-                            });
-                          },
-                        );
-                      } else {
-                        const groupItems = await OBR.scene.items.getItems(
-                          (item) =>
-                            isImage(item) &&
-                            (
-                              item.metadata?.[
-                                TOKEN_METADATA_KEY
-                              ] as MinionTokenData
-                            )?.groupId === groupId,
-                        );
-                        groupSize = groupItems.length;
-                      }
-
-                      const minionGroups = z
-                        .array(MinionGroupZod)
-                        .safeParse(
-                          (await OBR.scene.getMetadata())[
-                            MONSTER_GROUPS_METADATA_KEY
-                          ],
-                        );
-
-                      OBR.scene.setMetadata({
-                        [MONSTER_GROUPS_METADATA_KEY]: z
-                          .array(MinionGroupZod)
-                          .parse([
-                            ...(minionGroups.success
-                              ? minionGroups.data.filter(
-                                  (value) => value.id !== groupId,
-                                )
-                              : []),
-                            {
-                              type: "MINION",
-                              id: groupId,
-                              individualStamina: tokenOptions.stamina.value,
-                              name: tokenOptions.groupName.value,
-                              ...(typeof appState.selectedIndexBundle ===
-                              "object"
-                                ? {
-                                    statblock:
-                                      appState.selectedIndexBundle.name,
-                                    resourceId: appState.selectedIndexBundle.id,
-                                  }
-                                : {}),
-                              currentStamina:
-                                tokenOptions.stamina.value * groupSize,
-                              nameTagsEnabled: tokenOptions.groupName.nameTags,
-                              gmOnly: playerRole === "GM" ? true : false,
-                            },
-                          ] satisfies MinionGroup[]),
-                      });
-                    }
-                    OBR.popover.close(getPluginId("statblockSearch"));
-                  }}
-                >
-                  Confirm
-                </Button>
-              </>
-            )}
-          </div>
-        </footer>
       </div>
     </div>
   );

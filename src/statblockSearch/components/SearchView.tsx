@@ -8,6 +8,8 @@ import { FiltersDropdown } from "./FiltersDropdown";
 import { StatblockSearchList } from "./StatblockSearchList";
 import DebounceInput from "../../components/logic/DebounceInput";
 import type { AppState } from "../../types/statblockLookupAppState";
+import OBR from "@owlbear-rodeo/sdk";
+import { getPluginId } from "../../helpers/getPluginId";
 
 export default function SearchView({
   monsterIndex,
@@ -100,6 +102,18 @@ export default function SearchView({
           </>
         </div>
       </ScrollArea>
+
+      <footer>
+        <div className="border-mirage-300 dark:border-mirage-700 flex gap-4 border-t px-4 py-2 sm:px-6 sm:py-3">
+          <Button
+            variant={"accentOutline"}
+            className="grow"
+            onClick={() => OBR.popover.close(getPluginId("statblockSearch"))}
+          >
+            Close
+          </Button>
+        </div>
+      </footer>
     </div>
   );
 }
