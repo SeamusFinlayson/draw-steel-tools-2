@@ -1,8 +1,8 @@
 import type { Item, Layer } from "@owlbear-rodeo/sdk";
 
-type PluginItemType = "HERO" | "MONSTER" | "MINION" | "TERRAIN";
-type Requirement = { types: string[]; layers: Layer[] };
+export type PluginItemType = "HERO" | "MONSTER" | "MINION" | "TERRAIN";
 
+type Requirement = { types: string[]; layers: Layer[] };
 const pluginItemRequirements: Record<PluginItemType, Requirement[]> = {
   HERO: [{ types: ["IMAGE"], layers: ["CHARACTER", "MOUNT"] }],
   MONSTER: [{ types: ["IMAGE"], layers: ["CHARACTER", "MOUNT"] }],

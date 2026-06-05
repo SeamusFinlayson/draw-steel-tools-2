@@ -1,22 +1,26 @@
 import type { IndexBundle } from "./monsterDataBundlesZod";
 import { defaultSearchData, type SearchData } from "./statblockSearchData";
 
+export type MonsterSetupOptions = {
+  type: "MONSTER";
+  stamina: { enabled: boolean; value: number };
+  name: { enabled: boolean; value: string; nameTag: boolean };
+};
+export type MinionSetupOptions = {
+  type: "MINION";
+  stamina: { value: number };
+  groupName: { value: string; nameTags: boolean };
+};
+export type TerrainSetupOptions = {
+  type: "TERRAIN";
+  stamina: { enabled: boolean; value: number };
+  name: { enabled: boolean; value: string; nameTag: boolean };
+};
+
 export type SetupOptions =
-  | {
-      type: "BASIC";
-      stamina: { enabled: boolean; value: number };
-      name: { enabled: boolean; value: string; nameTag: boolean };
-    }
-  | {
-      type: "MINION";
-      stamina: { value: number };
-      groupName: { value: string; nameTags: boolean };
-    }
-  | {
-      type: "TERRAIN";
-      stamina: { enabled: boolean; value: number };
-      name: { enabled: boolean; value: string; nameTag: boolean };
-    };
+  | MonsterSetupOptions
+  | MinionSetupOptions
+  | TerrainSetupOptions;
 
 export type AppState = {
   search: SearchData;

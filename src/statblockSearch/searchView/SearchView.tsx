@@ -81,26 +81,20 @@ export default function SearchView({
         </Button>
       </div>
 
-      <ScrollArea className="grow basis-50">
-        <div className="flex grow flex-col">
-          <>
-            <FiltersDropdown
-              search={search}
-              setSearch={(search) =>
-                setAppState((prev) => ({ ...prev, search }))
-              }
-            />
+      <ScrollArea className="grow basis-0">
+        <FiltersDropdown
+          search={search}
+          setSearch={(search) => setAppState((prev) => ({ ...prev, search }))}
+        />
 
-            <StatblockSearchList
-              playerRole={playerRole}
-              search={search}
-              setAppState={setAppState}
-              monsterIndex={monsterIndex.filter(
-                (item) => item.type === "statblock" || item.type === "terrain",
-              )}
-            />
-          </>
-        </div>
+        <StatblockSearchList
+          playerRole={playerRole}
+          search={search}
+          setAppState={setAppState}
+          monsterIndex={monsterIndex.filter(
+            (item) => item.type === "statblock" || item.type === "terrain",
+          )}
+        />
       </ScrollArea>
 
       <footer>

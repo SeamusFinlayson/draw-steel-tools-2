@@ -102,7 +102,7 @@ export function StatblockSearchList({
                 ...prev,
                 selectedIndexBundle: "NONE",
                 setupOptions: {
-                  type: "BASIC",
+                  type: "MONSTER",
                   name: {
                     enabled: false,
                     value: "Monster",
@@ -192,7 +192,7 @@ export function StatblockSearchList({
                     stamina: { value: stamina },
                   }
                 : {
-                    type: resource.type === "statblock" ? "BASIC" : "TERRAIN",
+                    type: resource.type === "statblock" ? "MONSTER" : "TERRAIN",
                     name: {
                       enabled: true,
                       value: monsterName,
