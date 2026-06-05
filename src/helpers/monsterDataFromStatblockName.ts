@@ -1,5 +1,5 @@
-import { getMonsterDataBundle } from "../statblockSearch/helpers/getMonsterDataBundle.ts";
-import { monsterIndex } from "../statblockSearch/monsterIndex.ts";
+import { getMonsterDataBundle } from "../statblockSearch/devScriptButtons/helpers/getMonsterDataBundle.ts";
+import { monsterIndex } from "../statblockSearch/devScriptButtons/monsterIndex.ts";
 
 export const dataFromBestiaryIndexId = async (id: string) => {
   let indexBundle = monsterIndex.find((val) => val.id === id);

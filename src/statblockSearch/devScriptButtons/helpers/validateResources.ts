@@ -2,9 +2,9 @@ import {
   DrawSteelDynamicTerrainZod,
   DrawSteelFeatureBlockZod,
   DrawSteelStatblockZod,
-} from "../../types/DrawSteelZod";
-import type { IndexBundle } from "../../types/monsterDataBundlesZod";
-import getBestiaryUrl from "../helpers/getBestiaryUrl";
+} from "../../../types/DrawSteelZod";
+import type { IndexBundle } from "../../../types/monsterDataBundlesZod";
+import getBestiaryUrl from "./getBestiaryUrl";
 
 export async function validateResources(indexBundles: IndexBundle[]) {
   const badStatblocks: { file: string; errors: unknown }[] = [];

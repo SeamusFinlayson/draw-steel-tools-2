@@ -1,4 +1,4 @@
-import SearchView from "./components/SearchView";
+import SearchView from "./searchView/SearchView";
 import {
   Dialog,
   DialogContent,
@@ -7,7 +7,7 @@ import {
 } from "../components/ui/dialog";
 import { useState } from "react";
 import Button from "../components/ui/Button";
-import { OptionsView } from "./components/OptionsView";
+import { OptionsView } from "./optionsView/OptionsView";
 import {
   defaultAppState,
   type AppState,

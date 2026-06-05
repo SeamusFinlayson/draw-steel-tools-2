@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { IndexBundle } from "../../types/monsterDataBundlesZod";
-import { generateIndex } from "../devScripts/generateMonsterIndex";
-import { validateResources } from "../devScripts/validateResources";
+import { generateIndex } from "./helpers/generateMonsterIndex";
+import { validateResources } from "./helpers/validateResources";
 import Button from "../../components/ui/Button";
 
 export function DevActionButtons({

@@ -1,7 +1,7 @@
 import { XIcon } from "lucide-react";
 import FreeWheelInput from "../../components/logic/FreeWheelInput";
 import Input from "../../components/ui/Input";
-import { MonsterPreviewCard } from "./MonsterPreviewCard";
+import { MonsterPreviewCard } from "../components/MonsterPreviewCard";
 import { Checkbox } from "../../components/ui/checkbox";
 import Label from "../../components/ui/Label";
 import {
@@ -10,7 +10,7 @@ import {
 } from "../../components/ui/collapsible";
 import type { AppState } from "../../types/statblockLookupAppState";
 import parseNumber from "../../helpers/parseNumber";
-import { NoMonsterCard } from "./NoMonsterCard";
+import { NoMonsterCard } from "../components/NoMonsterCard";
 import Button from "../../components/ui/Button";
 import OBR, { isImage } from "@owlbear-rodeo/sdk";
 import z from "zod";

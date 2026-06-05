@@ -1,11 +1,11 @@
-import { DrawSteelFeatureBlockZod } from "../../types/DrawSteelZod";
+import { DrawSteelFeatureBlockZod } from "../../../types/DrawSteelZod";
 import {
   DrawSteelResourceZod,
   type DrawSteelResource,
   type DrawSteelResourceBundle,
   type IndexBundle,
-} from "../../types/monsterDataBundlesZod";
-import fetchTypedData from "./getTypedData";
+} from "../../../types/monsterDataBundlesZod";
+import fetchTypedData from "./fetchTypedData";
 import getBestiaryUrl from "./getBestiaryUrl";
 import { monsterIndex } from "../monsterIndex";
 

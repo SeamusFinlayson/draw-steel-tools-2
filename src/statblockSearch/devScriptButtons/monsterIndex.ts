@@ -1,4 +1,4 @@
-import type { IndexBundle } from "../types/monsterDataBundlesZod";
+import type { IndexBundle } from "../../types/monsterDataBundlesZod";
 import monsterIndexJson from "./monsterIndex.json";
 
 export const monsterIndex = monsterIndexJson as IndexBundle[];

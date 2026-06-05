@@ -1,19 +1,19 @@
 import z from "zod";
-import { githubTreeZod } from "../../types/githubZod";
-import getGitTreeUrl from "../helpers/getGitTreeUrl";
-import getBestiaryUrl from "../helpers/getBestiaryUrl";
+import { githubTreeZod } from "../../../types/githubZod";
+import getGitTreeUrl from "./getGitTreeUrl";
+import getBestiaryUrl from "./getBestiaryUrl";
 import {
   DrawSteelDynamicTerrainZod,
   DrawSteelFeatureBlockZod,
   DrawSteelStatblockZod,
-} from "../../types/DrawSteelZod";
+} from "../../../types/DrawSteelZod";
 import {
   IndexBundleZod,
   type FeatureIndexBundle,
   type IndexBundle,
   type StatblockIndexBundle,
   type TerrainIndexBundle,
-} from "../../types/monsterDataBundlesZod";
+} from "../../../types/monsterDataBundlesZod";
 
 function generateId(
   type: "feature" | "statblock" | "terrain",

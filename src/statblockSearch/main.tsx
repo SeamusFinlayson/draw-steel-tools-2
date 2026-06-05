@@ -5,8 +5,8 @@ import { syncThemeMode } from "../helpers/syncThemeMode.ts";
 import StatblockSearch from "./StatblockSearch.tsx";
 import { PluginReadyProvider } from "../components/logic/PluginReadyProvider.tsx";
 import { PluginReadyGate } from "../components/logic/PluginReadyGate.tsx";
-import { DevActionButtons } from "./components/DevScriptButtons.tsx";
-import { monsterIndex } from "./monsterIndex.ts";
+import { DevActionButtons } from "./devScriptButtons/DevScriptButtons.tsx";
+import { monsterIndex } from "./devScriptButtons/monsterIndex.ts";
 
 syncThemeMode();
 
