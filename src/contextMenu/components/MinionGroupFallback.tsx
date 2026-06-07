@@ -3,7 +3,6 @@ import {
   type MinionTokenData,
 } from "../../types/tokenDataZod";
 import Button from "../../components/ui/Button";
-import { getPluginId } from "../../helpers/getPluginId";
 import { removeCreatureData } from "../../helpers/removeCreatureData";
 import { generateGroupId } from "../../helpers/generateGroupId";
 import { TOKEN_METADATA_KEY } from "../../helpers/tokenHelpers";

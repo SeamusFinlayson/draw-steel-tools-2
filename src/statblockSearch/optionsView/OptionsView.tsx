@@ -1,4 +1,4 @@
-import { XIcon } from "lucide-react";
+import { AlertTriangleIcon, XIcon } from "lucide-react";
 import { MonsterPreviewCard } from "../components/MonsterPreviewCard";
 import type { AppState } from "../helpers/AppState";
 import { NoMonsterCard } from "../components/NoMonsterCard";
@@ -95,10 +95,31 @@ export function OptionsView({
           ) : (
             <div className="text-foreground/20">Loading...</div>
           )}
+          {invalidTargets.length > 0 && setupOptions && (
+            <div className="bg-mirage-100 dark:bg-mirage-901 rounded-2xl p-4">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <AlertTriangleIcon className="size-6 shrink-0" />
+                  {validTargets.length > 0 ? (
+                    <div>{`This data can only be applied to ${validTargets.length} of ${targetItems.length} target items.`}</div>
+                  ) : (
+                    <div>This data cannot be applied to any targets.</div>
+                  )}
+                </div>
+                <div>
+                  {invalidTargets.map((item) => (
+                    <div
+                      key={item.id}
+                      className="text-foreground-secondary text-sm"
+                    >
+                      {`Cannot apply ${setupOptions.type} to ${item.name} because it is a ${item.type} on the ${item.layer} layer.`}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-        {invalidTargets.length > 0 && (
-          <div>{`${invalidTargets.length} items cannot be assigned a statblock of this type.`}</div>
-        )}
       </ScrollArea>
 
       <footer className="w-full">
