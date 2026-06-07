@@ -59,8 +59,12 @@ export function parseTokenData(metadata: Metadata): DefinedCharacterTokenData {
     TOKEN_METADATA_KEY,
     CharacterTokenDataZod.parse,
   );
-  if (characterData === undefined)
+
+  if (characterData === undefined) {
+    console.error(metadata[TOKEN_METADATA_KEY]);
     throw new Error("Could not parse token data.");
+  }
+
   if (characterData.type === "MONSTER")
     return { ...defaultMonsterTokenData, ...characterData };
   if (characterData.type === "MINION")

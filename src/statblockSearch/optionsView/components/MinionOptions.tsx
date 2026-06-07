@@ -3,10 +3,7 @@ import { Checkbox } from "../../../components/ui/checkbox";
 import Input from "../../../components/ui/Input";
 import Label from "../../../components/ui/Label";
 import parseNumber from "../../../helpers/parseNumber";
-import type {
-  MinionSetupOptions,
-  SetupOptions,
-} from "../../../types/statblockLookupAppState";
+import type { MinionSetupOptions, SetupOptions } from "../../helpers/AppState";
 
 export function MinionOptions({
   setupOptions,

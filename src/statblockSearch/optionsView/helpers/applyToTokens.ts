@@ -12,7 +12,7 @@ import {
   MinionTokenDataZod,
   type MinionTokenData,
 } from "../../../types/tokenDataZod";
-import type { SetupOptions } from "../../../types/statblockLookupAppState";
+import type { SetupOptions } from "../../helpers/AppState";
 import type { IndexBundle } from "../../../types/monsterDataBundlesZod";
 
 export async function ApplyToTokens(

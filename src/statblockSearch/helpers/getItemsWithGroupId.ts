@@ -1,11 +1,14 @@
 import { type Item } from "@owlbear-rodeo/sdk";
-import { checkHasPluginData } from "../../../helpers/checkHasPluginData";
-import { MinionTokenDataZod } from "../../../types/tokenDataZod";
-import { TOKEN_METADATA_KEY } from "../../../helpers/tokenHelpers";
+import { checkHasPluginData } from "../../helpers/checkHasPluginData";
+import { MinionTokenDataZod } from "../../types/tokenDataZod";
+import { TOKEN_METADATA_KEY } from "../../helpers/tokenHelpers";
 
-export function getItemsWithGroupId(groupId: string | null, items: Item[]) {
-  if (!groupId) return undefined;
-  if (groupId === "") return undefined;
+export function getTargetItems(
+  items: Item[],
+  selection: string[] | undefined,
+  groupId: string | null,
+) {
+  if (!groupId) return items.filter((item) => selection?.includes(item.id));
 
   const itemsWithGroupId: Item[] = [];
   items.forEach((item) => {

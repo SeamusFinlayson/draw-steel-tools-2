@@ -11,6 +11,7 @@ import OBR from "@owlbear-rodeo/sdk";
 import type { MinionGroup } from "../../types/minionGroup";
 import { Minimize2Icon } from "lucide-react";
 import { ContextMenuButton } from "./ContextMenuButton";
+import { openStatblockSearch } from "../../helpers/openStatblockSearch";
 
 export function MinionGroupFallback({
   minionGroups,
@@ -90,18 +91,7 @@ export function MinionGroupFallback({
               ),
           );
 
-          const themeMode = (await OBR.theme.getTheme()).mode;
-          OBR.popover.open({
-            id: getPluginId("statblockSearch"),
-            url: `/statblockSearch?themeMode=${themeMode}&groupId=${newGroupId}&organization=Minion`,
-            height: 1000,
-            width: 800,
-            anchorOrigin: { horizontal: "CENTER", vertical: "CENTER" },
-            transformOrigin: {
-              horizontal: "CENTER",
-              vertical: "CENTER",
-            },
-          });
+          openStatblockSearch({ groupId, organization: "MINION" });
         }}
       >
         Replace Group

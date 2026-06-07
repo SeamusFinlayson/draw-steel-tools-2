@@ -118,6 +118,7 @@ export default function TokenEditor() {
             updateToken({ statblockName: "", resourceId: "" })
           }
           playerRole={playerRole}
+          organization={token.type === "MONSTER" ? "CREATURE" : "TERRAIN"}
         />
       )}
       {detailed && token.type === "HERO" && (

@@ -3,11 +3,14 @@ import { BrushCleaningIcon, ListFilterIcon, SearchIcon } from "lucide-react";
 import Button from "../../components/ui/Button";
 import Toggle from "../../components/ui/Toggle";
 import { ScrollArea } from "../../components/ui/scrollArea";
-import { defaultSearchData } from "../../types/statblockSearchData";
 import { FiltersDropdown } from "./components/FiltersDropdown";
 import { StatblockSearchList } from "./components/StatblockSearchList";
 import DebounceInput from "../../components/logic/DebounceInput";
-import type { AppState } from "../../types/statblockLookupAppState";
+import {
+  checkFiltersApplied,
+  getDefaultSearchData,
+  type AppState,
+} from "../helpers/AppState";
 import OBR from "@owlbear-rodeo/sdk";
 import { getPluginId } from "../../helpers/getPluginId";
 
@@ -56,25 +59,17 @@ export default function SearchView({
           className="shrink-0 pointer-fine:w-8"
         >
           <div
-            data-visible={
-              search.organizations.length > 0 ||
-              search.roles.length > 0 ||
-              search.keywords.length > 0 ||
-              !(
-                search.levelRange.includes(1) && search.levelRange.includes(11)
-              ) ||
-              !(search.evRange.includes(0) && search.evRange.includes(156))
-            }
+            data-visible={checkFiltersApplied(search)}
             className="bg-accent pointer-events-none absolute size-3.5 translate-x-[15px] -translate-y-[15px] scale-0 rounded-full duration-100 ease-in data-[visible=true]:scale-100 pointer-fine:translate-x-[13px]"
           />
           <ListFilterIcon />
         </Toggle>
         <Button
           size={"icon"}
-          className="mx-2 sm:w-20"
+          className="mr-4 ml-2 sm:w-20"
           variant={"secondary"}
           onClick={() =>
-            setAppState((prev) => ({ ...prev, search: defaultSearchData }))
+            setAppState((prev) => ({ ...prev, search: getDefaultSearchData() }))
           }
         >
           <BrushCleaningIcon />
@@ -98,7 +93,7 @@ export default function SearchView({
       </ScrollArea>
 
       <footer>
-        <div className="border-mirage-300 dark:border-mirage-700 flex gap-4 border-t px-4 py-2 sm:px-6 sm:py-3">
+        <div className="border-mirage-300 dark:border-mirage-700 flex gap-4 border-t px-4 py-3">
           <Button
             variant={"accentOutline"}
             className="grow"

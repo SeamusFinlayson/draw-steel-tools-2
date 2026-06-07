@@ -9,6 +9,7 @@ import {
   CharacterTokenDataZod,
   type CharacterTokenData,
 } from "../../../types/tokenDataZod";
+import { openStatblockSearch } from "../../../helpers/openStatblockSearch";
 
 async function setSelectionMetadata(
   metadata: CharacterTokenData,
@@ -136,11 +137,11 @@ export function createAddStats() {
   });
 
   OBR.contextMenu.create({
-    id: getPluginId("add-creatures-or-terrain"),
+    id: getPluginId("add-creature"),
     icons: [
       {
         icon: dragonHeadIcon,
-        label: "Add Creatures or Terrain",
+        label: "Add Creatures",
         filter: {
           every: [
             { key: "layer", value: "CHARACTER", coordinator: "||" },
@@ -157,20 +158,7 @@ export function createAddStats() {
         },
       },
     ],
-    onClick: async () => {
-      const themeMode = (await OBR.theme.getTheme()).mode;
-      OBR.popover.open({
-        id: getPluginId("statblockSearch"),
-        url: `/statblockSearch?themeMode=${themeMode}`,
-        height: 1000,
-        width: 800,
-        anchorOrigin: { horizontal: "CENTER", vertical: "CENTER" },
-        transformOrigin: {
-          horizontal: "CENTER",
-          vertical: "CENTER",
-        },
-      });
-    },
+    onClick: () => openStatblockSearch({ organization: "CREATURE" }),
   });
 
   OBR.contextMenu.create({
@@ -181,32 +169,37 @@ export function createAddStats() {
         label: "Add Terrain",
         filter: {
           every: [
-            { key: "layer", value: "DRAWING" },
             { key: "type", value: "SHAPE" },
+            { key: "layer", value: "DRAWING" },
             {
               key: ["metadata", TOKEN_METADATA_KEY],
               value: undefined,
               operator: "==",
             },
           ],
-          permissions: ["UPDATE"],
+          permissions: ["MAP_UPDATE"],
+          min: 2,
+        },
+      },
+      {
+        icon: landPlotIcon,
+        label: "Add Terrain",
+        filter: {
+          every: [
+            { key: "type", value: "IMAGE", coordinator: "||" },
+            { key: "type", value: "SHAPE" },
+            { key: "layer", value: "MAP" },
+            {
+              key: ["metadata", TOKEN_METADATA_KEY],
+              value: undefined,
+              operator: "==",
+            },
+          ],
+          permissions: ["MAP_UPDATE"],
           min: 2,
         },
       },
     ],
-    onClick: async () => {
-      const themeMode = (await OBR.theme.getTheme()).mode;
-      OBR.popover.open({
-        id: getPluginId("statblockSearch"),
-        url: `/statblockSearch?themeMode=${themeMode}&organization=Terrain`,
-        height: 1000,
-        width: 800,
-        anchorOrigin: { horizontal: "CENTER", vertical: "CENTER" },
-        transformOrigin: {
-          horizontal: "CENTER",
-          vertical: "CENTER",
-        },
-      });
-    },
+    onClick: () => openStatblockSearch({ organization: "TERRAIN" }),
   });
 }

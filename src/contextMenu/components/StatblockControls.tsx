@@ -4,6 +4,7 @@ import { getPluginId } from "../../helpers/getPluginId";
 import { Label } from "../trackerInputs/Label";
 import { cn } from "../../helpers/utils";
 import { ContextMenuButton } from "./ContextMenuButton";
+import { openStatblockSearch } from "../../helpers/openStatblockSearch";
 
 export default function StatblockControls({
   label = "Statblock",
@@ -12,6 +13,7 @@ export default function StatblockControls({
   removeStatblock,
   groupId,
   playerRole,
+  organization,
 }: {
   label?: string;
   statblockName: string;
@@ -19,6 +21,7 @@ export default function StatblockControls({
   removeStatblock: () => void;
   groupId?: string;
   playerRole: "PLAYER" | "GM";
+  organization?: "CREATURE" | "MINION" | "TERRAIN";
 }) {
   const useNameAsId = resourceId === "" && statblockName !== "";
   if (useNameAsId) resourceId = statblockName;
@@ -86,22 +89,7 @@ export default function StatblockControls({
           <ContextMenuButton
             disabled={playerRole === "PLAYER"}
             className="w-full"
-            onClick={async () => {
-              const themeMode = (await OBR.theme.getTheme()).mode;
-              OBR.popover.open({
-                id: getPluginId("statblockSearch"),
-                url:
-                  `/statblockSearch?themeMode=${themeMode}` +
-                  (groupId ? `&groupId=${groupId}` : ""),
-                height: 1000,
-                width: 800,
-                anchorOrigin: { horizontal: "CENTER", vertical: "CENTER" },
-                transformOrigin: {
-                  horizontal: "CENTER",
-                  vertical: "CENTER",
-                },
-              });
-            }}
+            onClick={() => openStatblockSearch({ groupId, organization })}
           >
             <PlusIcon />
           </ContextMenuButton>

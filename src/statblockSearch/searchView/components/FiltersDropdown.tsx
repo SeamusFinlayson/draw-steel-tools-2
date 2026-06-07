@@ -4,10 +4,10 @@ import {
   Collapsible,
   CollapsibleContent,
 } from "../../../components/ui/collapsible";
-import type { SearchData } from "../../../types/statblockSearchData";
 import { Slider } from "../../../components/ui/slider";
 import Label from "../../../components/ui/Label";
 import { statblockKeywords } from "../../devScriptButtons/monsterIndex";
+import type { SearchData } from "../../helpers/AppState";
 
 export function FiltersDropdown({
   search,
@@ -45,7 +45,15 @@ export function FiltersDropdown({
                 />
               </div>
             </div>
-            <div className="mt-4 mb-2 font-bold">Organization</div>
+            <div className="mt-4 mb-2 flex gap-2">
+              <div className="font-bold">Organization</div>
+              <button
+                className="text-foreground-secondary hover:underline"
+                onClick={() => setSearch({ ...search, organizations: [] })}
+              >
+                clear
+              </button>
+            </div>
             <div className="grid grid-cols-2 @min-[480px]:grid-cols-3 @min-[640px]:grid-cols-4 @min-[800px]:grid-cols-5 @min-[960px]:grid-cols-6">
               {[
                 "Terrain",

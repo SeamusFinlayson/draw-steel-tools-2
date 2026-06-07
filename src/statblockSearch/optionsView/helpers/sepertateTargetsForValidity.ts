@@ -8,14 +8,15 @@ export function sepertateTargetsForValidity(
   type: Exclude<PluginItemType, "HERO"> | undefined,
   items: Item[],
 ) {
-  if (type === undefined) return { valid: [], invalid: items };
+  if (type === undefined) return { validTargets: [], invalidTargets: items };
 
-  const valid: Item[] = [];
-  const invalid: Item[] = [];
+  const validTargets: Item[] = [];
+  const invalidTargets: Item[] = [];
+
   items.forEach((item) => {
-    if (checkItemIsValidPluginType(item, type)) valid.push(item);
-    else invalid.push(item);
+    if (checkItemIsValidPluginType(item, type)) validTargets.push(item);
+    else invalidTargets.push(item);
   });
 
-  return { valid, invalid };
+  return { validTargets, invalidTargets };
 }

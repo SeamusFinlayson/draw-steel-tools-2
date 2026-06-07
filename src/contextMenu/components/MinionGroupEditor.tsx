@@ -144,6 +144,7 @@ export default function MinionGroupEditor({
         }
         groupId={minionGroup.id}
         playerRole={playerRole}
+        organization="MINION"
       />
 
       {playerRole === "GM" && (

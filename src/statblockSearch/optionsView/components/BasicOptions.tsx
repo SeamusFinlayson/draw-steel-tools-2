@@ -11,7 +11,7 @@ import type {
   MonsterSetupOptions,
   SetupOptions,
   TerrainSetupOptions,
-} from "../../../types/statblockLookupAppState";
+} from "../../helpers/AppState";
 
 export function BasicOptions({
   setupOptions,
