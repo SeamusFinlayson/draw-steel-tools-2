@@ -1,4 +1,4 @@
-import { AlertTriangleIcon, XIcon } from "lucide-react";
+import { XIcon } from "lucide-react";
 import { MonsterPreviewCard } from "../components/MonsterPreviewCard";
 import type { AppState } from "../helpers/AppState";
 import { NoMonsterCard } from "../components/NoMonsterCard";
@@ -10,6 +10,7 @@ import { sepertateTargetsForValidity } from "./helpers/sepertateTargetsForValidi
 import { ApplyToTokens } from "./helpers/applyToTokens";
 import OBR, { type Item } from "@owlbear-rodeo/sdk";
 import { getPluginId } from "../../helpers/getPluginId";
+import { InvalidTargetsWarning } from "./components/InvalidTargetsWarning";
 
 export function OptionsView({
   appState,
@@ -96,28 +97,11 @@ export function OptionsView({
             <div className="text-foreground/20">Loading...</div>
           )}
           {invalidTargets.length > 0 && setupOptions && (
-            <div className="bg-mirage-100 dark:bg-mirage-901 rounded-2xl p-4">
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <AlertTriangleIcon className="size-6 shrink-0" />
-                  {validTargets.length > 0 ? (
-                    <div>{`This data can only be applied to ${validTargets.length} of ${targetItems.length} target items.`}</div>
-                  ) : (
-                    <div>This data cannot be applied to any targets.</div>
-                  )}
-                </div>
-                <div>
-                  {invalidTargets.map((item) => (
-                    <div
-                      key={item.id}
-                      className="text-foreground-secondary text-sm"
-                    >
-                      {`Cannot apply ${setupOptions.type} to ${item.name} because it is a ${item.type} on the ${item.layer} layer.`}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <InvalidTargetsWarning
+              validTargets={validTargets}
+              invalidTargets={invalidTargets}
+              setupOptions={setupOptions}
+            />
           )}
         </div>
       </ScrollArea>
