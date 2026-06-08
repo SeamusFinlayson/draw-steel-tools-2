@@ -20,7 +20,7 @@ import { getPluginId } from "../helpers/getPluginId";
 import usePlayerRole from "../helpers/usePlayerRole";
 import { getMinionTokenCounts } from "../helpers/getMinionTokenCounts";
 import { checkHasPluginData } from "../helpers/checkHasPluginData";
-import { getValidPluginTypes } from "../helpers/pluginTargetChecking";
+import { getValidPluginTypes } from "../helpers/pluginTargetValidityChecking";
 
 const parseMinionGroups = z.array(MinionGroupZod).parse;
 

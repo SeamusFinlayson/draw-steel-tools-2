@@ -14,7 +14,7 @@ import { useItems } from "../helpers/useItems";
 import usePlayerSelection from "../helpers/usePlayerSelection";
 import { parseTokenData } from "../helpers/tokenHelpers";
 import { checkHasPluginData } from "../helpers/checkHasPluginData";
-import { checkItemIsValidPluginType } from "../helpers/pluginTargetChecking";
+import { checkItemIsValidPluginType } from "../helpers/pluginTargetValidityChecking";
 import type { MinionTokenData } from "../types/tokenDataZod";
 import { isImage, type Image } from "@owlbear-rodeo/sdk";
 import { MinionsImageRow } from "./components/MinionsImageRow";

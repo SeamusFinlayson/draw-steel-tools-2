@@ -1,6 +1,6 @@
 import { type Item } from "@owlbear-rodeo/sdk";
 import type { MinionGroup } from "../types/minionGroup";
-import { checkItemIsValidPluginType } from "./pluginTargetChecking";
+import { checkItemIsValidPluginType } from "./pluginTargetValidityChecking";
 import { TOKEN_METADATA_KEY } from "./tokenHelpers";
 import type { MinionTokenData } from "../types/tokenDataZod";
 

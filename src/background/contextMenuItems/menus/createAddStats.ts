@@ -96,7 +96,8 @@ export function createAddStats() {
         label: "Add Terrain",
         filter: {
           every: [
-            { key: "type", value: "SHAPE" },
+            { key: "type", value: "SHAPE", coordinator: "||" },
+            { key: "type", value: "CURVE" },
             { key: "layer", value: "DRAWING" },
             {
               key: ["metadata", TOKEN_METADATA_KEY],
@@ -114,7 +115,8 @@ export function createAddStats() {
         filter: {
           every: [
             { key: "type", value: "IMAGE", coordinator: "||" },
-            { key: "type", value: "SHAPE" },
+            { key: "type", value: "SHAPE", coordinator: "||" },
+            { key: "type", value: "CURVE" },
             { key: "layer", value: "MAP" },
             {
               key: ["metadata", TOKEN_METADATA_KEY],
@@ -169,7 +171,8 @@ export function createAddStats() {
         label: "Add Terrain",
         filter: {
           every: [
-            { key: "type", value: "SHAPE" },
+            { key: "type", value: "SHAPE", coordinator: "||" },
+            { key: "type", value: "CURVE" },
             { key: "layer", value: "DRAWING" },
             {
               key: ["metadata", TOKEN_METADATA_KEY],
@@ -187,7 +190,8 @@ export function createAddStats() {
         filter: {
           every: [
             { key: "type", value: "IMAGE", coordinator: "||" },
-            { key: "type", value: "SHAPE" },
+            { key: "type", value: "SHAPE", coordinator: "||" },
+            { key: "type", value: "CURVE" },
             { key: "layer", value: "MAP" },
             {
               key: ["metadata", TOKEN_METADATA_KEY],

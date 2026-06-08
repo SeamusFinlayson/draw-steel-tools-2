@@ -2,7 +2,7 @@ import type { Item } from "@owlbear-rodeo/sdk";
 import {
   checkItemIsValidPluginType,
   type PluginItemType,
-} from "../../../helpers/pluginTargetChecking";
+} from "../../../helpers/pluginTargetValidityChecking";
 
 export function sepertateTargetsForValidity(
   type: Exclude<PluginItemType, "HERO"> | undefined,

@@ -1,6 +1,7 @@
 import type { Item } from "@owlbear-rodeo/sdk";
 import { AlertTriangleIcon } from "lucide-react";
 import type { SetupOptions } from "../../helpers/AppState";
+import { pluginItemRequirements } from "../../../helpers/pluginTargetValidityChecking";
 
 export function InvalidTargetsWarning({
   validTargets,
@@ -30,27 +31,23 @@ export function InvalidTargetsWarning({
           ))}
         </div>
         <div className="text-sm">
-          {setupOptions.type === "MINION" && (
-            <div>
-              MINION can be applied to IMAGE items on the CHARACTER or MOUNT
-              layers.
-            </div>
-          )}
-          {setupOptions.type === "MONSTER" && (
-            <div>
-              MONSTER can be applied to IMAGE items on the CHARACTER or MOUNT
-              layers.
-            </div>
-          )}
-          {setupOptions.type === "TERRAIN" && (
-            <div>TERRAIN can be applied to IMAGE items on the MAP layer.</div>
-          )}
-          {setupOptions.type === "TERRAIN" && (
-            <div>
-              TERRAIN can be applied to SHAPE and CUREVE items on the DRAWING
-              layer.
-            </div>
-          )}
+          {pluginItemRequirements[setupOptions.type].map((requirement) => {
+            const types = requirement.types.reduce(
+              (accumulator, currentValue, index) =>
+                accumulator + (index > 0 ? " or " : "") + currentValue,
+            );
+
+            const layers = (requirement.layers as string[]).reduce(
+              (accumulator, currentValue, index) =>
+                accumulator + (index > 0 ? " or " : "") + currentValue,
+            );
+
+            return (
+              <div>
+                {`${setupOptions.type} can be applied to ${types} items on the ${layers} layers.`}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

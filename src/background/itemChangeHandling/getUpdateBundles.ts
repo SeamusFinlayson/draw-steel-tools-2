@@ -13,7 +13,7 @@ import {
   checkItemChanges,
   checkMetadataChanges,
 } from "./checkChanges";
-import { getValidPluginTypes } from "../../helpers/pluginTargetChecking";
+import { getValidPluginTypes } from "../../helpers/pluginTargetValidityChecking";
 import { checkHasPluginData } from "../../helpers/checkHasPluginData";
 
 function bundleCatagory(

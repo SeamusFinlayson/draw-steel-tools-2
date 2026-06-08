@@ -240,7 +240,7 @@ export function getOriginAndBounds(
   let center: Vector2;
   let unsafeBounds: Bounds;
 
-  if (isShape(item)) {
+  if (isShape(item) || isCurve(item)) {
     const boundingBox = getBoundingBox(item);
     center = Math2.add(boundingBox.center, item.position);
     unsafeBounds = { width: boundingBox.width, height: boundingBox.height };

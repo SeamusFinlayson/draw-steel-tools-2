@@ -1,4 +1,4 @@
-import { isImage, isShape, type Item } from "@owlbear-rodeo/sdk";
+import { isCurve, isImage, isShape, type Item } from "@owlbear-rodeo/sdk";
 import { getOriginAndBounds } from "./mathHelpers";
 import type { DefinedSettings } from "../../types/settingsZod";
 import {
@@ -48,7 +48,7 @@ export function createTokenOverlay(
   dpi: number,
   settings: DefinedSettings,
 ) {
-  if (!isImage(item) && !isShape(item))
+  if (!isImage(item) && !isShape(item) && !isCurve(item))
     throw new Error(`Support for item type ${item.type} is not implemented.`);
 
   const { origin, bounds } = getOriginAndBounds(settings, item, dpi);

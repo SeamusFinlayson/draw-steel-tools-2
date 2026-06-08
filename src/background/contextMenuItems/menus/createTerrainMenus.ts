@@ -62,7 +62,8 @@ function buildTerrainMenu(
     icons: [
       getIcon(
         [
-          { key: "type", value: "SHAPE" },
+          { key: "type", value: "SHAPE", coordinator: "||" },
+          { key: "type", value: "CURVE" },
           { key: "layer", value: "DRAWING" },
         ],
         variant,
@@ -70,7 +71,8 @@ function buildTerrainMenu(
       getIcon(
         [
           { key: "type", value: "IMAGE", coordinator: "||" },
-          { key: "type", value: "SHAPE" },
+          { key: "type", value: "SHAPE", coordinator: "||" },
+          { key: "type", value: "CURVE" },
           { key: "layer", value: "MAP" },
         ],
         variant,
