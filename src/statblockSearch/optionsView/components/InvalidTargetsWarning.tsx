@@ -12,7 +12,7 @@ export function InvalidTargetsWarning({
   setupOptions: SetupOptions;
 }) {
   return (
-    <div className="bg-mirage-100 dark:bg-mirage-901 rounded-2xl p-4">
+    <div className="bg-mirage-99 dark:bg-mirage-901 rounded-2xl p-4">
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           <AlertTriangleIcon className="size-5 shrink-0" />
