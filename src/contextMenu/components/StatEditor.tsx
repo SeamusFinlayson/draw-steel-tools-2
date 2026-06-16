@@ -22,6 +22,7 @@ import { Label } from "../trackerInputs/Label";
 import { ToggleGroup, ToggleGroupItem } from "../../components/ui/toggleGroup";
 import Input from "../../components/ui/Input";
 import FreeWheelInput from "../../components/logic/FreeWheelInput";
+import { cn } from "../../helpers/utils";
 
 const params = new URLSearchParams(document.location.search);
 const detailedVale = params.get("detailed");
@@ -47,7 +48,11 @@ export default function StatEditor({
   return (
     <div className="space-y-2">
       <div className="grid grid-cols-4 gap-2">
-        <div className="col-span-2">
+        <div
+          className={cn("col-span-2", {
+            "col-span-4": token.type === "TERRAIN",
+          })}
+        >
           <div className="flex items-end gap-2">
             <BarTrackerInput
               label={"Stamina"}
