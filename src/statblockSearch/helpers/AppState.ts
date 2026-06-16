@@ -5,16 +5,19 @@ export type MonsterSetupOptions = {
   type: "MONSTER";
   stamina: { enabled: boolean; value: number };
   name: { enabled: boolean; value: string; nameTag: boolean };
+  gmOnly: { value: boolean };
 };
 export type MinionSetupOptions = {
   type: "MINION";
   stamina: { value: number };
   groupName: { value: string; nameTags: boolean };
+  gmOnly: { value: boolean };
 };
 export type TerrainSetupOptions = {
   type: "TERRAIN";
   stamina: { enabled: boolean; value: number };
   name: { enabled: boolean; value: string; nameTag: boolean };
+  gmOnly: { value: boolean };
 };
 
 export type SetupOptions =

@@ -103,11 +103,12 @@ export function StatblockSearchList({
                 setupOptions: {
                   type: "MONSTER",
                   name: {
-                    enabled: false,
+                    enabled: true,
                     value: "Monster",
-                    nameTag: false,
+                    nameTag: true,
                   },
-                  stamina: { enabled: false, value: 0 },
+                  stamina: { enabled: true, value: 0 },
+                  gmOnly: { value: playerRole === "GM" },
                 },
               }))
             }
@@ -127,6 +128,7 @@ export function StatblockSearchList({
                   type: "MINION",
                   groupName: { value: "Minion", nameTags: false },
                   stamina: { value: 1 },
+                  gmOnly: { value: playerRole === "GM" },
                 },
               }))
             }
@@ -144,8 +146,9 @@ export function StatblockSearchList({
                 selectedIndexBundle: "NONE",
                 setupOptions: {
                   type: "TERRAIN",
-                  name: { enabled: false, value: "Terrain", nameTag: false },
-                  stamina: { enabled: false, value: 0 },
+                  name: { enabled: true, value: "Terrain", nameTag: true },
+                  stamina: { enabled: true, value: 0 },
+                  gmOnly: { value: playerRole === "GM" },
                 },
               }))
             }
@@ -189,6 +192,7 @@ export function StatblockSearchList({
                       nameTags: false,
                     },
                     stamina: { value: stamina },
+                    gmOnly: { value: playerRole === "GM" },
                   }
                 : {
                     type: resource.type === "statblock" ? "MONSTER" : "TERRAIN",
@@ -198,6 +202,7 @@ export function StatblockSearchList({
                       nameTag: false,
                     },
                     stamina: { enabled: true, value: stamina },
+                    gmOnly: { value: playerRole === "GM" },
                   },
             }));
           }}

@@ -77,6 +77,7 @@ export function OptionsView({
             <>
               {setupOptions.type === "MINION" && (
                 <MinionOptions
+                  playerRole={playerRole}
                   setupOptions={setupOptions}
                   setSetupOptions={(setupOptions) =>
                     setAppState({ ...appState, setupOptions })
@@ -86,6 +87,7 @@ export function OptionsView({
               {(setupOptions.type === "MONSTER" ||
                 setupOptions.type === "TERRAIN") && (
                 <BasicOptions
+                  playerRole={playerRole}
                   setupOptions={setupOptions}
                   setSetupOptions={(setupOptions) =>
                     setAppState({ ...appState, setupOptions })
@@ -124,7 +126,6 @@ export function OptionsView({
                 setupOptions,
                 selectedIndexBundle,
                 validTargets,
-                playerRole,
               ).then(() => OBR.popover.close(getPluginId("statblockSearch")));
             }}
           >

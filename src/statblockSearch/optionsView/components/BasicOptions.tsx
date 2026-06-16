@@ -12,13 +12,16 @@ import type {
   SetupOptions,
   TerrainSetupOptions,
 } from "../../helpers/AppState";
+import { GmOnlyToggle } from "./GmOnlyToggle";
 
 export function BasicOptions({
   setupOptions,
   setSetupOptions,
+  playerRole,
 }: {
   setupOptions: MonsterSetupOptions | TerrainSetupOptions;
   setSetupOptions: (setupOptions: SetupOptions) => void;
+  playerRole: "PLAYER" | "GM";
 }) {
   return (
     <div>
@@ -136,6 +139,18 @@ export function BasicOptions({
           </div>
         </CollapsibleContent>
       </Collapsible>
+      <div className="mt-4">
+        <GmOnlyToggle
+          playerRole={playerRole}
+          gmOnly={setupOptions.gmOnly.value}
+          onGmOnlyChange={(value) =>
+            setSetupOptions({
+              ...setupOptions,
+              gmOnly: { value },
+            })
+          }
+        />
+      </div>
     </div>
   );
 }

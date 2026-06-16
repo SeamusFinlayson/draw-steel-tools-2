@@ -19,7 +19,6 @@ export async function ApplyToTokens(
   setupOptions: SetupOptions,
   indexBundle: IndexBundle | "NONE",
   targetItems: Item[],
-  playerRole: "PLAYER" | "GM",
 ) {
   if (setupOptions.type === "TERRAIN") {
     const nameOptions = setupOptions.name;
@@ -34,7 +33,7 @@ export async function ApplyToTokens(
             ? existingDataValidation.data
             : undefined),
           type: "TERRAIN",
-          gmOnly: playerRole === "GM" ? true : false,
+          gmOnly: setupOptions.gmOnly.value,
           ...(nameOptions.enabled && nameOptions.nameTag
             ? { name: nameOptions.value }
             : {}),
@@ -69,7 +68,7 @@ export async function ApplyToTokens(
             ? existingDataValidation.data
             : undefined),
           type: "MONSTER",
-          gmOnly: playerRole === "GM" ? true : false,
+          gmOnly: setupOptions.gmOnly.value,
           ...(nameOptions.enabled && nameOptions.nameTag
             ? { name: nameOptions.value }
             : {}),
@@ -133,7 +132,7 @@ export async function ApplyToTokens(
             : {}),
           currentStamina: setupOptions.stamina.value * groupSize,
           nameTagsEnabled: setupOptions.groupName.nameTags,
-          gmOnly: playerRole === "GM" ? true : false,
+          gmOnly: setupOptions.gmOnly.value,
         },
       ] satisfies MinionGroup[]),
     });

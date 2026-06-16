@@ -4,18 +4,21 @@ import Input from "../../../components/ui/Input";
 import Label from "../../../components/ui/Label";
 import parseNumber from "../../../helpers/parseNumber";
 import type { MinionSetupOptions, SetupOptions } from "../../helpers/AppState";
+import { GmOnlyToggle } from "./GmOnlyToggle";
 
 export function MinionOptions({
   setupOptions,
   setSetupOptions,
+  playerRole,
 }: {
   setupOptions: MinionSetupOptions;
   setSetupOptions: (setupOptions: SetupOptions) => void;
+  playerRole: "PLAYER" | "GM";
 }) {
   return (
-    <div>
+    <div className="space-y-4">
       <h1 className="mb-1">Minion Squad Options</h1>
-      <div className="bg-mirage-99 dark:bg-mirage-901 my-1 space-y-4 rounded-2xl p-4">
+      <div className="bg-mirage-99 dark:bg-mirage-901 space-y-4 rounded-2xl p-4">
         <div>
           <Label htmlFor="nameInput" className="mb-2">
             Individual Stamina
@@ -44,6 +47,8 @@ export function MinionOptions({
             />
           </Input>
         </div>
+      </div>
+      <div className="bg-mirage-99 dark:bg-mirage-901 space-y-4 rounded-2xl p-4">
         <div>
           <Label htmlFor="groupNameInput" className="mb-2">
             Squad Name
@@ -82,6 +87,16 @@ export function MinionOptions({
           </Label>
         </div>
       </div>
+      <GmOnlyToggle
+        playerRole={playerRole}
+        gmOnly={setupOptions.gmOnly.value}
+        onGmOnlyChange={(value) =>
+          setSetupOptions({
+            ...setupOptions,
+            gmOnly: { value },
+          })
+        }
+      />
     </div>
   );
 }
