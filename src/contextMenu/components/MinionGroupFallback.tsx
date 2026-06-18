@@ -1,10 +1,6 @@
-import {
-  MinionTokenDataZod,
-  type MinionTokenData,
-} from "../../types/tokenDataZod";
+import { MinionTokenDataZod } from "../../types/tokenDataZod";
 import Button from "../../components/ui/Button";
 import { removeCreatureData } from "../../helpers/removeCreatureData";
-import { generateGroupId } from "../../helpers/generateGroupId";
 import { TOKEN_METADATA_KEY } from "../../helpers/tokenHelpers";
 import OBR from "@owlbear-rodeo/sdk";
 import type { MinionGroup } from "../../types/minionGroup";
