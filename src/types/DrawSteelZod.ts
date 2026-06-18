@@ -65,7 +65,25 @@ export const DrawSteelStatblockZod = z.strictObject({
   features: z.array(DrawSteelFeatureZod).optional(),
 });
 
+export const DrawSteelDynamicTerrainZod = z.strictObject({
+  name: z.string(),
+  type: z.literal("dynamicterrain"),
+  featureblock_type: z.string(),
+  level: z.number(),
+  stamina: z.string(),
+  ev: z.string(),
+  flavor: z.string(),
+  size: z.string(),
+  stats: z
+    .array(z.strictObject({ name: z.string(), value: z.string() }))
+    .optional(),
+  features: z.array(DrawSteelFeatureZod),
+});
+
 export type DrawSteelEffect = z.infer<typeof DrawSteelEffectZod>;
 export type DrawSteelFeature = z.infer<typeof DrawSteelFeatureZod>;
 export type DrawSteelFeatureBlock = z.infer<typeof DrawSteelFeatureBlockZod>;
 export type DrawSteelStatblock = z.infer<typeof DrawSteelStatblockZod>;
+export type DrawSteelDynamicTerrain = z.infer<
+  typeof DrawSteelDynamicTerrainZod
+>;

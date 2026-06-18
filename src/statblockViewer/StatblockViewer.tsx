@@ -3,11 +3,11 @@ import MonsterView from "./creatureBlockUI/MonsterView.tsx";
 import Button from "../components/ui/Button.tsx";
 import OBR from "@owlbear-rodeo/sdk";
 import { getPluginId } from "../helpers/getPluginId.ts";
-import type { MonsterDataBundle } from "../types/monsterDataBundlesZod.ts";
+import type { DrawSteelResourceBundle } from "../types/monsterDataBundlesZod.ts";
 import { Maximize2Icon, Minimize2Icon } from "lucide-react";
 import { StatBlockSwitcher } from "./StatblockSwitcher.tsx";
 import { useEffect, useState } from "react";
-import { monsterDataFromStatblockName } from "../helpers/monsterDataFromStatblockName.ts";
+import { dataFromBestiaryIndexId } from "../helpers/monsterDataFromStatblockName.ts";
 import { cn } from "../helpers/utils.ts";
 import Toggle from "../components/ui/Toggle.tsx";
 import { OpenInNewTab } from "./OpenInNewTabButton.tsx";
@@ -18,21 +18,28 @@ import { DiceDrawer } from "./DiceDrawer.tsx";
 const statblockName = new URLSearchParams(document.location.search).get(
   "statblockName",
 );
+const resourceId = new URLSearchParams(document.location.search).get(
+  "resourceId",
+);
 
 export function StatblockViewer() {
   const [collapsed, setCollapsed] = useState(false);
-  const [monsterData, setMonsterData] = useState<MonsterDataBundle | null>();
+  const [monsterData, setMonsterData] =
+    useState<DrawSteelResourceBundle | null>();
   const [height, setHeight] = useState(57);
 
   useEffect(() => {
-    if (!statblockName) {
-      setMonsterData(null);
-      return;
-    }
-    monsterDataFromStatblockName(statblockName).then((monsterData) => {
-      document.title = monsterData.statblock.name;
-      setMonsterData(monsterData);
-    });
+    const id = resourceId ? resourceId : statblockName;
+    if (!id) return setMonsterData(null);
+    dataFromBestiaryIndexId(id)
+      .then((monsterData) => {
+        document.title = monsterData.resource.name;
+        setMonsterData(monsterData);
+      })
+      .catch((reason) => {
+        console.error(reason);
+        setMonsterData(null);
+      });
   }, []);
 
   return (
@@ -42,9 +49,11 @@ export function StatblockViewer() {
       ) : monsterData === undefined ? (
         <div className="text-foreground-secondary grow p-4">Loading...</div>
       ) : monsterData === null ? (
-        <div className="text-foreground-secondary grow p-4"></div>
+        <div className="text-foreground-secondary grow p-4">
+          Failed to Load.
+        </div>
       ) : (
-        <MonsterView monsterData={monsterData} />
+        <MonsterView bundle={monsterData} />
       )}
 
       <PluginReadyGate>
@@ -77,9 +86,7 @@ export function StatblockViewer() {
                   },
                 )}
               >
-                {!collapsed && (
-                  <OpenInNewTab statblockName={monsterData?.statblock.name} />
-                )}
+                {!collapsed && <OpenInNewTab resourceId={monsterData?.key} />}
                 <Toggle
                   variant={"default"}
                   size={"icon"}
