@@ -3,6 +3,7 @@ import { Checkbox } from "../../../components/ui/checkbox";
 import Input from "../../../components/ui/Input";
 import Label from "../../../components/ui/Label";
 import parseNumber from "../../../helpers/parseNumber";
+import type { DefinedSettings } from "../../../types/settingsZod";
 import type { MinionSetupOptions, SetupOptions } from "../../helpers/AppState";
 import { GmOnlyToggle } from "./GmOnlyToggle";
 
@@ -10,10 +11,12 @@ export function MinionOptions({
   setupOptions,
   setSetupOptions,
   playerRole,
+  settings,
 }: {
   setupOptions: MinionSetupOptions;
   setSetupOptions: (setupOptions: SetupOptions) => void;
   playerRole: "PLAYER" | "GM";
+  settings: DefinedSettings;
 }) {
   return (
     <div className="space-y-4">
@@ -68,24 +71,26 @@ export function MinionOptions({
             />
           </Input>
         </div>
-        <div className="flex items-center">
-          <Checkbox
-            id="AddNameTagCheckbox"
-            checked={setupOptions.groupName.nameTags}
-            onCheckedChange={(checked) =>
-              setSetupOptions({
-                ...setupOptions,
-                groupName: {
-                  ...setupOptions.groupName,
-                  nameTags: checked === true,
-                },
-              })
-            }
-          />
-          <Label className="h-fit" htmlFor="AddNameTagCheckbox">
-            Add Name Tags
-          </Label>
-        </div>
+        {settings.nameTagsEnabled && (
+          <div className="flex items-center">
+            <Checkbox
+              id="AddNameTagCheckbox"
+              checked={setupOptions.groupName.nameTags}
+              onCheckedChange={(checked) =>
+                setSetupOptions({
+                  ...setupOptions,
+                  groupName: {
+                    ...setupOptions.groupName,
+                    nameTags: checked === true,
+                  },
+                })
+              }
+            />
+            <Label className="h-fit" htmlFor="AddNameTagCheckbox">
+              Add Name Tags
+            </Label>
+          </div>
+        )}
       </div>
       <GmOnlyToggle
         playerRole={playerRole}

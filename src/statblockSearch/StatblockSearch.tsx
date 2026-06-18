@@ -1,5 +1,5 @@
 import SearchView from "./searchView/SearchView";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { OptionsView } from "./optionsView/OptionsView";
 import { getDefaulAppState } from "./helpers/AppState";
 import type { IndexBundle } from "../types/monsterDataBundlesZod";
@@ -8,6 +8,12 @@ import { useItems } from "../helpers/useItems";
 import usePlayerSelection from "../helpers/usePlayerSelection";
 import { getTargetItems } from "./helpers/getItemsWithGroupId";
 import { StatblockPreviewDialog } from "./components/StatblockPreviewDialog";
+import {
+  defaultSettings,
+  SETTINGS_METADATA_KEY,
+} from "../helpers/settingsHelpers";
+import { useRoomMetadata } from "../helpers/useRoomMetadata";
+import { SettingsZod } from "../types/settingsZod";
 
 const params = new URLSearchParams(document.location.search);
 const groupId = params.get("groupId");
@@ -21,10 +27,13 @@ export default function StatblockSearch({
   const playerRole = usePlayerRole();
   const items = useItems();
   const selection = usePlayerSelection();
+  const settingsMetadata = useRoomMetadata(
+    SETTINGS_METADATA_KEY,
+    SettingsZod.parse,
+  );
 
   const targetItems = getTargetItems(items, selection, groupId);
-
-  useEffect(() => {}, []);
+  const settings = { ...defaultSettings, ...settingsMetadata.value };
 
   return (
     <div>
@@ -43,6 +52,7 @@ export default function StatblockSearch({
             setAppState={setAppState}
             playerRole={playerRole}
             targetItems={targetItems}
+            settings={settings}
           />
         )}
       </div>

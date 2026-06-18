@@ -7,6 +7,7 @@ import {
 import Input from "../../../components/ui/Input";
 import Label from "../../../components/ui/Label";
 import parseNumber from "../../../helpers/parseNumber";
+import type { DefinedSettings } from "../../../types/settingsZod";
 import type {
   MonsterSetupOptions,
   SetupOptions,
@@ -18,10 +19,12 @@ export function BasicOptions({
   setupOptions,
   setSetupOptions,
   playerRole,
+  settings,
 }: {
   setupOptions: MonsterSetupOptions | TerrainSetupOptions;
   setSetupOptions: (setupOptions: SetupOptions) => void;
   playerRole: "PLAYER" | "GM";
+  settings: DefinedSettings;
 }) {
   return (
     <div>
@@ -118,24 +121,26 @@ export function BasicOptions({
                 />
               </Input>
             </div>
-            <div className="flex items-center">
-              <Checkbox
-                id="AddNameTagCheckbox"
-                checked={setupOptions.name.nameTag}
-                onCheckedChange={(checked) =>
-                  setSetupOptions({
-                    ...setupOptions,
-                    name: {
-                      ...setupOptions.name,
-                      nameTag: checked === true,
-                    },
-                  })
-                }
-              />
-              <Label className="h-fit" htmlFor="AddNameTagCheckbox">
-                Add Name Tag
-              </Label>
-            </div>
+            {settings.nameTagsEnabled && (
+              <div className="flex items-center">
+                <Checkbox
+                  id="AddNameTagCheckbox"
+                  checked={setupOptions.name.nameTag}
+                  onCheckedChange={(checked) =>
+                    setSetupOptions({
+                      ...setupOptions,
+                      name: {
+                        ...setupOptions.name,
+                        nameTag: checked === true,
+                      },
+                    })
+                  }
+                />
+                <Label className="h-fit" htmlFor="AddNameTagCheckbox">
+                  Add Name Tag
+                </Label>
+              </div>
+            )}
           </div>
         </CollapsibleContent>
       </Collapsible>

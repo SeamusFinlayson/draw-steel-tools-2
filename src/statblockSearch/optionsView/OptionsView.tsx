@@ -11,17 +11,20 @@ import { ApplyToTokens } from "./helpers/applyToTokens";
 import OBR, { type Item } from "@owlbear-rodeo/sdk";
 import { getPluginId } from "../../helpers/getPluginId";
 import { InvalidTargetsWarning } from "./components/InvalidTargetsWarning";
+import type { DefinedSettings } from "../../types/settingsZod";
 
 export function OptionsView({
   appState,
   setAppState,
   playerRole,
   targetItems,
+  settings,
 }: {
   appState: AppState;
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;
   playerRole: "PLAYER" | "GM";
   targetItems: Item[];
+  settings: DefinedSettings;
 }) {
   const setupOptions = appState.setupOptions;
   const selectedIndexBundle = appState.selectedIndexBundle;
@@ -82,6 +85,7 @@ export function OptionsView({
                   setSetupOptions={(setupOptions) =>
                     setAppState({ ...appState, setupOptions })
                   }
+                  settings={settings}
                 />
               )}
               {(setupOptions.type === "MONSTER" ||
@@ -92,6 +96,7 @@ export function OptionsView({
                   setSetupOptions={(setupOptions) =>
                     setAppState({ ...appState, setupOptions })
                   }
+                  settings={settings}
                 />
               )}
             </>
