@@ -22,6 +22,33 @@ export function processUpdateBundles(
   const deleteItemsArray: string[] = [];
   const newAttachmentLogs: AttachmentLogs = {};
 
+  // Debug
+  // console.log("--------");
+  // console.log(
+  //   "ADD",
+  //   updateBundles.filter((item) => item.type === "ADD").length,
+  // );
+  // console.log(
+  //   "REFRESH",
+  //   updateBundles.filter((item) => item.type === "REFRESH").length,
+  // );
+  // console.log(
+  //   "REMOVE",
+  //   updateBundles.filter((item) => item.type === "REMOVE").length,
+  // );
+  // console.log(
+  //   "UNCHANGED",
+  //   updateBundles.filter((item) => item.type === "UNCHANGED").length,
+  // );
+  // console.log(
+  //   "UNTRACKED",
+  //   updateBundles.filter((item) => item.type === "UNTRACKED").length,
+  // );
+  // console.log(
+  //   "UPDATE",
+  //   updateBundles.filter((item) => item.type === "UPDATE").length,
+  // );
+
   updateBundles
     .filter(
       (bundle) =>
@@ -67,6 +94,8 @@ export function processUpdateBundles(
       const ids = obrState.attachmentLogs[bundle.item.id]?.attachmentIds;
       if (ids) deleteItemsArray.push(...ids);
     });
+
+  // Untracked bundles are ignored, no action is required
 
   return { addItemsArray, deleteItemsArray, newAttachmentLogs };
 }
