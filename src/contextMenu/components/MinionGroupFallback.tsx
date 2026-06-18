@@ -72,26 +72,7 @@ export function MinionGroupFallback({
       </Button>
       <Button
         className="w-full text-sm"
-        onClick={async () => {
-          const newGroupId = generateGroupId();
-          OBR.scene.items.updateItems(
-            (item) => {
-              const itemData = item.metadata[TOKEN_METADATA_KEY];
-              const parsedData = MinionTokenDataZod.safeParse(itemData);
-              return parsedData.success && parsedData.data.groupId === groupId;
-            },
-            (items) =>
-              items.forEach(
-                (item) =>
-                  (item.metadata[TOKEN_METADATA_KEY] = {
-                    type: "MINION",
-                    groupId: newGroupId as string,
-                  } satisfies MinionTokenData),
-              ),
-          );
-
-          openStatblockSearch({ groupId, organization: "MINION" });
-        }}
+        onClick={() => openStatblockSearch({ groupId, organization: "MINION" })}
       >
         Replace Group
       </Button>

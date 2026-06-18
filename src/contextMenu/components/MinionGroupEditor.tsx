@@ -7,7 +7,6 @@ import { Label } from "../trackerInputs/Label";
 import NameInput from "./NameInput";
 import StatblockControls from "./StatblockControls";
 import type { DefinedSettings } from "../../types/settingsZod";
-import usePlayerRole from "../../helpers/usePlayerRole";
 import { useRef } from "react";
 import VisibilityToggle from "./VisibilityToggle";
 import { MinionsImageRow } from "./MinionsImageRow";
@@ -20,6 +19,7 @@ export default function MinionGroupEditor({
   groupItems,
   handleMinimize,
   showMinimize = false,
+  playerRole,
 }: {
   minionGroup: MinionGroup;
   setMinionGroup: (minionGroup: MinionGroup) => void;
@@ -27,9 +27,8 @@ export default function MinionGroupEditor({
   groupItems: Image[];
   handleMinimize: () => void;
   showMinimize?: boolean;
+  playerRole: "PLAYER" | "GM";
 }) {
-  const playerRole = usePlayerRole();
-
   const staminaInputRef = useRef<HTMLInputElement>(null);
 
   const gmOnly = minionGroup.gmOnly || minionGroup.gmOnly === undefined;

@@ -22,6 +22,7 @@ import { Separator } from "../components/ui/Separator";
 import { ScrollArea } from "../components/ui/scrollArea";
 import { useState } from "react";
 import { ContextMenuButton } from "./components/ContextMenuButton";
+import usePlayerRole from "../helpers/usePlayerRole";
 
 const parseMinionGroups = z.array(MinionGroupZod).parse;
 
@@ -43,6 +44,7 @@ export default function MinionContextMenu() {
 
   const items = useItems();
   const selection = usePlayerSelection();
+  const playerRole = usePlayerRole();
 
   const [userSelectedGroupId, setUserSelectedGroupId] = useState<string>();
 
@@ -69,14 +71,21 @@ export default function MinionContextMenu() {
         .map((val) => val.data.groupId),
     ),
   ];
-  const selectionGroupData: GroupData[] = selectionGroupIds.map((id) => {
-    const data = minionGroupsMetadata.value?.find((group) => group.id === id);
-    const items = minionData.filter((data) => data.data.groupId === id);
+  const selectionGroupData: GroupData[] = selectionGroupIds
+    .map((id) => {
+      const data = minionGroupsMetadata.value?.find((group) => group.id === id);
+      const items = minionData.filter((data) => data.data.groupId === id);
 
-    if (!data)
-      return { type: "MISSING", data: { id }, items } satisfies GroupData;
-    return { type: "FOUND", data, items } satisfies GroupData;
-  });
+      if (!data)
+        return { type: "MISSING", data: { id }, items } satisfies GroupData;
+      return { type: "FOUND", data, items } satisfies GroupData;
+    })
+    .filter(
+      (group) =>
+        playerRole === "GM" ||
+        group.type === "MISSING" ||
+        (playerRole === "PLAYER" && group.data.gmOnly === false),
+    );
 
   const definedSettings = { ...defaultSettings, ...settingsMetadata.value };
 
@@ -101,6 +110,7 @@ export default function MinionContextMenu() {
           />
         ) : (
           <MinionGroupEditor
+            playerRole={playerRole}
             minionGroup={groupData.data}
             setMinionGroup={(minionGroup) => {
               if (minionGroupsMetadata.value === undefined) return;
