@@ -24,15 +24,15 @@ export function createMinionOverlay(
       minionGroupTokenCounts[minionGroup.id],
   );
 
+  const playerVisible = "gmOnly" in minionGroup && minionGroup.gmOnly === false;
+
   return createTokenOverlay(
     {
       bubbles: [
         {
-          color: "#a0201f",
+          color: playerVisible ? "#d6484b" : "#a0201f",
           value: minionGroup.individualStamina,
-          display:
-            role === "GM" ||
-            ("gmOnly" in minionGroup && minionGroup.gmOnly === false),
+          display: role === "GM" || playerVisible,
         },
         {
           color: "black",
