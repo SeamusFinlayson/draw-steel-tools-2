@@ -64,6 +64,8 @@ export function getUpdateBundles(
     if (changed.minions && data.type === "MINION")
       return bundleCatagory("UPDATE", item, data, prev);
 
+    if (item.lastModified <= prev.item.lastModified)
+      return bundleCatagory("UNCHANGED", item, data, prev);
     if (checkNeedsRefresh(item, prev.item, obrState.settings.nameTagsEnabled))
       return bundleCatagory("REFRESH", item, data, prev);
     if (checkItemChanges(item, prev.item))
